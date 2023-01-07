@@ -1,0 +1,67 @@
+.titulo_campos{
+    font-size: 2.5rem;
+    text-align: center;
+    width: fit-content;
+    margin: 20px auto 0;
+    padding: 0;
+}
+.campo_name{
+    font-size: 1.5rem;
+    text-align: center;
+}
+.seccion_campos{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin: 20px auto 0;
+}
+.seccion_campos_btn-agregar{  
+    display: flex;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+    justify-self: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    padding: 5px;
+    margin: 50px auto;
+    width: 90%;
+    height: fit-content;
+    max-width: 400px;
+    font-size: 2rem;
+    cursor: pointer;
+}
+.boton_campo{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    list-style: none;
+    background-color: hsla(210, 70%, 55%, 0.4);
+    border: 1px solid;
+    margin: 0;
+    padding: 10px;
+    width: 150px;
+    cursor: pointer;
+    }
+.boton_campo:hover{
+    transition: .3s;
+    color: white;
+    background-color: hsl(240, 10%, 20%);
+}
+.boton_campo:active{
+    background-color: #496a9e;
+    box-shadow: inset 0 0 10px 5px;
+}
+.button-section_edit{
+    padding: auto;
+    display: flex;
+    align-items: center;
+    margin: 20px 0 20px 0;
+    justify-content: center;
+}
+@media (max-width: 450px){
+    .titulo_campos{
+        margin-top: 60px;
+    }
+}

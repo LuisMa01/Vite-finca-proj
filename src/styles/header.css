@@ -1,0 +1,139 @@
+header{
+    width: 100%;
+    color: #e6eaea;
+    background-color: #427fe0;
+    display: flex;
+    margin: 0;
+    padding: 5px 0;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    column-gap: 2rem;
+}
+.main_header_img{
+    display: flex;
+    align-items: center;
+    height: fit-content;
+    margin: 0 10px;
+}
+.main_header_p {
+    font-size: 1rem;
+    margin-top: -1rem;
+}
+.main_header {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    justify-content: center;
+    padding: 0%;
+    margin: 0 10px;
+}
+.main_header h1{
+    font-size: 1.8rem;
+    margin-top: 0px;
+}
+.logo-loyola{
+    width: 250px;
+    height: auto;
+    align-self: center;
+}
+.main_header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center
+}
+.menu-bar_focus{
+    transition: .2s;
+    border-radius: 0.2rem;
+    background-color: #1d4263;
+}
+.nav-bar {
+    position: relative;
+    background-color: #1d56b3;
+    width: 100%;
+    height: fit-content;
+    padding: 0;
+    display: flex;
+    margin: -10px 0 0;
+}
+.nav-bar ul{
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    height: fit-content;
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);  
+    justify-content: left;
+    align-items: center;
+    text-align: center;
+    position: relative;
+    }
+.nav-bar li ul{
+    display: none;
+    position: absolute;
+    width: fit-content;
+    margin: 0;
+    padding: 0;
+    top: 34px;
+    left: 0px;
+    background-color: #1d56b3;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
+.nav-bar li:hover ul{
+    display: block;
+}
+
+.nav-bar li ul li{
+    text-align: center;
+    justify-content: center;
+    padding: 0.2rem 0;
+    font-size: 0.9rem;
+    line-height: 1.2rem !important;
+}
+.nav-bar li ul li:hover{
+    border-radius: 0;
+    transform: scale(1) !important;
+    margin: 0;
+}
+.nav-bar li {
+    display: flex;
+    margin-inline-start: 1rem;
+    max-height: 100%;
+    list-style: none;
+    color: white;
+    font-family: sans-serif;
+    padding: 0.5rem 1rem;
+    margin: 0;
+    position: relative;
+    cursor: pointer;
+    white-space: wrap;
+}
+.nav-bar li:hover{
+    transition: .1s;
+    background-color: #1d5283;
+    }
+.nav-bar li:active{
+    background-color: #1d4673;
+    }
+.icon-button{
+    margin-top: -5px;
+}
+.line{
+    margin: 0px;
+}
+@media(max-width: 575px) {
+    header{
+        justify-content: center;
+    }
+    .main_header {
+        margin: 0 auto;
+        justify-self: center;
+    }
+    .main_header_img{
+        margin: 0 auto;
+    }
+}

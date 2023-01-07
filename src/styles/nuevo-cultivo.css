@@ -1,0 +1,21 @@
+.inf-general_card{
+    width: 90%;
+    max-width: 900px;
+    height: fit-content;
+    padding: 10px;
+    align-self: center;
+    justify-self: center;
+    display: flex;
+    flex-wrap: wrap;
+    background-color: hsla(210, 70%, 55%, 0.4);
+    margin-bottom: 20px;
+    border-radius: 15px;
+    box-shadow: 0 5px 15px -5px;
+}
+
+h1{margin: 20px auto;}
+h2{margin: 5px auto;}
+
+.agr-actividad_card{
+    
+}

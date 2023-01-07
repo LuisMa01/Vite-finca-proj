@@ -1,0 +1,64 @@
+.seccion_cultivos{
+    margin: 50px 5% 5% 5%;
+    display: flex;
+    flex-direction: column;
+}
+.button-section_parent{
+    padding: 0;
+    display: flex;
+    justify-content: center;
+}
+.seccion_cultivos_btn-agr{ 
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px;
+    font-size: 1.4rem;
+    cursor: pointer;
+    background-color:hsl(240, 5%, 90%);
+    border-radius: 5px;
+}
+.img-agr{
+    height: 40px;
+    width: auto;
+}
+.seccion_cultivos_btn-agr p{
+    margin: 0;
+}
+.seccion_cultivos_btn-agr:hover{
+    background-color: #e8e8e8;
+}
+.seccion_cultivos_btn-agr:active{
+    background-color: #799abe;
+}
+.seccion_cultivos_checkbox-div{
+    display: flex;
+    margin: 15px 0 0 0;
+    font-size: 1.2rem;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+.seccion_cultivos_checkbox-div div{
+    margin: 10px
+}
+.cultivos_general{
+    list-style: none;
+    background-color: hsla(210, 70%, 55%, 0.4);
+    display: flex;
+    flex-wrap: wrap;
+    padding: 10px;
+    cursor: pointer;
+    margin: 0;
+    border-bottom: 1px solid black;
+}
+.cultivos_general:hover{
+    transition: .3s;
+    color: white;
+    background-color: hsl(240, 10%, 20%);
+}
+.cultivos_general:active{
+    background-color: #294a7e;
+}
+.cultivos_general li{
+    margin: 10px;
+}

@@ -1,0 +1,106 @@
+.user-list_header{
+    font-size: 2.5rem;
+    text-align: center;
+    align-self: center;
+    width: fit-content;
+    margin: 50px auto 10px;
+    padding: 0;
+    font-weight: 400;
+}
+.user-list_card{
+    background-color: hsl(210, 90%, 85%);
+    align-self: center;
+    display: flex;
+    flex-direction: column;
+    margin: 20px 0;
+    padding: 0 2rem 0 2rem;
+    align-items: center;
+    justify-content: center;
+    height: fit-content;
+    width: 80%;
+    max-width: 700px;
+}
+.seccion_user_btn-agregar{  
+    display: flex;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto;
+    gap: 10px;
+    padding: 5px 15px;
+    max-width: 300px;
+    font-size: 1.4rem;
+    border-radius: 5px;
+    cursor: pointer;
+    background-color:hsl(240, 5%, 90%);
+    border-radius: 5px;
+}
+.img-add{
+    height: 60px;
+    width: auto;
+    justify-self: right;
+}
+.user-list_card ul{
+    padding: 5px 1rem;
+    margin: 0;
+    display: flex;
+    width: 100%;
+    justify-content: space-between; 
+    list-style: none;
+    text-align: center;
+}
+#user-list_card_header{
+    width: 100%;
+    border-radius: 0;
+    border-radius: 1rem;
+    font-weight: bold;
+    background-color: hsl(210, 90%, 65%);
+    box-shadow: 0 0 5px 0px;
+}
+.user-list_card .user-list_card_item:hover{
+    border-radius: 15px;
+    transition: .3s;
+    color: white;
+    background-color: hsl(240, 10%, 20%);
+    cursor: pointer;
+}
+.user-list_card .user-list_card_item:active{
+    background-color: #496a9e;
+    box-shadow: inset 0 0 10px 5px;
+}
+.user-list_card ul > li{
+    display: flex;
+    width: 25%;
+    justify-content: center;
+    align-items: center;
+}
+.user-list_card ul .Link li{
+    width: 33.33%;
+    justify-self: center;
+}
+.linea_horizontal{
+    background-color: black;
+    height: 0.5px;
+    width: 100%;
+    padding: 0;
+}
+.user-add_button{
+    height: fit-content;
+    width: fit-content;
+    margin: 0 auto;
+    font-size: 1.3rem;
+    padding: 10px;
+    border-width: 1px;
+    border-color: #7b7b93;
+    border-radius: 10px;
+    cursor: pointer;
+    box-shadow: 0 5px 8px -5px;
+    background: linear-gradient(160deg, #80B0F1, #80C0F7);
+}
+.user-add_button:hover{
+    transition: .2s;
+}
+.user-add_button:active{
+    transition: .2s;
+    box-shadow: inset 0 0 0px 30px hsl(240, 60%, 80%);
+}

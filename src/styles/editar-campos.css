@@ -1,0 +1,50 @@
+.seccion_campos_btn-agregar{  
+    display: flex;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+    justify-self: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    padding: 5px;
+    margin: 50px auto;
+    width: 90%;
+    height: fit-content;
+    max-width: 400px;
+    font-size: 2rem;
+    box-shadow: 0 0 10px 0;
+    border-radius: 20px;
+    cursor: pointer;
+}
+.img-add{
+    height: 60px;
+    width: auto;
+    justify-self: right;
+}
+.seccion_cultivos_btn-agregar:hover{
+    transform: scale(1.025)
+}
+.seccion_cultivos_btn-agregar:active{
+    box-shadow: inset 0 0 20px 0;
+}
+.nuevo-campo-card_form{
+    display: none;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    margin: 10px 0 0 0;
+    gap: 10px;
+}
+#campo_label{
+    font-size: 1.5rem;
+}
+.nuevo-campo-card_form input{
+    height: 30px;
+    margin: 0 10px;
+    padding: 0 5px ;
+    font-size: 1rem;
+    border-radius: 15px;
+    background-color: hsl(240, 10%, 90%);
+    align-self: flex-end;
+    border-width: 1.5px;
+    box-shadow: 0px 3px 10px -5px;
+}
