@@ -29,15 +29,14 @@ const NuevoUsuario = () => {
   useEffect(() => {
     setValidPassword(PWD_REGEX.test(password));
   }, [password]);
-console.log(validUsername);
-console.log(validPassword);
-console.log(roles);
+
+  console.log(roles);
   useEffect(() => {
     if (isSuccess) {
       setUsername("");
       setPassword("");
       setRoles(3);
-      navigate("/dash/usuario/lista-usuarios/editar-usuario");
+      navigate("/dash/usuario/lista-usuarios");
     }
   }, [isSuccess, navigate]);
 
@@ -45,17 +44,15 @@ console.log(roles);
   const onPasswordChanged = (e) => setPassword(e.target.value);
 
   const onRolesChanged = (e) => {
-    
     const values = Array.from(
       e.target.selectedOptions, //HTMLCollection
       (option) => option.value
     );
-    
+
     setRoles(parseInt(values));
   };
 
-  const canSave =
-    [ validUsername, validPassword].every(Boolean) && !isLoading;
+  const canSave = [validUsername, validPassword].every(Boolean) && !isLoading;
 
   const onSaveUserClicked = async (e) => {
     e.preventDefault();
@@ -64,9 +61,8 @@ console.log(roles);
       await addNewUser({ username, password, roles });
     }
   };
-  
+
   const options = Object.values(ROLES).map((role) => {
-    
     return (
       <option key={role} value={role}>
         {" "}
@@ -74,7 +70,7 @@ console.log(roles);
       </option>
     );
   });
-  
+
   const content = (
     <>
       <div className="return-div">
@@ -117,9 +113,7 @@ console.log(roles);
               />
             </div>
             <div>
-              <label htmlFor="role">
-                Cargo
-              </label>
+              <label htmlFor="role">Cargo</label>
               <select
                 id="cargo"
                 name="role"
@@ -136,7 +130,7 @@ console.log(roles);
                 Guardar Usuario
               </button>
               <Link
-                className="Link"
+                className="Link no-crear"
                 id="no-crear"
                 to={"/dash/usuario/lista-usuarios"}
               >
