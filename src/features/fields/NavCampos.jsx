@@ -1,81 +1,53 @@
+
 import React from 'react'
 import "../../styles/nav_campos.css"
 import ReImage from "../../images/return.svg"
 import AddImage from "../../images/edit.svg"
 import { Link } from 'react-router-dom'
+import MaizImag from '../../images/maiz.jpg'
+import campos from '../jsons/campos.json'
 
-const campos = [
-    {
-        "name" : "Campo 1",
-        "area" : "1.5",
-    },
-    {
-        "name" : "Campo 2 Norte",
-        "area" : "2",
-    },
-    {
-        "name" : "Campo 2 Sur",
-        "area" : "0.5",
-    },
-    {
-        "name" : "Campo 3",
-        "area" : "1",
-    },
-    {
-        "name" : "Campo 4 Oeste",
-        "area" : "2.5",
-    },
-    {
-        "name" : "Campo 4 Este",
-        "area" : "2.5",
-    },
-    {
-        "name" : "Campo 5 Norte",
-        "area" : "3",
-    },
-    {
-        "name" : "Campo 5 Sur",
-        "area" : "3",
-    },
-    {
-        "name" : "Campo 6",
-        "area" : "1",
-    },
-    {
-        "name" : "Campo 7",
-        "area" : "2.5",
-    }
-]
-export {campos}
-
-const Campos = () => {
+export const Campos = () => {
     return(
         campos.map((item) => (
-            <ul className='boton_campo'>
-                <li className='campo_name'><b>{item.name}</b></li>
-                <li><b>Área: </b>{item.area} tareas</li>
-            </ul>
+            <div className='col-12 col-sm-6 col-md-4 col-xl-3' style={isCampoEnabled(item.enable)}>
+                <div className="card">
+                    <img className="card-img-top" src={MaizImag} alt="dec-img" />
+                    <div className="card-body">
+                        <h5 className="card-title">{item.name}</h5>
+                        <p className="card-text"><b>Área: </b>{item.area} tareas</p>
+                    </div>
+                </div>
+            </div>
         )));
 }
 
-const navCultivos = () => {
+function isCampoEnabled(a){
+    if (a===0){
+    return {display : 'none'};
+    }
+    return;
+}
+
+const navCampos = () => {
     return(
         <>
             <div className="return-div"><Link to={'/dash'}><div className="return-button">
                 <img className="return-button-img" src={ReImage} alt="Atrás"/>
             </div></Link></div>
-            <p className='titulo_campos'>Campos existentes</p>
-            <div className='seccion_campos'>
-            <Campos />
+            <div className='campos_top-section'>
+                <p className='titulo_campos'>Campos existentes</p>
+                <div className="button-section_edit">
+                    <Link to={'/dash/campos/editar-campos'} className="Link"><div className="seccion_campos_btn-agr">
+                        <img className="img-edit" src={AddImage} alt="Add-Icon"/>
+                        <p>Editar campos</p>
+                </div></Link></div>
             </div>
-            <div className="button-section_edit">
-                <Link to={'/dash/campos/editar-campos'} className="Link"><div className="seccion_campos_btn-agregar">
-                    <img className="img-comun img-add" src={AddImage} alt="Add-Icon"/>
-                    <p>Editar campos</p>
-                </div></Link>
+            <div className='card-deck'>
+                <Campos />
             </div>
         </>
     );
 }
 
-export default navCultivos;
+export default navCampos;

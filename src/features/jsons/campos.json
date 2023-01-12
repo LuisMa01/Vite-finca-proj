@@ -1,0 +1,52 @@
+[
+    {
+        "name" : "Campo 1",
+        "area" : "1.5",
+        "enable" : 1
+    },
+    {
+        "name" : "Campo 2 Norte",
+        "area" : "2",
+        "enable" : 0
+    },
+    {
+        "name" : "Campo 2 Sur",
+        "area" : "0.5",
+        "enable" : 1
+    },
+    {
+        "name" : "Campo 3",
+        "area" : "1",
+        "enable" : 0
+    },
+    {
+        "name" : "Campo 4 Oeste",
+        "area" : "2.5",
+        "enable" : 1
+    },
+    {
+        "name" : "Campo 4 Este",
+        "area" : "2.5",
+        "enable" : 0
+    },
+    {
+        "name" : "Campo 5 Norte",
+        "area" : "3",
+        "enable" : 1
+    },
+    {
+        "name" : "Campo 5 Sur",
+        "area" : "3",
+        "enable" : 0
+    },
+    {
+        "name" : "Campo 6",
+        "area" : "1",
+        "enable" : 1
+    },
+    {
+        "name" : "Campo 7",
+        "area" : "2.5",
+        "enable" : 1
+    }
+]

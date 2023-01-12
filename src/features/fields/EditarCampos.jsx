@@ -2,7 +2,7 @@ import React from "react"
 import ReImage from "../../images/return.svg"
 import "../../styles/editar-campos.css"
 import { Link } from "react-router-dom"
-import { campos } from "./NavCampos"
+//import { campos } from "./NavCampos"
 import AddImage from "../../images/add.svg"
 
 const EditarCampos = () => {

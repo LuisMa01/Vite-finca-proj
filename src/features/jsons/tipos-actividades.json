@@ -1,0 +1,32 @@
+[
+    {
+        "name" : "Siembra",
+        "descripcion" : "Cavar un agujero y depositar el tallo o semilla en la tierra para posteiormente tapar",
+        "enable" : 1
+    },
+    {
+        "name" : "Riego",
+        "descripcion" : "n/a",
+        "enable" : 0
+    },
+    {
+        "name" : "Fertilización",
+        "descripcion" : "n/a",
+        "enable" : 1
+    },
+    {
+        "name" : "Cosecha",
+        "descripcion" : "n/a",
+        "enable" : 1
+    },
+    {
+        "name" : "Arado",
+        "descripcion" : "n/a",
+        "enable" : 0
+    },
+    {
+        "name" : "Fumigación",
+        "descripcion" : "n/a",
+        "enable" : 1
+    }
+]

@@ -3,38 +3,44 @@ import '../../styles/pswd_change.css'
 import ReImage from "../../images/return.svg"
 import { Link } from "react-router-dom"
 
-const PswdChange = () => {
+const pswdChange = () => {
     return(
         <>
             <div className="return-div"><Link to={'/dash/usuario/mi-perfil'}><div className="return-button">
                 <img className="return-button-img" src={ReImage} alt="Atrás"/>
             </div></Link></div>
-            <div className="pswd-card">
-                <h1>ronnie07</h1>
-                <div className="split-line"></div>
-                <form className="pswd-card_form" action="#">
-                    <div>
-                        <label id="current-pswd_label">Contraseña actual</label>
-                        <input type="password" id="current-pswd" name="current-pswd" placeholder="Contraseña actual" autoFocus/>
+            <p className='titulo_cambiar'>Cambiar contraseña</p>
+            <div className="my-card card-outline-secondary col-8 col-sm-6 col-md-5 col-lg-4">
+                        <div className="card-body">
+                            <form className="form" autocomplete="off">
+                                <div className="form-group">
+                                    <label for="inputPasswordOld">Contraseña actual</label>
+                                    <input type="password" className="form-control" id="inputPasswordOld" required autoFocus  />
+                                </div>
+                                <div className="form-group">
+                                    <label for="inputPasswordNew">Nueva contraseña</label>
+                                    <input type="password" className="form-control" id="inputPasswordNew" required />
+                                    <span className="form-text small text-muted">
+                                            La contraseña debe contener entre 8-20 caracteres, y <b>no</b> debe contener espacios.
+                                        </span>
+                                </div>
+                                <div className="form-group">
+                                    <label for="inputPasswordNewVerify">Verificar</label>
+                                    <input type="password" className="form-control" id="inputPasswordNewVerify" required />
+                                    <span className="form-text small text-muted">
+                                            Para confirmar, escriba la nueva contraseña.
+                                        </span>
+                                </div>
+                                <div className="button-section">
+                                    <button type="submit" className="btn btn-success btn-lg">Guardar</button>
+                                    <Link to={'/dash/usuario/mi-perfil'} className=".Link">
+                                        <button type="submit" className="btn btn-danger btn-lg">Cancelar</button></Link>
+                                </div>
+                            </form>
+                        </div>
                     </div>
-                    <p id="wrong-pswd_message" class="wrong-pswd">Contraseña incorrecta</p>
-                    <div>
-                        <label id="new-pswd_label">Contraseña nueva</label>
-                        <input type="password" id="new-pswd" name="new-pswd" placeholder="Contraseña nueva"/>
-                    </div>
-                    <p id="confirm-wrong_message" class="wrong-pswd">Las contraseñas no coinciden</p>
-                    <div>
-                        <label id="confirm-pswd_label">Confirme contraseña</label>
-                        <input type="password" id="confirm-new-pswd" name="confirm-current-pswd" placeholder="Confirme contraseña nueva"/>
-                    </div>
-                    <div className="button-section">
-                        <button id="save" type="submit">Guardar cambios</button>
-                        <Link to={'/dash/usuario/mi-perfil'} className=".Link"><button id="discard">Cancelar</button></Link>
-                    </div>
-                </form>
-            </div>
         </>
     )
 }
 
-export default PswdChange
+export default pswdChange
