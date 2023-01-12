@@ -21,11 +21,12 @@ export const usersApiSlice = apiSlice.injectEndpoints({
       }
       */
       transformResponse: (responseData) => {
-        const loadedUsers = responseData.map((user) => {
+       const loadedUsers = responseData.map((user) => {
           user.id = user.user_id;
           return user;
+          
         });
-        return usersAdapter.setAll(initialState, loadedUsers);
+        return usersAdapter.setAll(initialState, loadedUsers.sort((a, b) => b.id - a.id));
       },
       providesTags: (result, error, arg) => {
         if (result?.ids) {

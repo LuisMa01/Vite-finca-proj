@@ -1,0 +1,50 @@
+[
+    {
+        "name" : "Juan Pozo",
+        "username" : "juan123",
+        "cargo" : "Usuario",
+        "email" : "juanpozo@gmail.com",
+        "phone" : "809-528-4010",
+        "enable" : 1
+    },
+    {
+        "name" : "Pancho Villa",
+        "username" : "pan45",
+        "cargo" : "Supervisor",
+        "email" : "panchovilla@gmail.com",
+        "phone" : "809-528-4010",
+        "enable" : 0
+    },
+    {
+        "name" : "Emiliano Zapata",
+        "username" : "em16",
+        "cargo" : "Supervisor",
+        "email" : "emilianozap@gmail.com",
+        "phone" : "809-528-4010",
+        "enable" : 1
+    },
+    {
+        "name" : "Ronald Pozo",
+        "username" : "ron23",
+        "cargo" : "Supervisor",
+        "email" : "ronald23@gmail.com",
+        "phone" : "809-528-4010",
+        "enable" : 1
+    },
+    {
+        "name" : "Francisco Pérez",
+        "username" : "fran21",
+        "cargo" : "Administrador",
+        "email" : "ronald23@gmail.com",
+        "phone" : "809-528-4010",
+        "enable" : 1
+    },
+    {
+        "name" : "Luis Doñé",
+        "username" : "luis28",
+        "cargo" : "Administrador",
+        "email" : "luismdr@gmail.com",
+        "phone" : "809-528-4010",
+        "enable" : 1
+    }
+]

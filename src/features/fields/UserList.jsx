@@ -3,69 +3,11 @@ import "../../styles/user-list.css";
 import ReImage from "../../images/return.svg";
 import AddImage from "../../images/add.svg";
 import { Link } from "react-router-dom";
-//import UserInfoMap from "./InfoUser";
+import  User  from "../../components/User";
+
 import { useGetUsersQuery } from "./redux/usersApiSlice";
-import User from "../../components/User";
-/*
-const lista = [
-  {
-    name: "Juan Pozo",
-    username: "juan123",
-    cargo: "Usuario",
-    email: "juanpozo@gmail.com",
-    phone: "809-528-4010",
-    activo: "Si",
-  },
-  {
-    name: "Pancho Villa",
-    username: "pan45",
-    cargo: "Supervisor",
-    email: "panchovilla@gmail.com",
-    phone: "809-528-4010",
-    activo: "No",
-  },
-  {
-    name: "Emiliano Zapata",
-    username: "em16",
-    cargo: "Supervisor",
-    email: "emilianozap@gmail.com",
-    phone: "809-528-4010",
-    activo: "Si",
-  },
-  {
-    name: "Ronald",
-    username: "ron45",
-    cargo: "Supervisor",
-    activo: "Si",
-  },
-];
-
-export { lista };
-
-const Lista = () => {
 
 
-
-
-  return lista.map((item) => (
-    <>
-      <ul
-        key={item.index}
-        className="user-list_card_item"
-        onClick={UserInfoMap}
-      >
-        <Link className="Link" to={"/dash/usuario/lista-usuarios/info-user"}>
-          <li>{item.name}</li>
-          <li id="username">{item.username}</li>
-          <li>{item.cargo}</li>
-          <li>{item.activo}</li>
-        </Link>
-      </ul>
-      <div className="linea_horizontal"></div>
-    </>
-  ));
-};
-*/
 const userList = () => {
  
   const {
@@ -81,7 +23,7 @@ const userList = () => {
   });
   let content
 
-  if (isLoading) content = <p>Loading...</p>
+  if (isLoading) content = <p>Cargando...</p>
 
   if (isError) {
     content = <p className="errmsg">{error?.data?.message}</p>
