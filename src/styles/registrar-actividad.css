@@ -1,0 +1,15 @@
+.titulo_tipos-de-actividades{
+    font-size: 1.4rem;
+    text-align: center;
+    width: fit-content;
+    margin: 30px auto 0;
+    padding: 0;
+}
+.tipos_description{
+    text-align: center;
+    margin: auto 30px 25px;
+}
+.myform{
+    border: none 1px;
+    padding: 20px 0px ;
+}

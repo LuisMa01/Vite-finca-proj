@@ -5,7 +5,7 @@ import "../../styles/registrar-plantilla.css"
 import LasActividades from "../../jsons/plantilla-maiz.json"
 import MisActividades from "../../jsons/tipos-actividades.json"
 
-const registrarPlantilla = () => {
+const RegistrarPlantilla = () => {
     return(
         <>
             <div className="return-div"><Link to={'/dash/cultivos'}><div className="return-button">
@@ -77,7 +77,7 @@ const registrarPlantilla = () => {
     )
 }
 
-export default registrarPlantilla
+export default RegistrarPlantilla
 
 const Actividades = () => {
     return(

@@ -66,10 +66,10 @@ const navCultivos = () => {
                                 <button className="btn btn-outline-primary seccion_cultivos_btn-agr">Nuevo cultivo</button>
                                 </Link>
                                 <Link to={'/dash/cultivos/registrar-plantilla'} className="Link">
-                                <button type="button" class="btn btn-outline-secondary seccion_cultivos_btn-agr">Registrar plantilla</button>
+                                <button class="btn btn-outline-secondary seccion_cultivos_btn-agr">Registrar plantilla</button>
                                 </Link>
                                 <Link to={'/dash/cultivos/registrar-actividad'} className="Link">
-                                <button type="button" class="btn btn-outline-secondary seccion_cultivos_btn-agr">Tipos de actividades</button>
+                                <button class="btn btn-outline-secondary seccion_cultivos_btn-agr">Tipos de actividades</button>
                                 </Link>
                             </div>  
                         </div>

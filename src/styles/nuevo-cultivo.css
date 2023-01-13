@@ -1,21 +1,26 @@
-.inf-general_card{
-    width: 90%;
-    max-width: 900px;
-    height: fit-content;
-    padding: 10px;
-    align-self: center;
-    justify-self: center;
+.nuevo-cultivo-header{
+    font-size: 1.7rem;
+    text-align: center;
+    width: fit-content;
+    margin: 40px auto 0;
+    padding: 0;
+}
+.nuevo-descripcion{
+    font-size: 0.9rem;
+    text-align: center;
+    margin: 10px auto 20px;
+}
+.cultivos_button-section{
     display: flex;
     flex-wrap: wrap;
-    background-color: hsla(210, 70%, 55%, 0.4);
-    margin-bottom: 20px;
-    border-radius: 15px;
-    box-shadow: 0 5px 15px -5px;
+    gap: 15px;
+    justify-content: center;
+    font-size: 1rem;
 }
-
-h1{margin: 20px auto;}
-h2{margin: 5px auto;}
-
-.agr-actividad_card{
-    
+#cargo{
+    height: 36px;
+    border-color: grey;
+}
+.nuevo-cultivo-form{
+    margin: 0 auto 20px;
 }

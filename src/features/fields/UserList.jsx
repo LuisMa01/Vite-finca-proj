@@ -46,15 +46,11 @@ const userList = () => {
           </Link>
         </div>
         <h1 className="user-list_header">Lista de usuarios</h1>
-        <Link
-          to={"/dash/usuario/lista-usuarios/nuevo-usuario"}
-          className="Link"
-        >
-          <div className="seccion_user_btn-agregar">
-            <img className="img-comun img-add" src={AddImage} alt="Add-Icon" />
-            <p>Nuevo Usuario</p>
-          </div>
-        </Link>
+            <div className="button_section_parent"><Link to={'/dash/usuario/lista-usuarios/nuevo-usuario'} className="Link">
+            <div className="seccion_user_btn-agregar">
+                <img className="img-circ" src={AddImage} alt="Add-Icon"/>
+                <p>Nuevo Usuario</p>
+            </div></Link></div>       
         <div className="user-list_card">
           <ul id="user-list_card_header">
             <li>Nombre</li>

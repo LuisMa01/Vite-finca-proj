@@ -43,11 +43,11 @@ const Login = () => {
       navigate("/dash");
     } catch (err) {
       if (!err.status) {
-        setErrMsg("No Server Response");
+        setErrMsg("Sin respuesta del servidor");
       } else if (err.status === 400) {
-        setErrMsg("Missing Username or Password");
+        setErrMsg("Falta el usuario o la clave");
       } else if (err.status === 401) {
-        setErrMsg("Unauthorized");
+        setErrMsg("Usuario o contraseña incorrectos");
       } else {
         setErrMsg(err.data?.message);
       }
@@ -61,7 +61,8 @@ const Login = () => {
 
   const errClass = errMsg ? "errmsg" : "offscreen"
 
-  if (isLoading) return <p>Loading...</p>;
+  if (isLoading) return <p>Cargando...</p>
+
 /*
   const content = (
     <section >
@@ -114,9 +115,9 @@ const Login = () => {
     <>
     <DashHeader /> 
       <main className="login-screen">
-        <p ref={errRef} className={errClass} aria-live="assertive">
+        {/* <p ref={errRef} className={errClass} aria-live="assertive">
           {errMsg}
-        </p>
+        </p> */}
         <form onSubmit={handleSubmit} className="login">
           <h1>Inicie sesión en Finca Experimental AV</h1>
           <img className="bottom-image" src={LeafImg} alt="" />

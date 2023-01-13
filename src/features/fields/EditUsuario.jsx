@@ -1,4 +1,3 @@
-
 import React from "react";
 import "../../styles/nuevo-usuario.css";
 import { Link } from "react-router-dom";

@@ -1,5 +1,5 @@
-import { Link } from "react-router-dom";
-import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
 import { useSendLogoutMutation } from "../features/auth/authApiSlice";
 import "../styles/header.css";
 //import useAuth from "../hooks/useAuth";
@@ -13,7 +13,7 @@ const DashHeader = () => {
   const [cuatro, setCuatro] = useState("");
   const [cinco, setCinco] = useState("");
   //const [back, setBack] = useState([])
-  const [sendLogout, { isLoading, isError, error }] = useSendLogoutMutation();
+  const [sendLogout, { isLoading, isSuccess, isError, error }] = useSendLogoutMutation();
 
   function focusClick (a){
     //a.preventDefault();
@@ -68,12 +68,20 @@ const DashHeader = () => {
   } else {
     buttonContent = <>{logoutButton}</>;
   }
-
+  const navigate = useNavigate()
+  useEffect(() => {
+    if (isSuccess) {
+      navigate("/");
+    }
+  }, [isSuccess, navigate]);
   const content = (
     <>
       <p className={errClass}>{error?.data?.message}</p>
-
-      <nav className="nav-bar">
+      <nav className="nav-bar navbar navbar-expand-lg navbar-light">
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
         <ul>
           <Link to={"/dash"}>
             <li
@@ -137,6 +145,7 @@ const DashHeader = () => {
             </ul>
           </li>
         </ul>
+        </div>
       </nav>
       
     </>

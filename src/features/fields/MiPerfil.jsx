@@ -3,6 +3,7 @@ import ReImage from "../../images/return.svg"
 import "../../styles/mi_perfil.css"
 import { Link } from "react-router-dom"
 
+
 const MiPerfil = () => {
     return(
         <>  
