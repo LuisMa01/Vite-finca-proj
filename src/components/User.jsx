@@ -7,6 +7,7 @@ import {
 } from "../features/fields/redux/usersApiSlice";
 import { memo } from "react";
 import { Link } from "react-router-dom";
+import RemoveImg from "../images/remove.svg"
 
 const User = ({ userId }) => {
   const { user } = useGetUsersQuery("usersList", {
@@ -29,9 +30,8 @@ const User = ({ userId }) => {
   
     await updateUser({ id: user.user_id, username: user.user_name, roles: user.rol_user, active: e.target.checked });
    
-}
-
-  const onDeleteUserClicked = async () => {
+};
+   const onDeleteUserClicked = async () => {
     await deleteUser({ id: user.user_id });
   };
 
@@ -57,29 +57,25 @@ const User = ({ userId }) => {
 
     return (
       <>
-        <ul
+        <tr
           key={userId}
-          className="user-list_card_item"
           onClick={console.log("")}
         >
-          <Link className="Link" to={"/dash/usuario/lista-usuarios/info-user"}>
-            <li>{userName}</li>
-            <li id="username">{user.user_name}</li>
-            <li>{userRolesString}</li>
-          </Link>
-          <li>
+            <td>{userName}</td>
+            <td id="username">{user.user_name}</td>
+            <td>{userRolesString}</td>
+          <td>
             <input
               type="checkbox"
               checked={user.activo}
               onChange={onActiveChanged}
             />
-          </li>
-          <li>
+          </td>
+          <td>
             {" "}
-            <button onClick={onDeleteUserClicked}>BORRAR</button>
-          </li>
-        </ul>
-        <div className="linea_horizontal"></div>
+            <img onClick={onDeleteUserClicked} className="remove-img" src={RemoveImg} alt="Remove"/>
+          </td>
+        </tr>
       </>
     );
   } else return null;

@@ -81,6 +81,60 @@ const NuevoUsuario = () => {
         </Link>
       </div>
       <h1 className="crear_titulo">Crear usuario</h1>
+
+      {/* A partir de aqui son las modificaciones, esperando no poner otro huevo] */}
+
+      <form className="container col-12 col-sm-11 col-lg-9 bg-light" onSubmit={onSaveUserClicked}>
+        <p className="error-text">{error?.data?.message}</p>
+        <div class="form-row">
+          <div class="col-md-4 mb-3">
+            <label id="username_label" htmlFor="username">Nombre de usuario</label>
+            <input 
+              id="new-user-username"
+              className="form-control"
+              name="username"
+              type="text"
+              autoComplete="off"
+              autoFocus
+              placeholder="Ej: minombre07"
+              value={username}
+              onChange={onUsernameChanged}/>
+          </div>
+          <div className="col-md-4 mb-3">
+            <label id="pswd_label" htmlFor="password">Contraseña</label>
+            <input
+              id="new-user-pswd"
+              className="form-control"
+              name="password"
+              type="password"
+              placeholder="******"
+              value={password}
+              onChange={onPasswordChanged}/>
+          </div>
+          <div className="col-md-4 mb-3">    
+            <label htmlFor="role">Cargo</label>
+            <select 
+            id="cargo"
+            name="role"
+            className="dropdown form-control"
+            value={roles}
+            onChange={onRolesChanged}>
+              {options}
+            </select>
+          </div>
+        </div>
+
+        <div className="cultivos_button-section">
+          <button className="btn btn-success" id="user-save" disabled={!canSave}>Guardar usuario</button>
+          <Link to={'/dash/usuario/lista-usuarios'} className="Link">
+            <button className="btn btn-danger">Cancelar</button>
+          </Link>
+        </div>
+        
+      </form>
+
+      {/*  Este es el codigo anterior, a modo de backup:
+
       <div className="nuevo-usuario-card">
         <form className="nuevo-usuario-card_form" onSubmit={onSaveUserClicked}>
           <div>
@@ -139,7 +193,8 @@ const NuevoUsuario = () => {
             </div>
           </div>
         </form>
-      </div>
+      </div> */}
+       {/*Hasta aqui son las modificaciones, esperando no poner otro huevo] */}
     </>
   );
 

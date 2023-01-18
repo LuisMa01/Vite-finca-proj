@@ -69,11 +69,11 @@ const DashHeader = () => {
     buttonContent = <>{logoutButton}</>;
   }
   const navigate = useNavigate()
-  useEffect(() => {
+  // useEffect(() => {
     if (isSuccess) {
       navigate("/");
     }
-  }, [isSuccess, navigate]);
+ // }, [isSuccess, navigate]);
   const content = (
     <>
       <p className={errClass}>{error?.data?.message}</p>
