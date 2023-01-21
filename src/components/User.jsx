@@ -7,7 +7,7 @@ import {
 } from "../features/fields/redux/usersApiSlice";
 import { memo } from "react";
 import { Link } from "react-router-dom";
-import RemoveImg from "../images/remove.svg"
+import RemoveImg from "../images/remove.svg";
 import useAuth from "../hooks/useAuth";
 
 const User = ({ userId }) => {
@@ -17,7 +17,7 @@ const User = ({ userId }) => {
       user: data?.entities[userId],
     }),
   });
-  console.log(`${idUser}`);
+  
   const [updateUser, { isLoading, isSuccess, isError, error }] =
     useUpdateUserMutation();
 
@@ -26,16 +26,23 @@ const User = ({ userId }) => {
     { isSuccess: isDelSuccess, isError: isDelError, error: delerror },
   ] = useDeleteUserMutation();
 
-
-
   const onActiveChanged = async (e) => {
-  
-    await updateUser({ id: user.user_id, username: user.user_name, roles: user.user_rol, status: e.target.checked });
-   
-};
-   const onDeleteUserClicked = async () => {
-    await deleteUser({ id: user.user_id, idUser });
+    await updateUser({
+      id: user.user_id,
+      username: user.user_name,
+      roles: user.user_rol,
+      status: e.target.checked,
+    });
   };
+ 
+    const onDeleteUserClicked = async () => {
+      console.log(`usuario ${idUser}`);
+      const id_User = idUser
+      if (user.user_id !== idUser) {
+      await deleteUser({ id: user.user_id, id_User });
+      }
+    };
+
 
   //console.log(user)
 
@@ -50,7 +57,7 @@ const User = ({ userId }) => {
 
     //const cellStatus = user.user_status ? "activo" : "inactivo";
 
-    const errContent = (error?.data?.message || delerror?.data?.message) ?? ''
+    const errContent = (error?.data?.message || delerror?.data?.message) ?? "";
 
     //console.log(`${user.user_id} ${userName} ${userRolesString} ${active} ${errContent}`);
     if (isSuccess) {
@@ -59,13 +66,10 @@ const User = ({ userId }) => {
 
     return (
       <>
-        <tr
-          key={userId}
-          onClick={console.log("")}
-        >
-            <td>{userName}</td>
-            <td id="username">{user.user_name}</td>
-            <td>{userRolesString}</td>
+        <tr key={userId} onClick={console.log("")}>
+          <td>{userName}</td>
+          <td id="username">{user.user_name}</td>
+          <td>{userRolesString}</td>
           <td>
             <input
               type="checkbox"
@@ -75,7 +79,12 @@ const User = ({ userId }) => {
           </td>
           <td>
             {" "}
-            <img onClick={onDeleteUserClicked} className="remove-img" src={RemoveImg} alt="Remove"/>
+            <img
+              onClick={onDeleteUserClicked}
+              className="remove-img"
+              src={RemoveImg}
+              alt="Remove"
+            />
           </td>
         </tr>
       </>
