@@ -8,14 +8,16 @@ import {
 import { memo } from "react";
 import { Link } from "react-router-dom";
 import RemoveImg from "../images/remove.svg"
+import useAuth from "../hooks/useAuth";
 
 const User = ({ userId }) => {
+  const { userId: idUser } = useAuth();
   const { user } = useGetUsersQuery("usersList", {
     selectFromResult: ({ data }) => ({
       user: data?.entities[userId],
     }),
   });
-
+  console.log(`${idUser}`);
   const [updateUser, { isLoading, isSuccess, isError, error }] =
     useUpdateUserMutation();
 
@@ -28,11 +30,11 @@ const User = ({ userId }) => {
 
   const onActiveChanged = async (e) => {
   
-    await updateUser({ id: user.user_id, username: user.user_name, roles: user.rol_user, active: e.target.checked });
+    await updateUser({ id: user.user_id, username: user.user_name, roles: user.user_rol, status: e.target.checked });
    
 };
    const onDeleteUserClicked = async () => {
-    await deleteUser({ id: user.user_id });
+    await deleteUser({ id: user.user_id, idUser });
   };
 
   //console.log(user)
@@ -42,11 +44,11 @@ const User = ({ userId }) => {
   if (user) {
     //const handleEdit = () => navigate(`/dash/users/${userId}`)
 
-    const userName = user.nombres ? user.nombres : "no tiene";
+    const userName = user.user_nombre ? user.user_nombre : "no tiene";
 
-    const userRolesString = user.rol_user.toString().replaceAll(",", ", ");
+    const userRolesString = user.user_rol.toString().replaceAll(",", ", ");
 
-    const cellStatus = user.activo ? "activo" : "inactivo";
+    //const cellStatus = user.user_status ? "activo" : "inactivo";
 
     const errContent = (error?.data?.message || delerror?.data?.message) ?? ''
 
@@ -67,7 +69,7 @@ const User = ({ userId }) => {
           <td>
             <input
               type="checkbox"
-              checked={user.activo}
+              checked={user.user_status}
               onChange={onActiveChanged}
             />
           </td>
