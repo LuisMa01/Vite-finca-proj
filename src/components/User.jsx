@@ -37,10 +37,10 @@ const User = ({ userId }) => {
  
     const onDeleteUserClicked = async () => {
       console.log(`usuario ${idUser}`);
-      const id_User = idUser
-      if (user.user_id !== idUser) {
-      await deleteUser({ id: user.user_id, id_User });
-      }
+      
+     // if (user.user_id !== idUser) {
+      await deleteUser({ id: user.user_id, id_User: idUser });
+    //  }
     };
 
 
