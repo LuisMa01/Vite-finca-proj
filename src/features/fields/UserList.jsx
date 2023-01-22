@@ -23,12 +23,9 @@ const userList = () => {
 
   if (isLoading) {
     content = <p>Cargando...</p>;
-    console.log("hasta aqui");
     
   }
-  if (!isLoading) {
-    console.log("hasta murio");
-  }
+  
 
   if (isError) {
     content = <p className="errmsg">{error?.data?.message}</p>;
