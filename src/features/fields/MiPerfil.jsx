@@ -5,6 +5,7 @@ import "../../styles/mi_perfil.css";
 import { Link } from "react-router-dom";
 import useAuth from "../../hooks/useAuth";
 import { useEffect } from "react";
+import { ROLES } from "../../config/roles";
 
 const MiPerfil = () => {
   const { username, roles, isManager, isAdmin, userId, nombres, apellidos, email, phone } = useAuth();
@@ -56,6 +57,17 @@ const MiPerfil = () => {
   const correo = email ? email : "No tiene correo";
   const telefono = phone ? phone : "no tiene";
 
+  let llave 
+  if (roles==Object.values(ROLES)[0]) {
+    llave = Object.keys(ROLES)[0]
+  }
+  if (roles==Object.values(ROLES)[1]) {
+    llave = Object.keys(ROLES)[1]
+  }
+  if (roles==Object.values(ROLES)[2]) {
+    llave = Object.keys(ROLES)[2]
+  }
+
   return (
     <>
       <div className="return-div">
@@ -70,7 +82,7 @@ const MiPerfil = () => {
         <h2>
           {nombre} {apellido}
         </h2>
-        <p className="p-cargo">{roles}</p>
+        <p className="p-cargo">{llave}</p>
         <p>
           <b>Usuario: </b> {username}
         </p>

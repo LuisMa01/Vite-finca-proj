@@ -8,22 +8,26 @@ import {
 import { memo } from "react";
 import { Link } from "react-router-dom";
 import RemoveImg from "../images/remove.svg";
-import useAuth from "../hooks/useAuth";
+
 import { ROLES } from "../config/roles";
 
 const User = ({ userId }) => {
-  const llave = Object.keys(ROLES)
-  console.log(llave[1]); 
-  console.log(ROLES[llave[0]]);
-  Object.values(ROLES)
-
-  const { userId: idUser } = useAuth();
+  let llave 
   const { user } = useGetUsersQuery("usersList", {
     selectFromResult: ({ data }) => ({
       user: data?.entities[userId],
     }),
   });
   
+  if (user.user_rol==Object.values(ROLES)[0]) {
+    llave = Object.keys(ROLES)[0]
+  }
+  if (user.user_rol==Object.values(ROLES)[1]) {
+    llave = Object.keys(ROLES)[1]
+  }
+  if (user.user_rol==Object.values(ROLES)[2]) {
+    llave = Object.keys(ROLES)[2]
+  }
   const [updateUser, { isLoading, isSuccess, isError, error }] =
     useUpdateUserMutation();
 
@@ -42,27 +46,17 @@ const User = ({ userId }) => {
   };
  
     const onDeleteUserClicked = async () => {
-      console.log(`usuario ${idUser}`);
       
-     // if (user.user_id !== idUser) {
-      await deleteUser({ id: user.user_id, id_User: idUser });
-    //  }
+      await deleteUser({ id: user.user_id });
+   
     };
-
-
-  //console.log(user)
-
-  //const navigate = useNavigate()
 
   if (user) {
     //const handleEdit = () => navigate(`/dash/users/${userId}`)
 
     const userName = user.user_nombre ? user.user_nombre : "no tiene";
 
-    const userRolesString = user.user_rol.toString().replaceAll(",", ", ");
-
-
-    //const cellStatus = user.user_status ? "activo" : "inactivo";
+    
 
     const errContent = (error?.data?.message || delerror?.data?.message) ?? "";
 
@@ -76,7 +70,7 @@ const User = ({ userId }) => {
         <tr key={userId} onClick={console.log("")}>
           <td>{userName}</td>
           <td id="username">{user.user_name}</td>
-          <td>{userRolesString}</td>
+          <td>{llave}</td>
           <td>
             <input
               type="checkbox"
