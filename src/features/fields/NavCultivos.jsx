@@ -49,7 +49,7 @@ function isCompleted(a){
 
 
 
-const navCultivos = () => {
+const NavCultivos = () => {
     return(
             <>
                 <div className="return-div"><Link to={'/dash'}><div className="return-button">
@@ -57,21 +57,24 @@ const navCultivos = () => {
                 </div></Link></div>
                 <div className="seccion_cultivos">
                         <div>   
-                            <div className='seccion_cultivos_checkbox-div'>
-                                <div><input type="checkBox" className="curso" defaultChecked={true} /><span>Cultivos en curso</span></div>
-                                <div><input type="checkBox" className="finalizados" defaultChecked={false} /><span>Cultivos finalizados</span></div>
-                            </div>
                             <div className="button-section_parent">
                                 <Link to={'/dash/cultivos/nuevo-cultivo'} className="Link">
                                 <button className="btn btn-outline-primary seccion_cultivos_btn-agr">Nuevo cultivo</button>
                                 </Link>
                                 <Link to={'/dash/cultivos/registrar-plantilla'} className="Link">
-                                <button type="button" class="btn btn-outline-secondary seccion_cultivos_btn-agr">Registrar plantilla</button>
+                                <button type="button" class="btn btn-outline-secondary seccion_cultivos_btn-agr">Plantillas de cultivos</button>
                                 </Link>
                                 <Link to={'/dash/cultivos/registrar-actividad'} className="Link">
                                 <button type="button" class="btn btn-outline-secondary seccion_cultivos_btn-agr">Tipos de actividades</button>
                                 </Link>
+                                <Link to={'/dash/cultivos/item-section'} className="Link">
+                                <button type="button" class="btn btn-outline-secondary seccion_cultivos_btn-agr">Materiales y mano de obra</button>
+                                </Link>
                             </div>  
+                        </div>
+                        <div className='seccion_cultivos_checkbox-div'>
+                                <div><input type="checkBox" className="curso" defaultChecked={true} /><span>Cultivos en curso</span></div>
+                                <div><input type="checkBox" className="finalizados" defaultChecked={false} /><span>Cultivos finalizados</span></div>
                         </div>
                     <div className="card-deck cultivos_big-card">
                         <Cultivos />
@@ -80,4 +83,4 @@ const navCultivos = () => {
             </>
     );
 }
-export default navCultivos;
+export default NavCultivos;

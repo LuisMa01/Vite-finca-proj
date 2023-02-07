@@ -56,7 +56,7 @@ const nuevoCultivo = () => {
                 </div>
                 <div className="col-md-3 mb-3">
                     <label for="campo_cultivo">Campo</label>
-                    <select className="dropdown form-control" id="campo_cultivo">
+                    <select className="form-control" id="campo_cultivo">
                         <option disabled selected>Elegir campo</option>
                         <Campos />
                     </select>

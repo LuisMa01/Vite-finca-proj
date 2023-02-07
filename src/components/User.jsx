@@ -7,14 +7,27 @@ import {
 } from "../features/fields/redux/usersApiSlice";
 import { memo } from "react";
 import { Link } from "react-router-dom";
+import RemoveImg from "../images/remove.svg";
+
+import { ROLES } from "../config/roles";
 
 const User = ({ userId }) => {
+  let llave 
   const { user } = useGetUsersQuery("usersList", {
     selectFromResult: ({ data }) => ({
       user: data?.entities[userId],
     }),
   });
-
+  
+  if (user.user_rol==Object.values(ROLES)[0]) {
+    llave = Object.keys(ROLES)[0]
+  }
+  if (user.user_rol==Object.values(ROLES)[1]) {
+    llave = Object.keys(ROLES)[1]
+  }
+  if (user.user_rol==Object.values(ROLES)[2]) {
+    llave = Object.keys(ROLES)[2]
+  }
   const [updateUser, { isLoading, isSuccess, isError, error }] =
     useUpdateUserMutation();
 
@@ -23,32 +36,29 @@ const User = ({ userId }) => {
     { isSuccess: isDelSuccess, isError: isDelError, error: delerror },
   ] = useDeleteUserMutation();
 
-
-
   const onActiveChanged = async (e) => {
-  
-    await updateUser({ id: user.user_id, username: user.user_name, roles: user.rol_user, active: e.target.checked });
-   
-}
-
-  const onDeleteUserClicked = async () => {
-    await deleteUser({ id: user.user_id });
+    await updateUser({
+      id: user.user_id,
+      username: user.user_name,
+      roles: user.user_rol,
+      status: e.target.checked,
+    });
   };
-
-  //console.log(user)
-
-  //const navigate = useNavigate()
+ 
+    const onDeleteUserClicked = async () => {
+      
+      await deleteUser({ id: user.user_id });
+   
+    };
 
   if (user) {
     //const handleEdit = () => navigate(`/dash/users/${userId}`)
 
-    const userName = user.nombres ? user.nombres : "no tiene";
+    const userName = user.user_nombre ? user.user_nombre : "no tiene";
 
-    const userRolesString = user.rol_user.toString().replaceAll(",", ", ");
+    
 
-    const cellStatus = user.activo ? "activo" : "inactivo";
-
-    const errContent = (error?.data?.message || delerror?.data?.message) ?? ''
+    const errContent = (error?.data?.message || delerror?.data?.message) ?? "";
 
     //console.log(`${user.user_id} ${userName} ${userRolesString} ${active} ${errContent}`);
     if (isSuccess) {
@@ -57,29 +67,27 @@ const User = ({ userId }) => {
 
     return (
       <>
-        <ul
-          key={userId}
-          className="user-list_card_item"
-          onClick={console.log("")}
-        >
-          <Link className="Link" to={"/dash/usuario/lista-usuarios/info-user"}>
-            <li>{userName}</li>
-            <li id="username">{user.user_name}</li>
-            <li>{userRolesString}</li>
-          </Link>
-          <li>
+        <tr key={userId} onClick={console.log("")}>
+          <td>{userName}</td>
+          <td id="username">{user.user_name}</td>
+          <td>{llave}</td>
+          <td>
             <input
               type="checkbox"
-              checked={user.activo}
+              checked={user.user_status}
               onChange={onActiveChanged}
             />
-          </li>
-          <li>
+          </td>
+          <td>
             {" "}
-            <button onClick={onDeleteUserClicked}>BORRAR</button>
-          </li>
-        </ul>
-        <div className="linea_horizontal"></div>
+            <img
+              onClick={onDeleteUserClicked}
+              className="remove-img"
+              src={RemoveImg}
+              alt="Remove"
+            />
+          </td>
+        </tr>
       </>
     );
   } else return null;

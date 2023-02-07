@@ -13,14 +13,10 @@
     align-self: center;
     background-color: rgba(20, 120, 255, 0.05);
     text-align: center ;
-    border-radius: 0px;
-    border-width: 0px;
     margin: 75px auto;
     padding: 0 30px 20px;
     width: 85%;
     max-width: 450px;
-    border-style: solid;
-    border-color: black;
     font-size: 1.3rem;
 }
 .pswd-card h1{
@@ -64,27 +60,30 @@
     margin: 0px auto;
     visibility: hidden;
 }
-.button-section{
-    gap: 5px;
-    margin: 10px 0 0 0;
+.card-body .button-section{
     display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
     justify-content: center;
+    font-size: 1rem;
 }
-.button-section button{
-    height: fit-content;
-    min-width: 200px;
-    font-size: 1.3rem;
-    padding: 10px;
-    border: none;
-    border-radius: 2px;
-    cursor: pointer;
-    background: linear-gradient(160deg, #80B0F1, #80C0F7);
+.card-body .button-section button{
+    font-size: 1.1rem;
 }
-.pswd-card_form button:hover{
-    transition: .2s;
-    transform: scale(1.01);
+.card-form:hover{
+    background-color: inherit;
 }
-.pswd-card_form button:active{
-    transition: .2s;
-    box-shadow: inset 0 0 0px 30px hsl(240, 60%, 80%);
+.my-card{
+    margin: 30px auto;
+    background-color: inherit;
+}
+.card-header{
+    margin: -1px;
+}
+.titulo_cambiar{
+    font-size: 1.4rem;
+    text-align: center;
+    width: fit-content;
+    margin: 30px auto -25px;
+    padding: 0;
 }

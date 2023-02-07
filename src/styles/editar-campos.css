@@ -48,3 +48,33 @@
     border-width: 1.5px;
     box-shadow: 0px 3px 10px -5px;
 }
+.editar_campos_description{
+    font-size: 1.2rem;
+    margin: 50px auto 30px;
+}
+.remove-img{
+    padding: 5px;
+    height: 28px;
+    width: auto;
+}
+.remove-img:hover{
+    transition: .3s;
+    filter: invert(23%) sepia(90%) saturate(2387%) hue-rotate(345deg) brightness(98%) contrast(110%);
+}
+.toggle.ios, .toggle-on.ios, .toggle-off.ios {border-radius: 10rem; }
+.toggle.ios .toggle-handle { border-radius: 20rem; }
+.edit-campo-button-section_parent{
+    display: flex;
+    justify-content: center;
+    margin: 0 0 15px;
+    gap: 10px;
+}
+.seccion_campos_checkbox-div{
+    display: flex;
+    margin: 0;
+    padding: 10px 10px;
+    font-size: 1.2rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 10px
+}

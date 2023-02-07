@@ -9,6 +9,8 @@ import { useNavigate } from "react-router-dom";
 
 const USER_REGEX = /^[A-z]{3,20}$/;
 const PWD_REGEX = /^[A-z0-9!@#$%]{4,12}$/;
+const EMAIL_REGEX = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
+const PHONE_REGEX = /^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]*$/;
 
 const NuevoUsuario = () => {
   const [addNewUser, { isLoading, isSuccess, isError, error }] =
@@ -17,7 +19,13 @@ const NuevoUsuario = () => {
   const navigate = useNavigate();
 
   const [username, setUsername] = useState("");
+  const [names, setNames] = useState("");
+  const [surname, setSurname] = useState("");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
+  const [validEmail, setValidEmail] = useState(false);
   const [validUsername, setValidUsername] = useState(false);
+  const [validUserphone, setValidUserphone] = useState(false);
   const [password, setPassword] = useState("");
   const [validPassword, setValidPassword] = useState(false);
   const [roles, setRoles] = useState(3);
@@ -25,46 +33,54 @@ const NuevoUsuario = () => {
   useEffect(() => {
     setValidUsername(USER_REGEX.test(username));
   }, [username]);
-
+  useEffect(() => {
+    setValidEmail(EMAIL_REGEX.test(email));
+  }, [email]);
   useEffect(() => {
     setValidPassword(PWD_REGEX.test(password));
   }, [password]);
+  useEffect(() => {
+    setValidUserphone(PHONE_REGEX.test(phone));
+  }, [phone]);
 
   console.log(roles);
   useEffect(() => {
     if (isSuccess) {
       setUsername("");
+      setNames("");
+      setSurname("");
       setPassword("");
       setRoles(3);
+      setEmail("")
+      setPhone("")
       navigate("/dash/usuario/lista-usuarios");
     }
   }, [isSuccess, navigate]);
 
   const onUsernameChanged = (e) => setUsername(e.target.value);
   const onPasswordChanged = (e) => setPassword(e.target.value);
+  const onEmailChanged = (e) => setEmail(e.target.value);
+  const onNamesChanged = (e) => setNames(e.target.value);
+  const onSurnameChanged = (e) => setSurname(e.target.value);
+  const onPhoneChanged = (e) => setPhone(e.target.value);
+  
 
   const onRolesChanged = (e) => {
-    const values = Array.from(
-      e.target.selectedOptions, //HTMLCollection
-      (option) => option.value
-    );
-
-    setRoles(parseInt(values));
+        setRoles(e.target.value);
   };
 
-  const canSave = [validUsername, validPassword].every(Boolean) && !isLoading;
-
+  const canSave = [validUsername, validPassword, email?validEmail:true, phone?validUserphone:true].every(Boolean) && !isLoading;
+console.log(`${validUsername} ${validPassword} ${email?validEmail:true} ${phone?validUserphone:true}`);
   const onSaveUserClicked = async (e) => {
     e.preventDefault();
-    console.log(`guardar ${e}`);
     if (canSave) {
-      await addNewUser({ username, password, roles });
+      await addNewUser({ username, password, roles, names, surname, email, phone });
     }
   };
 
-  const options = Object.values(ROLES).map((role) => {
+  const options = Object.keys(ROLES).map((role) => {
     return (
-      <option key={role} value={role}>
+      <option key={ROLES[role]} value={ROLES[role]}>
         {" "}
         {role}
       </option>
@@ -81,65 +97,115 @@ const NuevoUsuario = () => {
         </Link>
       </div>
       <h1 className="crear_titulo">Crear usuario</h1>
-      <div className="nuevo-usuario-card">
-        <form className="nuevo-usuario-card_form" onSubmit={onSaveUserClicked}>
-          <div>
-            <p>{error?.data?.message}</p>
-            <div>
-              <label id="username_label" htmlFor="username">
-                Nombre de usuario:
-              </label>
-              <input
-                id="new-user-username"
-                name="username"
-                type="text"
-                autoComplete="off"
-                placeholder="Ej: minombre07"
-                value={username}
-                onChange={onUsernameChanged}
-              />
-            </div>
-            <div>
-              <label id="pswd_label" htmlFor="password">
-                Contraseña:
-              </label>
-              <input
-                id="new-user-pswd"
-                name="password"
-                type="password"
-                placeholder="******"
-                value={password}
-                onChange={onPasswordChanged}
-              />
-            </div>
-            <div>
-              <label htmlFor="role">Cargo</label>
-              <select
-                id="cargo"
-                name="role"
-                className="dropdown"
-                size="3"
-                value={roles}
-                onChange={onRolesChanged}
-              >
-                {options}
-              </select>
-            </div>
-            <div className="button-section">
-              <button id="user-save" disabled={!canSave}>
-                Guardar Usuario
-              </button>
-              <Link
-                className="Link no-crear"
-                id="no-crear"
-                to={"/dash/usuario/lista-usuarios"}
-              >
-                <button>Cancelar</button>
-              </Link>
-            </div>
+
+      {/* A partir de aqui son las modificaciones, esperando no poner otro huevo] */}
+
+      <form className="container col-12 col-sm-11 col-lg-9 bg-light" onSubmit={onSaveUserClicked}>
+        <p className="error-text">{error?.data?.message}</p>
+        <div class="form-row">
+          <div class="col-md-4 mb-3">
+            <label id="username_label" htmlFor="username">Nombre de usuario</label>
+            <input 
+              id="new-user-username"
+              className="form-control"
+              name="username"
+              type="text"
+              autoComplete="off"
+              autoFocus
+              placeholder="Ej: minombre07"
+              value={username}
+              onChange={onUsernameChanged}/>
           </div>
-        </form>
-      </div>
+
+          <div class="col-md-4 mb-3">
+            <label id="username_label" htmlFor="names">Nombres</label>
+            <input 
+              
+              className="form-control"
+              name="names"
+              type="text"
+              autoComplete="off"
+              autoFocus
+              placeholder="Ej: Juan Andres"
+              value={names}
+              onChange={onNamesChanged}/>
+          </div>
+
+
+          <div class="col-md-4 mb-3">
+            <label id="username_label" htmlFor="surname">Apellidos</label>
+            <input 
+              
+              className="form-control"
+              name="surname"
+              type="text"
+              autoComplete="off"
+              autoFocus
+              placeholder="Ej: Gómez Almanzar"
+              value={surname}
+              onChange={onSurnameChanged}/>
+          </div>
+          <div class="col-md-4 mb-3">
+            <label id="username_label" htmlFor="phone">Telefono</label>
+            <input 
+              
+              className="form-control"
+              name="surname"
+              type="text"
+              autoComplete="off"
+              autoFocus
+              placeholder="Ej: 1-809-000-0000"
+              value={phone}
+              onChange={onPhoneChanged}/>
+          </div>
+
+
+
+          <div class="col-md-4 mb-3">
+            <label id="username_label" htmlFor="email">Correo electrónico</label>
+            <input 
+              
+              className="form-control"
+              name="email"
+              type="text"
+              autoComplete="off"
+              autoFocus
+              placeholder="Ej: nombre@ejemplo.com"
+              value={email}
+              onChange={onEmailChanged}/>
+          </div>
+          <div className="col-md-4 mb-3">
+            <label id="pswd_label" htmlFor="password">Contraseña</label>
+            <input
+              id="new-user-pswd"
+              className="form-control"
+              name="password"
+              type="password"
+              placeholder="******"
+              value={password}
+              onChange={onPasswordChanged}/>
+          </div>
+          <div className="col-md-4 mb-3">    
+            <label htmlFor="role">Cargo</label>
+            <select 
+            id="cargo"
+            name="role"
+            className="dropdown form-control"
+            value={roles}
+            onChange={onRolesChanged}>
+              {options}
+            </select>
+          </div>
+        </div>
+
+        <div className="cultivos_button-section">
+          <button className="btn btn-success" id="user-save" disabled={!canSave}>Guardar usuario</button>
+          <Link to={'/dash/usuario/lista-usuarios'} className="Link">
+            <button className="btn btn-danger">Cancelar</button>
+          </Link>
+        </div>
+        
+      </form>
     </>
   );
 

@@ -2,7 +2,7 @@ import React from "react"
 import ReImage from "../../images/return.svg"
 import { Link } from "react-router-dom"
 import "../../styles/registrar-actividad.css"
-import actividades from "../../jsons/tipos-actividades.json"
+import actividades from "../jsons/tipos-actividades.json"
 import RemoveImg from "../../images/remove.svg"
 import Swal from "sweetalert2"
 
@@ -96,4 +96,4 @@ function Delete(a){
           )
         }
       })
-}
+} 

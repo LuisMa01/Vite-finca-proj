@@ -1,69 +1,58 @@
 .crear_titulo{
-        font-size: 2.5rem;
-        text-align: center;
-        align-self: center;
-        justify-self: center;
-        width: fit-content;
-        margin: 50px 10% 0px;
-        padding: 0;
+    font-size: 1.7rem;
+    text-align: center;
+    align-self: center;
+    justify-self: center;
+    width: fit-content;
+    margin: 50px 10% 30px;
+    padding: 0;
 }
 .nuevo-usuario-card{
-    display: flex;
-    flex-direction: column;
-    align-self: center;
-    background-color: rgba(20, 120, 255, 0.3);
-    text-align: center ;
-    border-radius: 10px;
-    border-width: 0px;
-    box-shadow: 0 0 20px 0px;
-    margin-top: 20px;
-    padding: 0 30px 20px;
-    width: fit-content;
-    border-style: solid;
-    border-color: black;
-    font-size: 1.3rem;
+display: flex;
+flex-direction: column;
+align-self: center;
+background-color: #427fe0;
+text-align: center ;
+border-width: 0px;
+margin-top: 20px;
+padding: 0 30px 20px;
+width: fit-content;
+border-style: solid;
+border-color: black;
+font-size: 1.3rem;
+color: white;
 }
 .nuevo-usuario-card_form{
-    margin: 10px 0 -10px 0;
-    font-size: 1.5rem;
-    display: flex;
-    flex-direction: column;
-    padding: 10px;
-    border-width: 1px;
-    border-style: dotted;
-    border-radius: 15px;
+margin: 10px 0 -10px 0;
+font-size: 1.5rem;
+display: flex;
+flex-direction: column;
+padding: 10px;
 }
 .nuevo-usuario-card_form div{
-    display: flex;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    margin: 10px 0 0 0;
+display: flex;
+justify-content: space-between;
+flex-wrap: wrap;
+margin: 10px 0 0 0;
 }
 .nuevo-usuario-card_form div input{
-    height: 30px;
-    margin: 0 10px;
-    padding: 0 5px ;
-    font-size: 1rem;
-    border-radius: 15px;
-    background-color: hsl(240, 10%, 90%);
-    align-self: flex-end;
-    border-width: 1.5px;
-    box-shadow: 0px 3px 10px -5px;
+height: 30px;
+margin: 0 10px;
+padding: 0 5px ;
+font-size: 1rem;
+background-color: hsl(240, 10%, 90%);
+align-self: flex-end;
+border-width: 0;
 }
-.dropdown{
-    height: 30px;
-    margin: 0 50px;
-    padding: 0 5px ;
-    font-size: 1rem;
-    border-radius: 15px;
-    background-color: hsl(240, 10%, 90%);
-    align-self: flex-end;
-    border-width: 1.5px;
-    box-shadow: 0px 3px 10px -5px;
+.mydropdown{
+height: 30px;
+margin: 0 50px;
+padding: 0 5px ;
+font-size: 1rem;
+background-color: hsl(240, 10%, 90%);
+align-self: flex-end;
+border-width: 0;
 }
-@media (max-width: 500px) {
-    .nuevo-usuario-card_form div{
-        flex-direction: column;
-        align-items: center;
-    }
+.error-text{
+    color: red;
 }

@@ -3,11 +3,11 @@ import './App.css'
 import { Routes, Route } from "react-router-dom";
 
 import Layouts from "./components/Layouts";
-import Public from "./components/Public";
+
 import Login from "./features/auth/Login";
 import DashLayout from "./components/DashLayout";
 import Profile from "./features/users/Profile";
-// import Users from "./features/users/Users";
+
 import PersistLogin from "./features/auth/PersistLogin";
 import RequireAuth from "./features/auth/RequireAuth";
 import { ROLES } from "./config/roles";
@@ -25,6 +25,9 @@ import ActInformacion from "./features/fields/ActInformacion"
 import NavCultivos from "./features/fields/NavCultivos";
 import NavCampos from "./features/fields/NavCampos";
 import EditUsuario  from "./features/fields/EditUsuario";
+import RegistrarPlantilla from "./features/fields/RegistrarPlantilla"
+import RegistrarActividad from "./features/fields/RegistrarActvidad";
+import ItemSection from "./features/fields/ItemSection";
 
 
 
@@ -35,8 +38,7 @@ function App() {
   return (
     <Routes>
       <Route path="/" element={<Layouts />}>
-        <Route index element={<Public />} />
-        <Route path="login" element={<Login />} />
+        <Route index element={<Login />} />
 
         <Route element={<PersistLogin />}>
           <Route
@@ -54,6 +56,9 @@ function App() {
               <Route path="cultivos">
                 <Route index element={<NavCultivos />} />
                 <Route path="nuevo-cultivo" element={<NuevoCultivo />} />
+                <Route path="registrar-plantilla" element={<RegistrarPlantilla />} /> 
+                <Route path="registrar-actividad" element={<RegistrarActividad /> } />
+                <Route path="item-section" element={<ItemSection />} />
               </Route>
               <Route path="campos">
                 <Route index element={<NavCampos />}/>
@@ -62,7 +67,7 @@ function App() {
               <Route path="usuario">
                 <Route path="mi-perfil">
                   <Route index element={<MiPerfil />} />
-                  <Route path="act-info" element={<ActInformacion />} />
+                  <Route path="act-info/:id" element={<ActInformacion />} />
                   <Route path="pswd-change" element={<PswdChange />} />
                 </Route>
                 <Route path="lista-usuarios">
