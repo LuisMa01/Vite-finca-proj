@@ -26,14 +26,10 @@ const registrarActividad = () => {
   const [actName, setActname] = useState("");
   const [desc, setDesc] = useState("");
 
-
-  
-
-  const onSaveUserClicked = async (e) => {
+  const onSaveActClicked = async (e) => {
     e.preventDefault();
     
-      await addNewAct({ actName, desc});
-  
+      await addNewAct({ actName, desc});  
   };
 
   const onActNameChanged = (e) => setActname(e.target.value);
@@ -101,7 +97,7 @@ const registrarActividad = () => {
             </div>
           </div>
           <div className="edit-campo-button-section_parent">
-            <button type="submit" onClick={onSaveUserClicked} className="btn btn-outline-primary limpiar">
+            <button type="submit" onClick={onSaveActClicked} className="btn btn-outline-primary limpiar">
               Añadir actividad
             </button>
             <button type="reset" className="btn btn-outline-danger limpiar">

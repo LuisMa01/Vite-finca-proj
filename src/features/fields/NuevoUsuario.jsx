@@ -147,11 +147,11 @@ console.log(`${validUsername} ${validPassword} ${email?validEmail:true} ${phone?
           </div>
           <div class="col-md-4 mb-3">
             <label id="username_label" htmlFor="phone">Telefono</label>
-            <input 
-              
+            <input    
+              type="tel"
+              pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"           
               className="form-control"
-              name="surname"
-              type="text"
+              name="surname"              
               autoComplete="off"
               autoFocus
               placeholder="Ej: 1-809-000-0000"
