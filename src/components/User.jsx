@@ -8,7 +8,7 @@ import {
 import { memo } from "react";
 import { Link } from "react-router-dom";
 import RemoveImg from "../images/remove.svg";
-
+import Swal from "sweetalert2";
 import { ROLES } from "../config/roles";
 
 const User = ({ userId }) => {
@@ -45,12 +45,31 @@ const User = ({ userId }) => {
     });
   };
  
-    const onDeleteUserClicked = async () => {
+    const onDeleteUserClicked = () => {
+      Swal.fire({
+        title: '¿Seguro de eliminar?',
+        text: `Eliminar este usuario afectará todos los datos asociados a esta. Esta acción será irreversible.`,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Sí, eliminar!',
+        cancelButtonText: 'Cancelar'
+      }).then(async (result) => {
+        if (result.isConfirmed) {
+          await deleteUser({ id: user.user_id });
+          Swal.fire(
+            '¡Eliminada!',
+            'Este Usuario ha sido eliminada.',
+            'success'
+          )
+        }
+      })
       
-      await deleteUser({ id: user.user_id });
    
     };
 
+    
   if (user) {
     //const handleEdit = () => navigate(`/dash/users/${userId}`)
 
@@ -96,3 +115,4 @@ const User = ({ userId }) => {
 const memoizedUser = memo(User);
 
 export default memoizedUser;
+

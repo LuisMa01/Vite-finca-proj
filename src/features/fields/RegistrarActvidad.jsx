@@ -6,7 +6,9 @@ import actividades from "../jsons/tipos-actividades.json";
 import RemoveImg from "../../images/remove.svg";
 import Swal from "sweetalert2";
 import Act from "../../components/Act";
-import { useGetActsQuery } from "./redux/actApiSlice";
+import { useGetActsQuery, useAddNewActMutation } from "./redux/actApiSlice";
+import { useState, useEffect } from "react";
+
 const registrarActividad = () => {
   const {
     data: acts,
@@ -19,6 +21,31 @@ const registrarActividad = () => {
     refetchOnFocus: true,
     refetchOnMountOrArgChange: true,
   });
+  const [addNewAct, { isSuccess : addissuccess, isError: addiserror, error: adderror }] = useAddNewActMutation();
+
+  const [actName, setActname] = useState("");
+  const [desc, setDesc] = useState("");
+
+
+  
+
+  const onSaveUserClicked = async (e) => {
+    e.preventDefault();
+    
+      await addNewAct({ actName, desc});
+  
+  };
+
+  const onActNameChanged = (e) => setActname(e.target.value);
+  const onActDescChanged = (e) => setDesc(e.target.value);
+  useEffect(() => {
+    if (addissuccess) {
+      setActname("");
+      setDesc("");      
+    }
+  }, [addissuccess]);
+
+
   let tableContent;
   if (isError) {
     tableContent = <p className="errmsg">{error?.data?.message}</p>;
@@ -56,6 +83,8 @@ const registrarActividad = () => {
                 className="form-control"
                 id="nombre_actividad"
                 placeholder="Actividad X"
+                value={actName}
+                onChange={onActNameChanged}
                 required
               />
             </div>
@@ -66,11 +95,13 @@ const registrarActividad = () => {
                 id="descripcion_actividad"
                 rows="1"
                 placeholder="Esta actividad consiste en..."
+                value={desc}
+                onChange={onActDescChanged}
               ></textarea>
             </div>
           </div>
           <div className="edit-campo-button-section_parent">
-            <button type="submit" className="btn btn-outline-primary limpiar">
+            <button type="submit" onClick={onSaveUserClicked} className="btn btn-outline-primary limpiar">
               Añadir actividad
             </button>
             <button type="reset" className="btn btn-outline-danger limpiar">

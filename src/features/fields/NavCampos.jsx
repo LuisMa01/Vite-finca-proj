@@ -28,7 +28,7 @@ function isCampoEnabled(a){
     return;
 }
 
-const navCampos = () => {
+const navCampos = () => { 
     return(
         <>
             <div className="return-div"><Link to={'/dash'}><div className="return-button">

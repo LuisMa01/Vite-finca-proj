@@ -43,7 +43,7 @@ const NuevoUsuario = () => {
     setValidUserphone(PHONE_REGEX.test(phone));
   }, [phone]);
 
-  console.log(roles);
+  
   useEffect(() => {
     if (isSuccess) {
       setUsername("");

@@ -8,7 +8,7 @@ import {
 import { memo } from "react";
 import { Link } from "react-router-dom";
 import RemoveImg from "../images/remove.svg";
-
+import Swal from "sweetalert2";
 import { ROLES } from "../config/roles";
 
 const Act = ({ actId }) => {
@@ -35,7 +35,27 @@ const Act = ({ actId }) => {
   };
   // id, actName, desc, active
   const onDeleteActClicked = async () => {
-    await deleteAct({ id: act.act_id });
+
+    Swal.fire({
+      title: '¿Seguro de eliminar?',
+      text: `Eliminar esta actividad afectará todos los datos asociados a esta. Esta acción será irreversible.`,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Sí, eliminar!',
+      cancelButtonText: 'Cancelar'
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        await deleteAct({ id: act.act_id });
+        Swal.fire(
+          '¡Eliminada!',
+          'Esta actividad ha sido eliminada.',
+          'success'
+        )
+      }
+    })
+    
   };
 
   if (act) {

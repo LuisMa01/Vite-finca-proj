@@ -6,7 +6,7 @@ import RemoveImg from "../../images/remove.svg"
 import campos from '../jsons/campos.json'
 import Swal from "sweetalert2"
 
-const EditarCampos = () => {
+const EditarCampos = () => { 
     return(
         <>
             <div className="return-div"><Link to={'/dash/campos'}><div className="return-button">
