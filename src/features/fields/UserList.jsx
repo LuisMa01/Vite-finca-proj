@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 import User from "../../components/User";
 
 import { useGetUsersQuery } from "./redux/usersApiSlice";
-import { useGetPlantsQuery } from "./redux/plantApiSlice";
+
 
 const userList = () => {
   const {
