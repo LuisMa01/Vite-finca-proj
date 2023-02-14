@@ -59,7 +59,7 @@ const NavCultivos = () => {
                         <div>   
                             <div className="button-section_parent">
                                 <Link to={'/dash/cultivos/nuevo-cultivo'} className="Link">
-                                <button className="btn btn-outline-primary seccion_cultivos_btn-agr">Nuevo cultivo</button>
+                                <button className="btn btn-outline-primary seccion_cultivos_btn-agr">Cultivo</button>
                                 </Link>
                                 <Link to={'/dash/cultivos/registrar-plantilla'} className="Link">
                                 <button type="button" class="btn btn-outline-secondary seccion_cultivos_btn-agr">Plantillas de cultivos</button>
