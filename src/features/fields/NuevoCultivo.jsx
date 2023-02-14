@@ -4,6 +4,10 @@ import ReImage from "../../images/return.svg"
 import { Link } from 'react-router-dom'
 import '../../styles/nuevo-cultivo.css'
 import campos from '../jsons/campos.json'
+import {
+    useGetCropsQuery,
+    useAddNewCropMutation,
+  } from "./redux/cropApiSlice";
 
 
 const Campos = () => {
@@ -22,6 +26,34 @@ function isCampoEnabled(a){
 }
 
 const nuevoCultivo = () => {
+    const {
+        data: crops,
+        isLoading,
+        isSuccess,
+        isError,
+        error,
+      } = useGetCropsQuery("cropsList", {
+        pollingInterval: 60000,
+        refetchOnFocus: true,
+        refetchOnMountOrArgChange: true,
+      });
+      const [
+        addNewCrop,
+        { isSuccess: addissuccess, isError: addiserror, error: adderror },
+      ] = useAddNewCropMutation();
+      
+      //username, cropName, datePlant, dateHarvest, finalProd, cropCampKey, cropPlantKey
+      const [cropName, setCropName] = useState("");
+      const [datePlant, setCropPlant] = useState({varOne:new Date()});
+      const [dateHarvest, setCropHarvest] = useState({varOne:new Date()});
+      const [finalProd, setCropProd] = useState("");
+      const [cropCampKey, setCropCamp] = useState(0);
+      const [cropPlantKey, setCropPlantKey] = useState(0);
+
+
+
+
+
     return(
         <>
             <div className="return-div"><Link to={'/dash/cultivos'}><div className="return-button">

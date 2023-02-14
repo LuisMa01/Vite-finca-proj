@@ -10,7 +10,7 @@ import {
 } from "./redux/plantApiSlice";
 import { useState, useEffect } from "react";
 import Plant from "../../components/Plant";
-
+ 
 
 const RegistrarPlanta = () => {
   const {
