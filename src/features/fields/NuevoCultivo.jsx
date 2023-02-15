@@ -6,9 +6,9 @@ import "../../styles/nuevo-cultivo.css";
 import { useGetCropsQuery, useAddNewCropMutation } from "./redux/cropApiSlice";
 import { useGetCampsQuery } from "./redux/campApiSlice";
 import { useGetPlantsQuery } from "./redux/plantApiSlice";
+import { useGetUsersQuery } from "./redux/usersApiSlice";
 import { useEffect, useState } from "react";
 import Crop from "../../components/Crop";
-
 
 const nuevoCultivo = () => {
   const {
@@ -34,33 +34,59 @@ const nuevoCultivo = () => {
     refetchOnFocus: true,
     refetchOnMountOrArgChange: true,
   });
+  const { data: rpuser, isSuccess: useSucc } = useGetUsersQuery("usersList", {
+    pollingInterval: 60000,
+    refetchOnFocus: true,
+    refetchOnMountOrArgChange: true,
+  });
 
-  let plantOption
-if (plantSucc) {
+  let userOption;
+  if (useSucc) {
+    const { ids, entities } = rpuser;
+
+    userOption = ids.map((Id) => {
+      if (entities[Id].user_status) {
+        console.log(`${entities[Id].user_id}   ${Id}`);
+        return (
+          <option key={Id} value={entities[Id].user_id}>
+            {entities[Id].user_nombre
+              ? entities[Id].user_nombre
+              : entities[Id].user_name}
+          </option>
+        );
+      }
+    });
+  }
+
+  let plantOption;
+  if (plantSucc) {
     const { ids, entities } = plts;
 
-  plantOption = ids.map((Id) => {
-    if (entities[Id].plant_status) {
-        return <option key={Id} value={Id}>{entities[Id].plant_name}</option>;
-    }
-    
-  });
-    
-}
+    plantOption = ids.map((Id) => {
+      if (entities[Id].plant_status) {
+        return (
+          <option key={Id} value={Id}>
+            {entities[Id].plant_name}
+          </option>
+        );
+      }
+    });
+  }
 
-let campOption
-if (campSucc) {
+  let campOption;
+  if (campSucc) {
     const { ids, entities } = cmp;
 
     campOption = ids.map((Id) => {
-        if (entities[Id].camp_status) {
-            return <option key={Id} value={Id}>{entities[Id].camp_name}</option>; 
-        }
-    
-  });
-    
-}
-  
+      if (entities[Id].camp_status) {
+        return (
+          <option key={Id} value={Id}>
+            {entities[Id].camp_name}
+          </option>
+        );
+      }
+    });
+  }
 
   const [
     addNewCrop,
@@ -69,6 +95,7 @@ if (campSucc) {
 
   //username, cropName, datePlant, dateHarvest, finalProd, cropCampKey, cropPlantKey
   const [cropName, setCropName] = useState("");
+  const [repUser, setRepUser] = useState(0);
   const [datePlant, setCropPlant] = useState();
   const [dateHarvest, setCropHarvest] = useState();
   const [finalProd, setCropProd] = useState("");
@@ -77,9 +104,8 @@ if (campSucc) {
 
   const onSaveCropClicked = async (e) => {
     e.preventDefault();
-    console.log(`${cropName} ${datePlant} ${dateHarvest} ${finalProd} ${cropCampKey} ${cropPlantKey}`);
-
     await addNewCrop({
+      repUser,
       cropName,
       datePlant,
       dateHarvest,
@@ -89,6 +115,7 @@ if (campSucc) {
     });
   };
   const onCropNameChanged = (e) => setCropName(e.target.value);
+  const onRepUserChanged = (e) => setRepUser(e.target.value);
   const onCropPlantChanged = (e) => setCropPlant(e.target.value);
   const onCropHarvestChanged = (e) => setCropHarvest(e.target.value);
   const onCropFinalProdChanged = (e) => setCropProd(e.target.value);
@@ -98,11 +125,12 @@ if (campSucc) {
   useEffect(() => {
     if (addissuccess) {
       setCropName("");
+      setRepUser(0);
       setCropPlant();
       setCropHarvest();
       setCropProd("");
-      setCropCamp(0);
-      setCropPlantKey(0);
+      setCropCamp();
+      setCropPlantKey();
     }
   }, [addissuccess]);
 
@@ -168,7 +196,7 @@ if (campSucc) {
           */}
         </div>
         <div className="form-row">
-         {/* <div className="col-md-3 mb-3">
+          {/* <div className="col-md-3 mb-3">
             <label for="area_cultivo">Area</label>
             <input
               type="text"
@@ -190,8 +218,27 @@ if (campSucc) {
             />
           </div>
           <div className="col-md-3 mb-3">
+            <label for="campo_cultivo">Responsable</label>
+            <select
+              className="form-control"
+              id="campo_cultivo"
+              value={repUser}
+              onChange={onRepUserChanged}
+            >
+              <option disabled selected>
+                Elegir Responsable
+              </option>
+              {userOption}
+            </select>
+          </div>
+          <div className="col-md-3 mb-3">
             <label for="campo_cultivo">Plantas</label>
-            <select className="form-control" id="campo_cultivo" value={cropPlantKey} onChange={onCropPlantKeyChanged} >
+            <select
+              className="form-control"
+              id="campo_cultivo"
+              value={cropPlantKey}
+              onChange={onCropPlantKeyChanged}
+            >
               <option disabled selected>
                 Elegir Planta
               </option>
@@ -200,7 +247,12 @@ if (campSucc) {
           </div>
           <div className="col-md-3 mb-3">
             <label for="campo_cultivo">Campos</label>
-            <select className="form-control" id="campo_cultivo" value={cropCampKey} onChange={onCropCampChanged} >
+            <select
+              className="form-control"
+              id="campo_cultivo"
+              value={cropCampKey}
+              onChange={onCropCampChanged}
+            >
               <option disabled selected>
                 Elegir Campo
               </option>

@@ -11,7 +11,6 @@ import RemoveImg from "../images/remove.svg";
 import Swal from "sweetalert2";
 import { ROLES } from "../config/roles";
 
-
 const Crop = ({ cropId }) => {
   const { crop } = useGetCropsQuery("cropsList", {
     selectFromResult: ({ data }) => ({
@@ -20,7 +19,7 @@ const Crop = ({ cropId }) => {
   });
 
   const [updateCrop, { isLoading, isSuccess, isError, error }] =
-  useUpdateCropMutation();
+    useUpdateCropMutation();
 
   const [
     deleteCrop,
@@ -41,27 +40,21 @@ const Crop = ({ cropId }) => {
   };
   //id, cropName, datePlant, dateHarvest, finalProd, cropCampKey, cropPlantKey, active
   const onDeleteCropClicked = async () => {
-
     Swal.fire({
-      title: '¿Seguro de eliminar?',
+      title: "¿Seguro de eliminar?",
       text: `Eliminar esta cultivo afectará todos los datos asociados a esta. Esta acción será irreversible.`,
-      icon: 'warning',
+      icon: "warning",
       showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Sí, eliminar!',
-      cancelButtonText: 'Cancelar'
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Sí, eliminar!",
+      cancelButtonText: "Cancelar",
     }).then(async (result) => {
       if (result.isConfirmed) {
         await deleteCrop({ id: crop.crop_id });
-        Swal.fire(
-          '¡Eliminada!',
-          'Esta cultivo ha sido eliminada.',
-          'success'
-        )
+        Swal.fire("¡Eliminada!", "Esta cultivo ha sido eliminada.", "success");
       }
-    })
-    
+    });
   };
 
   if (crop) {
@@ -78,7 +71,11 @@ const Crop = ({ cropId }) => {
 
     const contenido = (
       <tr key={cropId}>
-        <td>{cropname}</td>
+        <td>
+          <Link to={`/dash/cultivos/info-cultivo/${cropId}`}>
+            <div type="button">{cropname}</div>
+          </Link>
+        </td>
         <td>
           <input
             type="checkbox"
