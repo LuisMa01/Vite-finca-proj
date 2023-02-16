@@ -42,7 +42,7 @@ const Crop = ({ cropId }) => {
   const onDeleteCropClicked = async () => {
     Swal.fire({
       title: "¿Seguro de eliminar?",
-      text: `Eliminar esta cultivo afectará todos los datos asociados a esta. Esta acción será irreversible.`,
+      text: `Eliminar este cultivo afectará todos los datos asociados a este. Esta acción será irreversible.`,
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#3085d6",
@@ -52,7 +52,7 @@ const Crop = ({ cropId }) => {
     }).then(async (result) => {
       if (result.isConfirmed) {
         await deleteCrop({ id: crop.crop_id });
-        Swal.fire("¡Eliminada!", "Esta cultivo ha sido eliminada.", "success");
+        Swal.fire("¡Eliminado!", "Este cultivo ha sido eliminado.", "success");
       }
     });
   };

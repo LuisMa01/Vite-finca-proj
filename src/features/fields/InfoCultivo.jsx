@@ -1,4 +1,5 @@
 import React from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useGetCropsQuery, useUpdateCropMutation } from "./redux/cropApiSlice";
 import ReImage from "../../images/return.svg";
@@ -11,38 +12,95 @@ import {
   useDeleteDateMutation,
 } from "./redux/appApiSlice";
 import { useGetActsQuery } from "./redux/actApiSlice";
+import { useGetUsersQuery } from "./redux/usersApiSlice";
+import AppDate from "../../components/AppDate";
 
 const infoCultivo = () => {
   const { id } = useParams();
-
-  console.log(`Esto va ${id}`);
+  const [actKey, setActKey] = useState();
+  const [dateInit, setDateInit] = useState();
+  const [dateEnd, setDateEnd] = useState();
+  const [userRep, setUserRep] = useState();
 
   const { crop } = useGetCropsQuery("cropsList", {
     selectFromResult: ({ data }) => ({
       crop: data?.entities[id],
     }),
   });
-  console.log(crop);
+  const { data: rpuser } = useGetUsersQuery("usersList", {
+    pollingInterval: 60000,
+    refetchOnFocus: true,
+    refetchOnMountOrArgChange: true,
+  });
+  const { data: dates, isError: dateIsError, error: dateError } = useGetDatesQuery("datesList", {
+    pollingInterval: 60000,
+    refetchOnFocus: true,
+    refetchOnMountOrArgChange: true,
+  });
+
+  const { data: activ } = useGetActsQuery("actsList", {
+    pollingInterval: 60000,
+    refetchOnFocus: true,
+    refetchOnMountOrArgChange: true,
+  });
+
+  console.log("hasta aqui");
+
+  const [
+    addNewDate,
+    { isSuccess: addDateSuc, isError: addDateIserror, error: addDateerror },
+  ] = useAddNewDateMutation();
+
+  const onAddActClicked = async (e) => {
+    e.preventDefault();
+    await addNewDate({
+      actKey,
+      userRep,
+      dateInit,
+      dateEnd,
+      cropKey: crop.crop_id,
+      plantId: crop.crop_plant_key,
+    });
+  };
+
+  //userRep, dateInit, dateEnd, actKey, cropKey, plantId
+
+  const onActKeyChanged = (e) => setActKey(e.target.value);
+  const onDateInitChanged = (e) => setDateInit(e.target.value);
+  const onDateEndChanged = (e) => setDateEnd(e.target.value);
+  const onUserRepChanged = (e) => setUserRep(e.target.value);
+
+  useEffect(() => {
+    if (addDateSuc) {
+      setActKey();
+      setDateInit();
+      setDateEnd();
+      setUserRep();
+    }
+  }, [addDateSuc]);
 
   let cropName;
   let contenido;
-  if (crop) {
-    const {
-      data: dates,
-      isSuccess: dateSucc,
-      isError,
-      error,
-    } = useGetDatesQuery("datesList", {
-      pollingInterval: 60000,
-      refetchOnFocus: true,
-      refetchOnMountOrArgChange: true,
-    });
+  let userOption;
+  if (rpuser) {
+    const { ids, entities } = rpuser;
 
-    const { data: activ } = useGetActsQuery("actsList", {
-      pollingInterval: 60000,
-      refetchOnFocus: true,
-      refetchOnMountOrArgChange: true,
+    userOption = ids.map((Id) => {
+      if (entities[Id].user_status) {
+        console.log(`${entities[Id].user_id}   ${Id}`);
+        return (
+          <option key={Id} value={entities[Id].user_id}>
+            {entities[Id].user_nombre
+              ? entities[Id].user_nombre
+              : entities[Id].user_name}
+          </option>
+        );
+      }
     });
+  }
+
+  if (crop) {
+    //para asegurar que obtenga los datos del cultivo
 
     let actOption;
     if (activ) {
@@ -60,33 +118,22 @@ const infoCultivo = () => {
     }
 
     let dateList;
-    if (isError) {
-      dateList = <p className="errmsg">{error?.data?.message}</p>;
+    if (dateIsError) {
+      dateList = <p className="errmsg">{dateError?.data?.message}</p>;
     }
-    if (dateSucc) {
+    if (dates) {
       const { ids, entities } = dates;
 
       dateList =
         ids?.length &&
         ids.map((Id) => {
-          if ((entities[Id].date_crop_key = crop.crop_id)) {
-            const { act } = useGetActsQuery("actsList", {
-              selectFromResult: ({ data }) => ({
-                act: data?.entities[entities[Id].crop_act_key],
-              }),
-            });
-            return (
-              <tr key={act.act_id}>
-                <td>{act.act_name}</td>
-                <td>{entities[Id].date_init}</td>
-                <td>{entities[Id].date_end}</td>
-              </tr>
-            );
+          if ((entities[Id].date_crop_key == crop.crop_id)) {
+            return <AppDate key={Id} dateId={Id} />;
           }
         });
     }
 
-    console.log(crop.crop_name);
+    
     cropName = crop.crop_name ? crop.crop_name : "no tiene";
     contenido = (
       <>
@@ -101,12 +148,61 @@ const infoCultivo = () => {
         <div className="form-row bg-light">
           <div className="col-md-3 mb-3">
             <label for="campo_cultivo">Actividad</label>
-            <select className="form-control" id="campo_cultivo">
+            <select
+              className="form-control"
+              id="campo_cultivo"
+              value={actKey}
+              onChange={onActKeyChanged}
+            >
               <option disabled selected>
                 Elegir actividad
               </option>
               {actOption}
             </select>
+          </div>
+          <div className="col-md-3 mb-3">
+            <label for="campo_cultivo">Responsable de la actividad</label>
+            <select
+              className="form-control"
+              id="campo_cultivo"
+              value={userRep}
+              onChange={onUserRepChanged}
+            >
+              <option disabled selected>
+                Elegir Responsable
+              </option>
+              {userOption}
+            </select>
+          </div>
+          <div className="col-md-3 mb-3">
+            <label for="siembra_cultivo">Fecha de Inicio</label>
+            <input
+              type="date"
+              className="form-control"
+              id="siembra_cultivo"
+              value={dateInit}
+              onChange={onDateInitChanged}
+            />
+          </div>
+          <div className="col-md-3 mb-3">
+            <label for="siembra_cultivo">Fecha de Fin</label>
+            <input
+              type="date"
+              className="form-control"
+              id="siembra_cultivo"
+              value={dateEnd}
+              onChange={onDateEndChanged}
+            />
+          </div>
+
+          <div className="cultivos_button-section">
+            <button
+              className="btn btn-success"
+              onClick={onAddActClicked}
+              type="submit"
+            >
+              Agregar Actividad
+            </button>
           </div>
         </div>
 
@@ -121,6 +217,12 @@ const infoCultivo = () => {
               </th>
               <th className="align-middle" scope="col">
                 Fecha de Fin
+              </th>
+              <th className="align-middle" scope="col">
+                Responsable
+              </th>
+              <th className="align-middle" scope="col">
+                Eliminar
               </th>
             </thead>
             <tbody>

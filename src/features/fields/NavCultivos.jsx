@@ -11,15 +11,15 @@ const Cultivos = () => {
                 <div className="card">
                     <h5 className="card-header">{item.name}</h5>
                     <ul className='cultivos_general'>
-                        <li><b>Variedad: </b>{item.variedad}</li>
-                        <li><b>Área: </b>{item.area} tareas</li>
-                        <li><b>Marco de plantacion: </b>{item.marco_plantacion}</li>
-                        <li><b>Campo#: </b>{item.campo}</li>
-                        <li><b>Fecha de siembra: </b>{item.fecha_siembra}</li>
-                        <li><b>Fecha de cosecha: </b>{item.fecha_cosecha}</li>
-                        <li><b>Producto final: </b>{item.producto_final}</li>
-                        <li><b>Costo acumulado: </b>${numberWithCommas(item.costo)}</li>
-                        <li><b>Finalizado: </b>{isCompleted(item.finalizado)}</li>
+                        <li className='col-12'><b>Variedad: </b>{item.variedad}</li>
+                        <li className='col-12'><b>Área: </b>{item.area} tareas</li>
+                        <li className='col-12'><b>Marco de plantacion: </b>{item.marco_plantacion}</li>
+                        <li className='col-12'><b>Campo#: </b>{item.campo}</li>
+                        <li className='col-12'><b>Fecha de siembra: </b>{item.fecha_siembra}</li>
+                        <li className='col-12'><b>Fecha de cosecha: </b>{item.fecha_cosecha}</li>
+                        <li className='col-12'><b>Producto final: </b>{item.producto_final}</li>
+                        <li className='col-12'><b>Costo acumulado: </b>${numberWithCommas(item.costo)}</li>
+                        <li className='col-12'><b>Finalizado: </b>{isCompleted(item.finalizado)}</li>
                     </ul>
                 </div>
             </div>
@@ -57,7 +57,7 @@ const NavCultivos = () => {
                 </div></Link></div>
                 <div className="seccion_cultivos">
                         <div>   
-                            <div className="button-section_parent">
+                            <div className="button-section_parent ">
                                 <Link to={'/dash/cultivos/nuevo-cultivo'} className="Link">
                                 <button className="btn btn-outline-primary seccion_cultivos_btn-agr">Cultivo</button>
                                 </Link>

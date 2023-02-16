@@ -58,11 +58,23 @@ const User = ({ userId }) => {
       }).then(async (result) => {
         if (result.isConfirmed) {
           await deleteUser({ id: user.user_id });
-          Swal.fire(
-            '¡Eliminada!',
-            'Este Usuario ha sido eliminada.',
-            'success'
-          )
+          if (isDelSuccess) {
+            Swal.fire(
+              "¡Eliminada!",
+              "Esta Usurio ha sido eliminada.",
+              "success"
+            );
+          } else {
+            Swal.fire(              
+              "No se puede eliminar Usuario",
+            );
+          }
+          if (isDelError) {
+            Swal.fire(
+              "¡No se pudo eliminar!",
+              `${delerror?.data?.message}.`
+            );
+          } 
         }
       })
       
