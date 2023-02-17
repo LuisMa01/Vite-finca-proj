@@ -75,7 +75,7 @@ const userList = () => {
         </div>
         <div className="table-container col-12 col-md-9 col-xl-6">
           <table className="table table-hover table-sm table-striped table-responsive-sm table-bordered">
-            <thead className="thead-blue">
+            <thead className="thead-loyola">
               <th className="align-middle" scope="col">
                 Nombre
               </th>

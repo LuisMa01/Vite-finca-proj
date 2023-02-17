@@ -1,6 +1,7 @@
 import React from "react";
 import { useGetUsersQuery } from "./redux/usersApiSlice";
 import ReImage from "../../images/return.svg";
+import PeopleImg from "../../images/users.svg"
 import "../../styles/mi_perfil.css";
 import { Link } from "react-router-dom";
 import useAuth from "../../hooks/useAuth";
@@ -79,9 +80,13 @@ const MiPerfil = () => {
       </div>
       <h1 className="encabezado">Mi información</h1>
       <div className="profile-card">
-        <h2>
-          {nombre} {apellido}
-        </h2>
+        <div className="name-header">
+          <h2>
+            {nombre} {apellido}
+          </h2>
+          <div className="small-icon-container"><img className="reduced-icon" src={PeopleImg} alt="."/></div>
+        </div>
+        
         <p className="p-cargo">{llave}</p>
         <p>
           <b>Usuario: </b> {username}

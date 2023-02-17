@@ -30,7 +30,7 @@ const navProximas = () => {
                     Estas son las próximas actividades a realizar en la finca, de todos los campos y cultivos
                 </p>
                 <div className="table-container col-12 col-md-10 col-lg-8"><table className="table table-hover table-sm table-striped table-responsive-sm table-bordered">
-                    <thead className="thead-blue">
+                    <thead className="thead-loyola">
                         <th className="align-middle" scope="col">Actividad</th>
                         <th className="align-middle" scope="col">Cultivo</th>
                         <th className="align-middle" scope="col">Campo</th>

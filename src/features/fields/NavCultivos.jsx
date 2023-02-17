@@ -9,7 +9,7 @@ const Cultivos = () => {
         cultivos.map((item) => (
             <div className="big-cont col-12 col-sm-6 col-md-4 col-xl-3" style={allOrSome(item.finalizado)}>
                 <div className="card">
-                    <h5 className="card-header">{item.name}</h5>
+                    <div className="card-header rounded"><h5>{item.name}</h5></div>
                     <ul className='cultivos_general'>
                         <li className='col-12'><b>Variedad: </b>{item.variedad}</li>
                         <li className='col-12'><b>Área: </b>{item.area} tareas</li>
