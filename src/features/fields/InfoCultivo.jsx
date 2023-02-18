@@ -17,10 +17,10 @@ import AppDate from "../../components/AppDate";
 
 const infoCultivo = () => {
   const { id } = useParams();
-  const [actKey, setActKey] = useState();
-  const [dateInit, setDateInit] = useState();
-  const [dateEnd, setDateEnd] = useState();
-  const [userRep, setUserRep] = useState();
+  const [actKey, setActKey] = useState("");
+  const [dateInit, setDateInit] = useState(null);
+  const [dateEnd, setDateEnd] = useState(null);
+  const [userRep, setUserRep] = useState("");
 
   const { crop } = useGetCropsQuery("cropsList", {
     selectFromResult: ({ data }) => ({
@@ -32,7 +32,11 @@ const infoCultivo = () => {
     refetchOnFocus: true,
     refetchOnMountOrArgChange: true,
   });
-  const { data: dates, isError: dateIsError, error: dateError } = useGetDatesQuery("datesList", {
+  const {
+    data: dates,
+    isError: dateIsError,
+    error: dateError,
+  } = useGetDatesQuery("datesList", {
     pollingInterval: 60000,
     refetchOnFocus: true,
     refetchOnMountOrArgChange: true,
@@ -53,6 +57,9 @@ const infoCultivo = () => {
 
   const onAddActClicked = async (e) => {
     e.preventDefault();
+    console.log(
+      `${actKey} ${userRep} ${dateInit} ${dateEnd} ${crop.crop_id} ${crop.crop_plant_key}`
+    );
     await addNewDate({
       actKey,
       userRep,
@@ -63,46 +70,58 @@ const infoCultivo = () => {
     });
   };
 
-  //userRep, dateInit, dateEnd, actKey, cropKey, plantId
+  //userRep, dateInit, dateEnd, actKey, cropKey, plantId , userRep, dateInit, dateEnd, actKey, cropKey, plantId
 
-  const onActKeyChanged = (e) => setActKey(e.target.value);
-  const onDateInitChanged = (e) => setDateInit(e.target.value);
-  const onDateEndChanged = (e) => setDateEnd(e.target.value);
-  const onUserRepChanged = (e) => setUserRep(e.target.value);
+  const onActKeyChanged = (e) => {
+    e.preventDefault();
+    setActKey(e.target.value);
+  };
+  const onDateInitChanged = (e) => {
+    e.preventDefault();
+    setDateInit(e.target.value);
+  };
+  const onDateEndChanged = (e) => {
+    e.preventDefault();
+    setDateEnd(e.target.value);
+  };
+  const onUserRepChanged = (e) => {
+    e.preventDefault();
+    setUserRep(e.target.value);
+  };
 
   useEffect(() => {
     if (addDateSuc) {
-      setActKey();
-      setDateInit();
-      setDateEnd();
-      setUserRep();
+      setActKey("");
+      setDateInit(null);
+      setDateEnd(null);
+      setUserRep("");
     }
   }, [addDateSuc]);
 
   let cropName;
   let contenido;
   let userOption;
-  if (rpuser) {
-    const { ids, entities } = rpuser;
-
-    userOption = ids.map((Id) => {
-      if (entities[Id].user_status) {
-        console.log(`${entities[Id].user_id}   ${Id}`);
-        return (
-          <option key={Id} value={entities[Id].user_id}>
-            {entities[Id].user_nombre
-              ? entities[Id].user_nombre
-              : entities[Id].user_name}
-          </option>
-        );
-      }
-    });
-  }
+  let actOption;
 
   if (crop) {
     //para asegurar que obtenga los datos del cultivo
 
-    let actOption;
+    if (rpuser) {
+      const { ids, entities } = rpuser;
+
+      userOption = ids.map((Id) => {
+        if (entities[Id].user_status) {
+          console.log(`${entities[Id].user_id}   ${Id}`);
+          return (
+            <option key={Id} value={entities[Id].user_id}>
+              {entities[Id].user_nombre
+                ? entities[Id].user_nombre
+                : entities[Id].user_name}
+            </option>
+          );
+        }
+      });
+    }
     if (activ) {
       const { ids, entities } = activ;
 
@@ -127,13 +146,12 @@ const infoCultivo = () => {
       dateList =
         ids?.length &&
         ids.map((Id) => {
-          if ((entities[Id].date_crop_key == crop.crop_id)) {
+          if (entities[Id].date_crop_key == crop.crop_id) {
             return <AppDate key={Id} dateId={Id} />;
           }
         });
     }
 
-    
     cropName = crop.crop_name ? crop.crop_name : "no tiene";
     contenido = (
       <>
@@ -144,52 +162,46 @@ const infoCultivo = () => {
             </div>
           </Link>
         </div>
+
         <div className="nuevo-cultivo-header">{cropName}</div>
-        <div className="form-row bg-light">
-          <div className="col-md-3 mb-3">
-            <label for="campo_cultivo">Actividad</label>
+        <form>
+        <div className="new-activity-miniform d-flex justify-content-center col-12 col-md-10 col-xl-9 form-row bg-light">
+          <div className="col-md-6 col-lg-3 mb-3">
+            <label htmlFor="campo_cultivo">Actividad</label>
             <select
               className="form-control"
-              id="campo_cultivo"
               value={actKey}
               onChange={onActKeyChanged}
             >
-              <option disabled selected>
-                Elegir actividad
-              </option>
+              <option disabled value={""}>Elegir actividad</option>
               {actOption}
             </select>
           </div>
-          <div className="col-md-3 mb-3">
-            <label for="campo_cultivo">Responsable de la actividad</label>
+          <div className="col-md-6 col-lg-3 mb-3">
+            <label htmlFor="campo_cultivo">Responsable de la actividad</label>
             <select
               className="form-control"
-              id="campo_cultivo"
               value={userRep}
               onChange={onUserRepChanged}
             >
-              <option disabled selected>
-                Elegir Responsable
-              </option>
+              <option disabled value={""}>Elegir Responsable</option>
               {userOption}
             </select>
           </div>
-          <div className="col-md-3 mb-3">
-            <label for="siembra_cultivo">Fecha de Inicio</label>
+          <div className="col-md-6 col-lg-3 mb-3">
+            <label htmlFor="siembra_cultivo">Fecha de Inicio</label>
             <input
               type="date"
               className="form-control"
-              id="siembra_cultivo"
               value={dateInit}
               onChange={onDateInitChanged}
             />
           </div>
-          <div className="col-md-3 mb-3">
-            <label for="siembra_cultivo">Fecha de Fin</label>
+          <div className="col-md-6 col-lg-3 mb-3">
+            <label htmlFor="siembra_cultivo">Fecha de Fin</label>
             <input
               type="date"
               className="form-control"
-              id="siembra_cultivo"
               value={dateEnd}
               onChange={onDateEndChanged}
             />
@@ -205,6 +217,7 @@ const infoCultivo = () => {
             </button>
           </div>
         </div>
+        </form>
 
         <div className="table-container col-12 col-md-9 col-xl-6">
           <table className="table table-hover table-sm table-striped table-responsive-sm table-bordered">

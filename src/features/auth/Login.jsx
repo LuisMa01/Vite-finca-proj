@@ -123,7 +123,6 @@ const Login = () => {
           <img className="bottom-image" src={LeafImg} alt="" />
           <input
             type="text"
-            id="username"
             className="login-input"
             placeholder="Nombre de usuario"
             value={username}
@@ -135,8 +134,7 @@ const Login = () => {
           <div className="pswd-div">
             <input
               type="password"
-              id="password"
-              class="login-input password"
+              className="login-input password"
               placeholder="Contraseña"
               onChange={handlePwdInput}
               value={password}

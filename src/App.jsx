@@ -30,6 +30,7 @@ import RegistrarActividad from "./features/fields/RegistrarActvidad";
 import ItemSection from "./features/fields/ItemSection";
 import RegistrarPlanta from "./features/fields/RegistrarPlanta";
 import InfoCultivo from "./features/fields/InfoCultivo";
+import InfoAppCult from "./features/fields/InfoAppCult";
 
 
 
@@ -58,6 +59,7 @@ function App() {
                 <Route index element={<NavCultivos />} />
                 <Route path="nuevo-cultivo" element={<NuevoCultivo />} />
                 <Route path="info-cultivo/:id" element={<InfoCultivo />} />
+                <Route path="info-app/:id" element={<InfoAppCult />} />
                 <Route path="registrar-plantilla" element={<RegistrarPlantilla />} /> 
                 <Route path="registrar-planta" element={<RegistrarPlanta />} /> 
                 <Route path="registrar-actividad" element={<RegistrarActividad /> } />

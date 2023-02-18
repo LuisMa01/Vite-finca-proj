@@ -12,21 +12,21 @@ import Swal from "sweetalert2";
 import { ROLES } from "../config/roles";
 
 const User = ({ userId }) => {
-  let llave 
+  let llave;
   const { user } = useGetUsersQuery("usersList", {
     selectFromResult: ({ data }) => ({
       user: data?.entities[userId],
     }),
   });
-  
-  if (user.user_rol==Object.values(ROLES)[0]) {
-    llave = Object.keys(ROLES)[0]
+
+  if (user.user_rol == Object.values(ROLES)[0]) {
+    llave = Object.keys(ROLES)[0];
   }
-  if (user.user_rol==Object.values(ROLES)[1]) {
-    llave = Object.keys(ROLES)[1]
+  if (user.user_rol == Object.values(ROLES)[1]) {
+    llave = Object.keys(ROLES)[1];
   }
-  if (user.user_rol==Object.values(ROLES)[2]) {
-    llave = Object.keys(ROLES)[2]
+  if (user.user_rol == Object.values(ROLES)[2]) {
+    llave = Object.keys(ROLES)[2];
   }
   const [updateUser, { isLoading, isSuccess, isError, error }] =
     useUpdateUserMutation();
@@ -44,50 +44,35 @@ const User = ({ userId }) => {
       status: e.target.checked,
     });
   };
- 
-    const onDeleteUserClicked = () => {
-      Swal.fire({
-        title: '¿Seguro de eliminar?',
-        text: `Eliminar este usuario afectará todos los datos asociados a esta. Esta acción será irreversible.`,
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Sí, eliminar!',
-        cancelButtonText: 'Cancelar'
-      }).then(async (result) => {
-        if (result.isConfirmed) {
-          await deleteUser({ id: user.user_id });
-          if (isDelSuccess) {
-            Swal.fire(
-              "¡Eliminada!",
-              "Esta Usurio ha sido eliminada.",
-              "success"
-            );
-          } else {
-            Swal.fire(              
-              "No se puede eliminar Usuario",
-            );
-          }
-          if (isDelError) {
-            Swal.fire(
-              "¡No se pudo eliminar!",
-              `${delerror?.data?.message}.`
-            );
-          } 
-        }
-      })
-      
-   
-    };
 
-    
+  const onDeleteUserClicked = () => {
+    Swal.fire({
+      title: "¿Seguro de eliminar?",
+      text: `Eliminar este usuario afectará todos los datos asociados a esta. Esta acción será irreversible.`,
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Sí, eliminar!",
+      cancelButtonText: "Cancelar",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        await deleteUser({ id: user.user_id });
+        if (isDelSuccess) {
+          Swal.fire("¡Eliminada!", "Esta Usurio ha sido eliminada.", "success");
+        } else if (isDelError) {
+          Swal.fire("¡No se pudo eliminar!", `${delerror?.data?.message}.`);
+        } else {
+          Swal.fire("No se puede eliminar Usuario");
+        }
+      }
+    });
+  };
+
   if (user) {
     //const handleEdit = () => navigate(`/dash/users/${userId}`)
 
     const userName = user.user_nombre ? user.user_nombre : "no tiene";
-
-    
 
     const errContent = (error?.data?.message || delerror?.data?.message) ?? "";
 
@@ -127,4 +112,3 @@ const User = ({ userId }) => {
 const memoizedUser = memo(User);
 
 export default memoizedUser;
-

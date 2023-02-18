@@ -7,7 +7,6 @@ import User from "../../components/User";
 
 import { useGetUsersQuery } from "./redux/usersApiSlice";
 
-
 const userList = () => {
   const {
     data: users,
@@ -20,19 +19,18 @@ const userList = () => {
     refetchOnFocus: true,
     refetchOnMountOrArgChange: true,
   });
-  
+
   let content;
 
   if (isLoading) {
     content = <p>Cargando...</p>;
-    
   }
-  
 
   if (isError) {
     content = <p className="errmsg">{error?.data?.message}</p>;
   }
-
+  if (users) {
+  }
   if (isSuccess) {
     const { ids } = users;
     const tableContent =
@@ -40,13 +38,6 @@ const userList = () => {
 
     content = (
       <>
-        <div className="return-div">
-          <Link to={"/dash"}>
-            <div className="return-button">
-              <img className="return-button-img" src={ReImage} alt="" />
-            </div>
-          </Link>
-        </div>
         <h1 className="user-list_header">Lista de usuarios</h1>
         <div className="button_section_parent">
           <Link
@@ -100,8 +91,20 @@ const userList = () => {
       </>
     );
   }
+  const cabeza = (
+      <div className="return-div">
+        <Link to={"/dash"}>
+          <div className="return-button">
+            <img className="return-button-img" src={ReImage} alt="" />
+          </div>
+        </Link>
+      </div>    
+  );
 
-  return content;
+  return (<>
+  {cabeza}
+  {content}
+  </>);
 };
 
 export default userList;

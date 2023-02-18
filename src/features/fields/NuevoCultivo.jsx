@@ -163,7 +163,6 @@ const nuevoCultivo = () => {
 
       <form
         className="container needs-validation nuevo-cultivo-form"
-        novalidate
       >
         <div className="form-row bg-light">
           <div className="col-md-4 mb-3">
@@ -171,7 +170,6 @@ const nuevoCultivo = () => {
             <input
               type="text"
               className="form-control"
-              id="nombre_cultivo"
               placeholder="Fruta ##"
               value={cropName}
               onChange={onCropNameChanged}
@@ -184,7 +182,6 @@ const nuevoCultivo = () => {
             <input
               type="text"
               className="form-control"
-              id="variedad_cultivo"
               required
             />
           </div>
@@ -201,7 +198,6 @@ const nuevoCultivo = () => {
             <input
               type="text"
               className="form-control"
-              id="area_cultivo"
               required
             />
           </div>
@@ -211,7 +207,6 @@ const nuevoCultivo = () => {
             <input
               type="date"
               className="form-control"
-              id="siembra_cultivo"
               value={datePlant}
               onChange={onCropPlantChanged}
               required
@@ -221,7 +216,6 @@ const nuevoCultivo = () => {
             <label for="campo_cultivo">Responsable</label>
             <select
               className="form-control"
-              id="campo_cultivo"
               value={repUser}
               onChange={onRepUserChanged}
             >
@@ -235,7 +229,6 @@ const nuevoCultivo = () => {
             <label for="campo_cultivo">Plantas</label>
             <select
               className="form-control"
-              id="campo_cultivo"
               value={cropPlantKey}
               onChange={onCropPlantKeyChanged}
             >
@@ -249,7 +242,6 @@ const nuevoCultivo = () => {
             <label for="campo_cultivo">Campos</label>
             <select
               className="form-control"
-              id="campo_cultivo"
               value={cropCampKey}
               onChange={onCropCampChanged}
             >
@@ -264,7 +256,6 @@ const nuevoCultivo = () => {
             <input
               type="date"
               className="form-control"
-              id="cosecha_cultivo"
               value={dateHarvest}
               onChange={onCropHarvestChanged}
             />
@@ -276,7 +267,6 @@ const nuevoCultivo = () => {
             <input
               type="text"
               class="form-control"
-              id="producto_final"
               value={finalProd}
               onChange={onCropFinalProdChanged}
             />

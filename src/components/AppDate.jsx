@@ -67,11 +67,8 @@ const AppDate = ({ dateId }) => {
           );
         }
         if (isDelError) {
-          Swal.fire(
-            "¡No se pudo eliminar!",
-            `${delerror?.data?.message}.`
-          );
-        }        
+          Swal.fire("¡No se pudo eliminar!", `${delerror?.data?.message}.`);
+        }
       }
     });
   };
@@ -88,14 +85,14 @@ const AppDate = ({ dateId }) => {
         user: data?.entities[userRep],
       }),
     });
-    
+
     if (act && user) {
       const actname = act.act_name ? act.act_name : "sin nombre";
 
-      const fechaIni = `${dateInit}`
-      const feIni = fechaIni.split("T")
-      const fechaFin = `${dateEnd}`
-      const feFin = fechaFin.split("T")
+      const fechaIni = `${dateInit}`;
+      const feIni = fechaIni.split("T");
+      const fechaFin = `${dateEnd}`;
+      const feFin = fechaFin.split("T");
       const errContent =
         (error?.data?.message || delerror?.data?.message) ?? "";
 
@@ -106,7 +103,11 @@ const AppDate = ({ dateId }) => {
 
       const contenido = (
         <tr key={dateId}>
-          <td>{actname}</td>
+          <td>
+            <Link to={`/dash/cultivos/info-app/${dateId}`}>
+              <div type="button">{actname}</div>
+            </Link>
+          </td>
           <td>{feIni[0]}</td>
           <td>{feFin[0]}</td>
           <td>{user.user_name}</td>

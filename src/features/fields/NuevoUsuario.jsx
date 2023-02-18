@@ -57,7 +57,10 @@ const NuevoUsuario = () => {
     }
   }, [isSuccess, navigate]);
 
-  const onUsernameChanged = (e) => setUsername(e.target.value);
+  const onUsernameChanged = (e) => {
+    setUsername(e.target.value);
+    
+  };
   const onPasswordChanged = (e) => setPassword(e.target.value);
   const onEmailChanged = (e) => setEmail(e.target.value);
   const onNamesChanged = (e) => setNames(e.target.value);
