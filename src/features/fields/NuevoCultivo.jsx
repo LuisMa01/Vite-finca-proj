@@ -95,12 +95,13 @@ const nuevoCultivo = () => {
 
   //username, cropName, datePlant, dateHarvest, finalProd, cropCampKey, cropPlantKey
   const [cropName, setCropName] = useState("");
-  const [repUser, setRepUser] = useState(0);
+  const [repUser, setRepUser] = useState("");
   const [datePlant, setCropPlant] = useState();
   const [dateHarvest, setCropHarvest] = useState();
   const [finalProd, setCropProd] = useState("");
-  const [cropCampKey, setCropCamp] = useState(0);
-  const [cropPlantKey, setCropPlantKey] = useState(0);
+  const [cropCampKey, setCropCamp] = useState("");
+  const [cropPlantKey, setCropPlantKey] = useState("");
+  const [cropArea, setCropArea] = useState("");
 
   const onSaveCropClicked = async (e) => {
     e.preventDefault();
@@ -112,6 +113,7 @@ const nuevoCultivo = () => {
       finalProd,
       cropCampKey,
       cropPlantKey,
+      cropArea,
     });
   };
   const onCropNameChanged = (e) => setCropName(e.target.value);
@@ -121,16 +123,18 @@ const nuevoCultivo = () => {
   const onCropFinalProdChanged = (e) => setCropProd(e.target.value);
   const onCropCampChanged = (e) => setCropCamp(e.target.value);
   const onCropPlantKeyChanged = (e) => setCropPlantKey(e.target.value);
+  const onCropAreaChanged = (e) => setCropArea(e.target.value);
 
   useEffect(() => {
     if (addissuccess) {
       setCropName("");
-      setRepUser(0);
+      setRepUser("");
       setCropPlant();
       setCropHarvest();
       setCropProd("");
-      setCropCamp();
-      setCropPlantKey();
+      setCropCamp("");
+      setCropPlantKey("");
+      setCropArea("")
     }
   }, [addissuccess]);
 
@@ -161,9 +165,7 @@ const nuevoCultivo = () => {
         características generales que lo identifican.
       </p>
 
-      <form
-        className="container needs-validation nuevo-cultivo-form"
-      >
+      <form className="container needs-validation nuevo-cultivo-form">
         <div className="form-row bg-light">
           <div className="col-md-4 mb-3">
             <label for="nombre_cultivo">Nombre del cultivo</label>
@@ -219,7 +221,7 @@ const nuevoCultivo = () => {
               value={repUser}
               onChange={onRepUserChanged}
             >
-              <option disabled selected>
+              <option disabled value={""}>
                 Elegir Responsable
               </option>
               {userOption}
@@ -232,7 +234,7 @@ const nuevoCultivo = () => {
               value={cropPlantKey}
               onChange={onCropPlantKeyChanged}
             >
-              <option disabled selected>
+              <option disabled value={""}>
                 Elegir Planta
               </option>
               {plantOption}
@@ -245,7 +247,7 @@ const nuevoCultivo = () => {
               value={cropCampKey}
               onChange={onCropCampChanged}
             >
-              <option disabled selected>
+              <option disabled value={""}>
                 Elegir Campo
               </option>
               {campOption}
@@ -262,6 +264,18 @@ const nuevoCultivo = () => {
           </div>
         </div>
         <div className="form-row bg-light">
+          <div className="col-12 col-md-6 mb-2">
+            <label for="variedad_cultivo">Área de Cultivo (tareas)</label>
+            <input
+              type="number"
+              step="any"
+              min={0}
+              className="form-control"
+              id="variedad_cultivo"
+              value={cropArea}
+              onChange={onCropAreaChanged}
+            />
+          </div>
           <div className="col-md-6 mb-3">
             <label for="producto_final">Producto final</label>
             <input

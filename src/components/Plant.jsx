@@ -34,6 +34,7 @@ const Plant = ({ plantId }) => {
       desc: plant.plant_desc,
       variety: plant.plant_variety,
       active: e.target.checked,
+      plantFrame: plant.plant_frame
     });
   };
   // id, plantName, desc, variety, active

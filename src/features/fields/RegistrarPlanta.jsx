@@ -32,21 +32,24 @@ const RegistrarPlanta = () => {
   const [plantName, setPlantname] = useState("");
   const [desc, setDesc] = useState("");
   const [variety, setVary] = useState("");
+  const [plantFrame, setPlantFrame] = useState("");
 
   const onSavePlantClicked = async (e) => {
     e.preventDefault();
 
-    await addNewPlant({ plantName, desc, variety });
+    await addNewPlant({ plantName, desc, variety, plantFrame });
   };
 
   const onPlantNameChanged = (e) => setPlantname(e.target.value);
   const onPlantDescChanged = (e) => setDesc(e.target.value);
   const onPlantVaryChanged = (e) => setVary(e.target.value);
+  const onPlantFrameChanged = (e) => setPlantFrame(e.target.value);
   useEffect(() => {
     if (addissuccess) {
       setPlantname("");
       setDesc("");
       setVary("");
+      setPlantFrame("");
     }
   }, [addissuccess]);
 
@@ -100,6 +103,18 @@ const RegistrarPlanta = () => {
                 id="nombre_cultivo"
                 value={variety}
                 onChange={onPlantVaryChanged}
+              />
+            </div>
+            <div className="col-md-4 mb-3">
+              <label for="nombre_cultivo" className="text-center">
+                Marco de Plantación
+              </label>
+              <input
+                type="text"
+                className="form-control"
+                id="nombre_cultivo"
+                value={plantFrame}
+                onChange={onPlantFrameChanged}
               />
             </div>
           </div>

@@ -36,6 +36,7 @@ const Crop = ({ cropId }) => {
       cropCampKey: crop.crop_camp_key,
       cropPlantKey: crop.crop_plant_key,
       active: e.target.checked,
+      cropArea: crop.crop_area,
     });
   };
   //id, cropName, datePlant, dateHarvest, finalProd, cropCampKey, cropPlantKey, active
