@@ -1,10 +1,10 @@
 //import { useNavigate } from 'react-router-dom'
 import "../../src/styles/registrar-actividad.css";
 import {
-  useGetItemsQuery,
-  useUpdateItemMutation,
-  useDeleteItemMutation,
-} from "../features/fields/redux/itemApiSlice";
+  useGetDosesQuery,
+  useUpdateDoseMutation,
+  useDeleteDoseMutation,
+} from "../features/fields/redux/doseApiSlice";
 import { memo, useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import RemoveImg from "../images/remove.svg";
@@ -12,46 +12,44 @@ import Swal from "sweetalert2";
 import { ROLES } from "../config/roles";
 
 //en progreso aun falta configurar dosis y luego de este
-const Item = ({ itemId }) => {
-  const { item } = useGetItemsQuery("itemsList", {
+const Dose = ({ doseId }) => {
+  const { dose } = useGetDosesQuery("dosesList", {
     selectFromResult: ({ data }) => ({
-      item: data?.entities[itemId],
+      dose: data?.entities[doseId],
     }),
   });
-  const [itemName, setItemName] = useState(item.item_name);
-  const [itemPrice, setItemPrice] = useState(item.item_price);
-  const [desc, setDesc] = useState(item.item_desc);
-  const [itemDose, setItemDose] = useState(item.item_dose_key);
+  const [doseName, setDoseName] = useState(dose.dose_name);
+  const [doseUnit, setDoseUnit] = useState(dose.dose_unit);
+  const [desc, setDesc] = useState(dose.dose_desc);
 
-  const [updateItem, { isLoading, isSuccess: itemUpSuc, isError, error }] =
-    useUpdateItemMutation();
+  const [updateDose, { isLoading, isSuccess: doseUpSuc, isError, error }] =
+  useUpdateDoseMutation();
 
   const [
-    deleteItem,
+    deleteDose,
     { isSuccess: isDelSuccess, isError: isDelError, error: delerror },
-  ] = useDeleteItemMutation();
+  ] = useDeleteDoseMutation();
 
-  const onItemNameChanged = (e) => setItemName(e.target.value);
-  const onItemPriceChanged = (e) => setItemPrice(e.target.value);
-  const onItemDescChanged = (e) => setDesc(e.target.value);
-  const onItemDoseChanged = (e) => setItemDose(e.target.value);
+  const onDoseNameChanged = (e) => setDoseName(e.target.value);
+  const onDoseUnitChanged = (e) => setDoseUnit(e.target.value);
+  const onDoseDescChanged = (e) => setDesc(e.target.value);
+  
 
   const onActiveChanged = async (e) => {
-    await updateItem({
-      id: item.item_id,
-      itemName,
-      itemPrice,
+    await updateDose({
+      id: dose.dose_id,
+      doseName,
+      doseUnit,
       desc,
-      itemDose,
       active: e.target.checked,
     });
   };
   //id, itemName, desc, itemPrice, active, itemDose 
 
-  const onDeleteItemClicked = async () => {
+  const onDeleteDoseClicked = async () => {
     Swal.fire({
       title: "¿Seguro de eliminar?",
-      text: `Eliminar este cultivo afectará todos los datos asociados a este. Esta acción será irreversible.`,
+      text: `Eliminar esta dosis afectará todos los datos asociados a este. Esta acción será irreversible.`,
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#3085d6",
@@ -60,23 +58,22 @@ const Item = ({ itemId }) => {
       cancelButtonText: "Cancelar",
     }).then(async (result) => {
       if (result.isConfirmed) {
-        await deleteItem({ id: item.item_id });
-        Swal.fire("¡Eliminado!", "Este cultivo ha sido eliminado.", "success");
+        await deleteDose({ id: dose.dose_id });
+        Swal.fire("¡Eliminado!", "Este dosis ha sido eliminado.", "success");
       }
     });
   };
   useEffect(() => {
-    if (itemUpSuc) {
-      setItemName(item.item_dose_key);
-      setItemPrice(item.item_dose_key);
-      setDesc(item.item_dose_key);
-      setItemDose(item.item_dose_key);
+    if (doseUpSuc) {
+      setDoseName(dose.dose_name);
+      setDoseUnit(dose.dose_unit);
+      setDesc(dose.dose_desc);
     }
-  }, [itemUpSuc]);
-  if (item) {
+  }, [doseUpSuc]);
+  if (dose) {
     //const handleEdit = () => navigate(`/dash/users/${cropId}`)
 
-    const itemname = itemName ? itemName : "no tiene";
+    const dosename = doseName ? doseName : "no tiene";
 
     const errContent = (error?.data?.message || delerror?.data?.message) ?? "";
 
@@ -86,22 +83,22 @@ const Item = ({ itemId }) => {
     }
 
     const contenido = (
-      <tr key={itemId}>
+      <tr key={doseId}>
         <td>
           
-            <div type="button">{itemname}</div>
+            <div type="button">{dosename}</div>
           
         </td>
         <td>
           <input
             type="checkbox"
-            checked={item.item_status}
+            checked={dose.dose_status}
             onChange={onActiveChanged}
           />
         </td>
         <td>
           <img
-            onClick={onDeleteItemClicked}
+            onClick={onDeleteDoseClicked}
             className="remove-img"
             src={RemoveImg}
             alt="Remove"
@@ -114,6 +111,6 @@ const Item = ({ itemId }) => {
   } else return null;
 };
 
-const memoizedItem = memo(Item);
+const memoizedDose = memo(Dose);
 
-export default memoizedItem;
+export default memoizedDose;
