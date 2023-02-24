@@ -81,9 +81,7 @@ const Item = ({ itemId }) => {
     const errContent = (error?.data?.message || delerror?.data?.message) ?? "";
 
     //console.log(`${user.user_id} ${userName} ${userRolesString} ${active} ${errContent}`);
-    if (isSuccess) {
-      console.log(`no hay error ${errContent}`);
-    }
+    
 
     const contenido = (
       <tr key={itemId}>

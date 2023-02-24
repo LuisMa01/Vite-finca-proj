@@ -23,7 +23,7 @@ const Dose = ({ doseId }) => {
   const [desc, setDesc] = useState(dose.dose_desc);
 
   const [updateDose, { isLoading, isSuccess: doseUpSuc, isError, error }] =
-  useUpdateDoseMutation();
+    useUpdateDoseMutation();
 
   const [
     deleteDose,
@@ -33,7 +33,6 @@ const Dose = ({ doseId }) => {
   const onDoseNameChanged = (e) => setDoseName(e.target.value);
   const onDoseUnitChanged = (e) => setDoseUnit(e.target.value);
   const onDoseDescChanged = (e) => setDesc(e.target.value);
-  
 
   const onActiveChanged = async (e) => {
     await updateDose({
@@ -44,7 +43,7 @@ const Dose = ({ doseId }) => {
       active: e.target.checked,
     });
   };
-  //id, itemName, desc, itemPrice, active, itemDose 
+  //id, itemName, desc, itemPrice, active, itemDose
 
   const onDeleteDoseClicked = async () => {
     Swal.fire({
@@ -78,16 +77,15 @@ const Dose = ({ doseId }) => {
     const errContent = (error?.data?.message || delerror?.data?.message) ?? "";
 
     //console.log(`${user.user_id} ${userName} ${userRolesString} ${active} ${errContent}`);
-    if (isSuccess) {
-      console.log(`no hay error ${errContent}`);
-    }
+    
 
     const contenido = (
       <tr key={doseId}>
         <td>
-          
-            <div type="button">{dosename}</div>
-          
+          <div type="button">{dosename}</div>
+        </td>
+        <td>
+          <div>{doseUnit}</div>
         </td>
         <td>
           <input

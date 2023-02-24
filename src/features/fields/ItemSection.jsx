@@ -7,6 +7,10 @@ import { useGetItemsQuery, useAddNewItemMutation } from "./redux/itemApiSlice";
 import { useGetDosesQuery } from "./redux/doseApiSlice";
 import { useState, useEffect } from "react";
 import Item from "../../components/Item";
+import Modal from "react-modal";
+import DoseSection from "./DoseSection";
+
+Modal.setAppElement("#root");
 
 const ItemSection = () => {
   const {
@@ -35,6 +39,7 @@ const ItemSection = () => {
   const [desc, setDesc] = useState("");
   const [itemPrice, setItemPrice] = useState("");
   const [itemDose, setItemDose] = useState("");
+  const [isOpen, setIsOpen] = useState(false);
 
   //itemName, desc, itemPrice, itemDose
 
@@ -62,7 +67,7 @@ const ItemSection = () => {
     const { ids, entities } = doses;
 
     doseOption = ids.map((Id) => {
-      if (entities[Id].status_status) {
+      if (entities[Id].dose_status) {
         return (
           <option key={Id} value={Id}>
             {entities[Id].dose_name}
@@ -72,26 +77,26 @@ const ItemSection = () => {
     });
   }
 
-  let content
+  let content;
   if (isError) {
     content = <p className="errmsg">{error?.data?.message}</p>;
     console.log(error?.data?.message);
   }
-  
+
   if (items) {
     const { ids } = items;
 
     let tableContent =
-      ids?.length && ids.map((Id) => <Item key={Id} cropId={Id} />);
+      ids?.length && ids.map((Id) => <Item key={Id} itemId={Id} />);
 
-    content=(
-        <div className="ventana_plantillas">
+    content = (
+      <div className="ventana_plantillas">
         <p className="subheader">Lista de Artículos</p>
         <div className="table-container-1">
           <table className="table table-hover table-sm table-striped table-responsive-sm table-bordered">
             <thead className="thead-blue">
               <th className="align-middle" scope="col">
-              Artículos
+                Artículos
               </th>
               <th className="align-middle" scope="col">
                 Estatus
@@ -104,11 +109,8 @@ const ItemSection = () => {
           </table>
         </div>
       </div>
-    )
+    );
   }
-
-
-
 
   return (
     <>
@@ -150,6 +152,13 @@ const ItemSection = () => {
               {doseOption}
             </select>
           </div>
+          <div className="cultivos_button-section">
+            <button className="btn btn-success" onClick={() => setIsOpen(true)}>Crear Dosis</button>
+            <Modal isOpen={isOpen} onRequestClose={() => setIsOpen(false)}>              
+              <button className="btn btn-danger" onClick={() => setIsOpen(false)}>Cerrar</button>
+              <DoseSection />
+            </Modal>
+          </div>
         </div>
         <div className="form-row bg-light">
           <div className="col-12 col-md-6 mb-2">
@@ -188,7 +197,7 @@ const ItemSection = () => {
         </div>
       </form>
       <hr />
-
+      {content}
     </>
   );
 };
