@@ -15,6 +15,7 @@ import { useGetActsQuery } from "./redux/actApiSlice";
 import { useGetUsersQuery } from "./redux/usersApiSlice";
 import AppDate from "../../components/AppDate";
 
+
 const infoCultivo = () => {
   const { id } = useParams();
   const [actKey, setActKey] = useState("");
@@ -48,7 +49,7 @@ const infoCultivo = () => {
     refetchOnMountOrArgChange: true,
   });
 
-  console.log("hasta aqui");
+
 
   const [
     addNewDate,
@@ -221,7 +222,7 @@ const infoCultivo = () => {
 
         <div className="table-container col-12 col-md-9 col-xl-6">
           <table className="table table-hover table-sm table-striped table-responsive-sm table-bordered">
-            <thead className="thead-blue">
+            <thead className="thead-loyola">
               <th className="align-middle" scope="col">
                 Actividad
               </th>

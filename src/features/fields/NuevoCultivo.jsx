@@ -167,8 +167,8 @@ const nuevoCultivo = () => {
 
       <form className="container needs-validation nuevo-cultivo-form">
         <div className="form-row bg-light">
-          <div className="col-md-4 mb-3">
-            <label for="nombre_cultivo">Nombre del cultivo</label>
+          <div className="col-md-6 mb-3">
+            <label htmlFor="nombre_cultivo">Nombre del cultivo</label>
             <input
               type="text"
               className="form-control"
@@ -178,34 +178,20 @@ const nuevoCultivo = () => {
               required
             />
           </div>
-          {/*
-          <div className="col-md-4 mb-3">
-            <label for="variedad_cultivo">Variedad</label>
+          <div className="col-12 col-md-3 mb-2">
+            <label htmlFor="variedad_cultivo">Área de Cultivo (tareas)</label>
             <input
-              type="text"
+              type="number"
+              step="any"
+              min={0}
               className="form-control"
-              required
+              id="variedad_cultivo"
+              value={cropArea}
+              onChange={onCropAreaChanged}
             />
           </div>
-          
-          <div className="col-md-4 mb-3">
-            <label for="marco_cultivo">Marco de plantación</label>
-            <input type="text" className="form-control" id="marco_cultivo" />
-          </div>
-          */}
-        </div>
-        <div className="form-row">
-          {/* <div className="col-md-3 mb-3">
-            <label for="area_cultivo">Area</label>
-            <input
-              type="text"
-              className="form-control"
-              required
-            />
-          </div>
-  */}
           <div className="col-md-3 mb-3">
-            <label for="siembra_cultivo">Fecha de siembra</label>
+            <label htmlFor="siembra_cultivo">Fecha de siembra</label>
             <input
               type="date"
               className="form-control"
@@ -214,8 +200,12 @@ const nuevoCultivo = () => {
               required
             />
           </div>
+        </div>
+
+
+        <div className="form-row">  
           <div className="col-md-3 mb-3">
-            <label for="campo_cultivo">Responsable</label>
+            <label htmlFor="campo_cultivo">Responsable</label>
             <select
               className="form-control"
               value={repUser}
@@ -228,7 +218,7 @@ const nuevoCultivo = () => {
             </select>
           </div>
           <div className="col-md-3 mb-3">
-            <label for="campo_cultivo">Plantas</label>
+            <label htmlFor="campo_cultivo">Plantas</label>
             <select
               className="form-control"
               value={cropPlantKey}
@@ -241,7 +231,7 @@ const nuevoCultivo = () => {
             </select>
           </div>
           <div className="col-md-3 mb-3">
-            <label for="campo_cultivo">Campos</label>
+            <label htmlFor="campo_cultivo">Campos</label>
             <select
               className="form-control"
               value={cropCampKey}
@@ -254,7 +244,7 @@ const nuevoCultivo = () => {
             </select>
           </div>
           <div className="col-md-3 mb-3">
-            <label for="cosecha_cultivo">Fecha de cosecha</label>
+            <label htmlFor="cosecha_cultivo">Fecha de cosecha</label>
             <input
               type="date"
               className="form-control"
@@ -264,20 +254,8 @@ const nuevoCultivo = () => {
           </div>
         </div>
         <div className="form-row bg-light">
-          <div className="col-12 col-md-6 mb-2">
-            <label for="variedad_cultivo">Área de Cultivo (tareas)</label>
-            <input
-              type="number"
-              step="any"
-              min={0}
-              className="form-control"
-              id="variedad_cultivo"
-              value={cropArea}
-              onChange={onCropAreaChanged}
-            />
-          </div>
           <div className="col-md-6 mb-3">
-            <label for="producto_final">Producto final</label>
+            <label htmlFor="producto_final">Producto final</label>
             <input
               type="text"
               class="form-control"
@@ -286,6 +264,7 @@ const nuevoCultivo = () => {
             />
           </div>
         </div>
+
         <div className="cultivos_button-section">
           <button
             className="btn btn-success"
@@ -298,14 +277,14 @@ const nuevoCultivo = () => {
             <button className="btn btn-danger">Descartar</button>
           </Link>
         </div>
-        {/* <p className='nuevo-descripcion text-muted'>Una vez creado el cultivo, podrá cargar plantillas y/o agregar actividades </p> */}
       </form>
       <hr />
+
       <div className="ventana_plantillas">
         <p className="subheader">Cultivos</p>
-        <div className="table-container-1">
+        <div className="table-container col-12 col-md-10 col-lg-8">
           <table className="table table-hover table-sm table-striped table-responsive-sm table-bordered">
-            <thead className="thead-blue">
+            <thead className="thead-loyola">
               <th className="align-middle" scope="col">
                 Cultivos
               </th>

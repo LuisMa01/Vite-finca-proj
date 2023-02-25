@@ -76,7 +76,7 @@ const DoseSection = () => {
         <p className="subheader">Lista</p>
         <div className="table-container-1">
           <table className="table table-hover table-sm table-striped table-responsive-sm table-bordered">
-            <thead className="thead-blue">
+            <thead className="thead-loyola">
               <th className="align-middle" scope="col">
                 Dosis
               </th>

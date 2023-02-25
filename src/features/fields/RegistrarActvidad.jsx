@@ -59,7 +59,7 @@ const registrarActividad = () => {
       <>
         <div className=" container col-12 col-md-9 col-lg-6 edit_table-container">
           <table className="table table-hover table-sm table-striped table-bordered">
-            <thead className="thead-blue">
+            <thead className="thead-loyola">
               <th className="align-middle" scope="col">
                 Campo
               </th>

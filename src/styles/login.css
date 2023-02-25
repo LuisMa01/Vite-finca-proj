@@ -117,7 +117,7 @@ input, textarea, select, label {
   color: white;
   border-width: 0;
   text-align: center;
-  background: hsl(210, 70%, 40%);
+  background: #1266A2;
   background-clip: padding-box;
   cursor: pointer;
   transition: all .35s;

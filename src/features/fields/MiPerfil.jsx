@@ -100,7 +100,7 @@ const MiPerfil = () => {
         <div className="split-line"></div>
         <div className="button-section">
           <Link key={userId} to={`/dash/usuario/mi-perfil/act-info/${userId}`}>
-            <button type="button" class="btn btn-primary btn-lg">
+            <button type="button" class="btn thead-loyola btn-lg">
               Actualizar información
             </button>
           </Link>
