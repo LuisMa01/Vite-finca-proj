@@ -1,13 +1,16 @@
 //import { useNavigate } from 'react-router-dom'
 import "../../src/styles/registrar-actividad.css";
-import {
-  useGetDatesQuery,
-  useUpdateDateMutation,
-  useDeleteDateMutation,
-} from "../features/fields/redux/appApiSlice";
+import { useGetDatesQuery } from "../features/fields/redux/appApiSlice";
+import { useGetItemsQuery } from "../features/fields/redux/itemApiSlice";
+import { useGetDosesQuery } from "../features/fields/redux/doseApiSlice";
 import { useEffect, useState } from "react";
 import { useGetActsQuery } from "../features/fields/redux/actApiSlice";
 import { useGetUsersQuery } from "../features/fields/redux/usersApiSlice";
+import {
+  useGetCostsQuery,
+  useUpdateCostMutation,
+  useDeleteCostMutation,
+} from "../features/fields/redux/costApiSlice";
 import { memo } from "react";
 import { Link } from "react-router-dom";
 import RemoveImg from "../images/remove.svg";
@@ -15,37 +18,35 @@ import Swal from "sweetalert2";
 import { ROLES } from "../config/roles";
 
 const Cost = ({ costId }) => {
-  const { date } = useGetDatesQuery("datesList", {
+  const { cost } = useGetCostsQuery("costsList", {
     selectFromResult: ({ data }) => ({
-      date: data?.entities[costId],
+      cost: data?.entities[costId],
     }),
   });
-  const [actKey, setActKey] = useState(date.date_act_key);
-  const [dateInit, setDateInit] = useState(date.date_init);
-  const [dateEnd, setDateEnd] = useState(date.date_end);
-  const [cropKey, setCropKey] = useState(date.date_crop_key);
-  const [userRep, setUserRep] = useState(date.date_user_key);
+  const [costItemKey, setItemKey] = useState(cost.cost_item_key);
+  const [costQuantity, setCostQuantity] = useState(cost.cost_quantity);
+  const [costItemPrice, setCostItemPrice] = useState(cost.cost_item_price);
+  const [costPrice, setCostPrice] = useState(cost.cost_price);
+  const [costDateKey, setCostDateKey] = useState(cost.cost_date_key);
 
-  const [updateDate, { isLoading, isSuccess, isError, error }] =
-    useUpdateDateMutation();
+  const [updateCost, { isLoading, isSuccess, isError, error }] =
+    useUpdateCostMutation();
 
   const [
-    deleteDate,
+    deleteCost,
     { isSuccess: isDelSuccess, isError: isDelError, error: delerror },
-  ] = useDeleteDateMutation();
+  ] = useDeleteCostMutation();
 
   const onActiveChanged = async (e) => {
-    await updateDate({
-      id: dateId,
-      dateInit,
-      dateEnd,
-      actKey,
-      cropKey,
-      plantId: date.crop_plant_key,
-      userRep,
+    await updateCost({
+      id: costId,
+      costItemKey,
+      costQuantity,
+      costItemPrice,
+      costDateKey,
     });
   };
-  // id, dateInit, dateEnd, actKey, cropKey, plantId, userRep
+  // id, costItemKey, costQuantity, costDateKey, costItemPrice
   const onDeleteDateClicked = async () => {
     Swal.fire({
       title: "¿Seguro de eliminar?",
@@ -58,7 +59,7 @@ const Cost = ({ costId }) => {
       cancelButtonText: "Cancelar",
     }).then(async (result) => {
       if (result.isConfirmed) {
-        await deleteDate({ id: date.date_id });
+        await deleteCost({ id: cost.cost_id });
         if (isDelSuccess) {
           Swal.fire(
             "¡Eliminada!",
@@ -72,27 +73,43 @@ const Cost = ({ costId }) => {
       }
     });
   };
+  useEffect(() => {
+    if (cost) {
+      setCostDateKey(cost.cost_date_key);
+      setCostPrice(cost.cost_price);
+      setCostItemPrice(cost.cost_item_price);
+      setCostQuantity(cost.cost_quantity);
+      setItemKey(cost.cost_item_key);
+    }
+  }, [cost]);
 
-  if (date) {
+  if (cost) {
     //const handleEdit = () => navigate(`/dash/users/${actId}`)
-    const { act } = useGetActsQuery("actsList", {
+    
+    const { item } = useGetItemsQuery("itemsList", {
       selectFromResult: ({ data }) => ({
-        act: data?.entities[actKey],
+        item: data?.entities[costItemKey],
       }),
     });
-    const { user } = useGetUsersQuery("usersList", {
+    const { dose } = useGetDosesQuery("dosesList", {
       selectFromResult: ({ data }) => ({
-        user: data?.entities[userRep],
+        dose: data?.entities[cost.item_dose_key],
       }),
     });
+    
+    let precioItem = new Intl.NumberFormat("es-do", {
+      style: "currency",
+      currency: "DOP",
+    }).format(parseFloat(costItemPrice));
 
-    if (act && user) {
-      const actname = act.act_name ? act.act_name : "sin nombre";
+    let precio = new Intl.NumberFormat("es-do", {
+      style: "currency",
+      currency: "DOP",
+    }).format(parseFloat(costPrice));
 
-      const fechaIni = `${dateInit}`;
-      const feIni = fechaIni.split("T");
-      const fechaFin = `${dateEnd}`;
-      const feFin = fechaFin.split("T");
+    if (item && dose) {
+      const itemname = item.item_name ? item.item_name : "sin nombre";
+
       const errContent =
         (error?.data?.message || delerror?.data?.message) ?? "";
 
@@ -104,13 +121,13 @@ const Cost = ({ costId }) => {
       const contenido = (
         <tr key={costId}>
           <td>
-            <Link to={`/dash/cultivos/info-app/${dateId}`}>
-              <div type="button">{actname}</div>
-            </Link>
+            <div type="button">{itemname}</div>
           </td>
-          <td>{feIni[0]}</td>
-          <td>{feFin[0]}</td>
-          <td>{user.user_name}</td>
+          <td>{dose.dose_name}</td>
+          <td>{costQuantity}</td>
+          <td>{dose.dose_unit}</td>
+          <td>{precioItem}</td>
+          <td>{precio}</td>
           <td>
             <img
               onClick={onDeleteDateClicked}

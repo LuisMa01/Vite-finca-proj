@@ -35,13 +35,16 @@ const Act = ({ actId }) => {
 };
 
 const InfoAppCult = () => {
+  const { id } = useParams();
   const [actKey, setActKey] = useState("");
   const [dateInit, setDateInit] = useState(null);
   const [dateEnd, setDateEnd] = useState(null);
   const [userRep, setUserRep] = useState("");
   const [costItemKey, setItemCostKey] = useState("");
-  const [itemPrecio, setItemPrecioKey] = useState();
-  const { id } = useParams();
+  const [costQuantity, setCostQuantityKey] = useState(1);
+  const [itemPrecio, setItemPrecioKey] = useState(0);
+
+  const [costDateKey, setCostDateKey] = useState(id);
 
   const {
     data: costs,
@@ -61,13 +64,17 @@ const InfoAppCult = () => {
   const { data: items } = useGetItemsQuery("itemsList");
 
   const onItemCostChanged = (e) => {
-    //e.preventDefault();
+    e.preventDefault();
     setItemCostKey(e.target.value);
     if (items) {
       const { entities } = items;
-      setItemPrecioKey(`${entities[e.target.value].item_price}`)
+      setItemPrecioKey(`${entities[e.target.value].item_price}`);
     }
   };
+  const onCostQuantityChanged = (e) => {
+    e.preventDefault();
+    setCostQuantityKey(e.target.value);
+  }
 
   const [
     addNewCost,
@@ -76,28 +83,30 @@ const InfoAppCult = () => {
 
   const onAddCostClicked = async (e) => {
     e.preventDefault();
-    console.log(
-      `${actKey} ${userRep} ${dateInit} ${dateEnd} ${crop.crop_id} ${crop.crop_plant_key}`
-    );
+
     await addNewCost({
-      actKey,
-      userRep,
-      dateInit,
-      dateEnd,
-      cropKey: crop.crop_id,
-      plantId: crop.crop_plant_key,
+      costItemKey,
+      costQuantity,
+      costDateKey,
     });
   };
   //  costItemKey, costQuantity, costDateKey
-  useEffect(() => {
-    if (date) {
-      setActKey(date.date_act_key);
-      setDateInit(date.date_init);
-      setDateEnd(date.date_end);
-      setUserRep(date.date_user_key);
-      setItemCostKey("");
-    }
-  }, [date]);
+  useEffect(
+    () => {
+      if (date || costs) {
+        setActKey(date.date_act_key);
+        setDateInit(date.date_init);
+        setDateEnd(date.date_end);
+        setUserRep(date.date_user_key);
+        setItemCostKey("");
+        setItemPrecioKey(0);
+        setCostDateKey(id);
+        setCostQuantityKey(1);
+      }
+    },
+    [date],
+    [costs]
+  );
 
   let itemOption;
 
@@ -105,13 +114,9 @@ const InfoAppCult = () => {
     const { ids, entities } = items;
 
     itemOption = ids.map((Id) => {
-
       if (entities[Id].item_status) {
         return (
-          <option
-            key={Id}
-            value={entities[Id].item_id}
-          >
+          <option key={Id} value={entities[Id].item_id}>
             {entities[Id].item_name}
           </option>
         );
@@ -133,7 +138,6 @@ const InfoAppCult = () => {
   }
   if (costIsError) {
     console.log(costError?.data?.message);
-    
   }
   if (date) {
     const usuario = (
@@ -146,6 +150,10 @@ const InfoAppCult = () => {
         <Act key={actKey} actId={actKey} />
       </>
     );
+    let precio = new Intl.NumberFormat("es-do", {
+      style: "currency",
+      currency: "DOP",
+    }).format(parseFloat(itemPrecio));
 
     return (
       <>
@@ -176,12 +184,12 @@ const InfoAppCult = () => {
               </select>
             </div>
             <div className="col-md-6 col-lg-3 mb-3">
-              <label htmlFor="campo_cultivo">Precio</label>
-              <input
-                type="number"
-                className="form-control"
-                value={"123"}
-              />
+              <div> <label htmlFor="campo_cultivo">Precio</label></div>
+              <div>{precio ? precio : "precio del articulo elejido."}</div>
+            </div>
+            <div className="col-md-6 col-lg-3 mb-3">
+              <div> <label htmlFor="campo_cultivo">Cantidad</label></div>
+              <input type="number" value={costQuantity} min="0" onChange={onCostQuantityChanged} />
             </div>
 
             <div className="cultivos_button-section">

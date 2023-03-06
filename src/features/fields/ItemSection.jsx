@@ -40,7 +40,7 @@ const ItemSection = () => {
   const [itemPrice, setItemPrice] = useState("");
   const [itemDose, setItemDose] = useState("");
   const [isOpen, setIsOpen] = useState(false);
-
+ 
   //itemName, desc, itemPrice, itemDose
 
   const onSavePlantClicked = async (e) => {
@@ -51,7 +51,10 @@ const ItemSection = () => {
 
   const onItemNameChanged = (e) => setItemName(e.target.value);
   const onItemDescChanged = (e) => setDesc(e.target.value);
-  const onItemPriceChanged = (e) => setItemPrice(e.target.value);
+  const onItemPriceChanged = (e) => {
+    
+    setItemPrice(e.target.value);
+  }
   const onItemDoseChanged = (e) => setItemDose(e.target.value);
   useEffect(() => {
     if (addissuccess) {
