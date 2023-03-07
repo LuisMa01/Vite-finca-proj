@@ -102,6 +102,15 @@ const ItemSection = () => {
                 Artículos
               </th>
               <th className="align-middle" scope="col">
+                Dosis
+              </th>
+              <th className="align-middle" scope="col">
+                Unidad
+              </th>
+              <th className="align-middle" scope="col">
+                Precio
+              </th>
+              <th className="align-middle" scope="col">
                 Estatus
               </th>
               <th className="align-middle" scope="col">

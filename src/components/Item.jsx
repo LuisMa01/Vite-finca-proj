@@ -5,11 +5,27 @@ import {
   useUpdateItemMutation,
   useDeleteItemMutation,
 } from "../features/fields/redux/itemApiSlice";
+import {
+  useGetDosesQuery
+} from "../features/fields/redux/doseApiSlice";
 import { memo, useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import RemoveImg from "../images/remove.svg";
 import Swal from "sweetalert2";
 import { ROLES } from "../config/roles";
+
+const Dose = ({doseId}) =>{
+  const { dose } = useGetDosesQuery("dosesList", {
+    selectFromResult: ({ data }) => ({
+      dose: data?.entities[doseId],
+    }),
+  });
+
+  if (dose) {
+    return (<><td>{dose.dose_name}</td><td>{dose.dose_unit}</td></>)
+    
+  }
+}
 
 //en progreso aun falta configurar dosis y luego de este
 const Item = ({ itemId }) => {
@@ -75,6 +91,10 @@ const Item = ({ itemId }) => {
   }, [itemUpSuc]);
   if (item) {
     //const handleEdit = () => navigate(`/dash/users/${cropId}`)
+    let precio = new Intl.NumberFormat("es-do", {
+      style: "currency",
+      currency: "DOP",
+    }).format(parseFloat(itemPrice));
 
     const itemname = itemName ? itemName : "no tiene";
 
@@ -90,6 +110,8 @@ const Item = ({ itemId }) => {
             <div type="button">{itemname}</div>
           
         </td>
+      <><Dose key={itemDose} doseId={itemDose} /></>
+        <td>{precio}</td>
         <td>
           <input
             type="checkbox"

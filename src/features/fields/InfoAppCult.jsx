@@ -125,6 +125,7 @@ const InfoAppCult = () => {
   }
 
   let costList;
+  let costTotal=[]
   if (costs) {
     const { ids, entities } = costs;
 
@@ -132,10 +133,21 @@ const InfoAppCult = () => {
       ids?.length &&
       ids.map((Id) => {
         if (entities[Id].cost_date_key == date.date_id) {
-          return <Cost key={Id} costId={Id} />;
+          let list = <Cost key={Id} costId={Id} />
+          costTotal.push(parseFloat(entities[Id].cost_price))
+          return list;
         }
       });
   }
+  let TT = costTotal.reduce((valorAnterior, valorActual) => {
+    return valorAnterior + valorActual;
+  }, 0);
+  let precioTT = new Intl.NumberFormat("es-do", {
+    style: "currency",
+    currency: "DOP",
+  }).format(parseFloat(TT));
+
+  console.log(costTotal);
   if (costIsError) {
     console.log(costError?.data?.message);
   }
@@ -165,7 +177,10 @@ const InfoAppCult = () => {
           </Link>
         </div>
         <div className="nuevo-cultivo-header">
-          MATERIALES, INSUMOS Y MANO DE OBRA {usuario} {actividad} {dateEnd}{" "}
+          MATERIALES, INSUMOS Y MANO DE OBRA 
+        </div>
+        <div className="nuevo-cultivo-header">
+          {usuario} {actividad} {dateEnd}{" "}
           {dateInit}
         </div>
         <form>
@@ -220,18 +235,20 @@ const InfoAppCult = () => {
                 Unidad
               </th>
               <th className="align-middle" scope="col">
-                Costo Unitario (RD$)
+                Costo Unitario 
               </th>
               <th className="align-middle" scope="col">
-                Costo Total (RD$)
+                Costo Total 
               </th>
               <th className="align-middle" scope="col">
                 Eliminar
               </th>
             </thead>
             <tbody>
-              <>{costList}</>
+              {costList}
+              
             </tbody>
+            <tfoot><td colSpan={"5"} >Total:</td><td>{precioTT}</td></tfoot>
           </table>
         </div>
       </>
