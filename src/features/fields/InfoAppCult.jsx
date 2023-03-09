@@ -167,6 +167,10 @@ const InfoAppCult = () => {
       currency: "DOP",
     }).format(parseFloat(itemPrecio));
 
+    const fechaIni = (`${dateInit}`).split("T")[0];
+      
+      const fechaFin = (`${dateEnd}`).split("T")[0];
+
     return (
       <>
         <div className="return-div">
@@ -180,8 +184,8 @@ const InfoAppCult = () => {
           MATERIALES, INSUMOS Y MANO DE OBRA 
         </div>
         <div className="nuevo-cultivo-header">
-          {usuario} {actividad} {dateEnd}{" "}
-          {dateInit}
+          {usuario} {actividad} {fechaIni}{" "}
+          {fechaFin}
         </div>
         <form>
           <div className="new-activity-miniform d-flex justify-content-center col-12 col-md-10 col-xl-9 form-row bg-light">

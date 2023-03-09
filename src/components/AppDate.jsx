@@ -88,11 +88,11 @@ const AppDate = ({ dateId }) => {
 
     if (act && user) {
       const actname = act.act_name ? act.act_name : "sin nombre";
-
-      const fechaIni = `${dateInit}`;
-      const feIni = fechaIni.split("T");
-      const fechaFin = `${dateEnd}`;
-      const feFin = fechaFin.split("T");
+      console.log(typeof dateInit);
+      
+      const fechaIni = (`${dateInit}`).split("T")[0];
+      
+      const fechaFin = (`${dateEnd}`).split("T")[0];
       const errContent =
         (error?.data?.message || delerror?.data?.message) ?? "";
 
@@ -108,8 +108,8 @@ const AppDate = ({ dateId }) => {
               <div type="button">{actname}</div>
             </Link>
           </td>
-          <td>{feIni[0]}</td>
-          <td>{feFin[0]}</td>
+          <td>{fechaIni?fechaIni:"no fecha asignada"}</td>
+          <td>{fechaFin?fechaFin:"no fecha asignada"}</td>
           <td>{user.user_name}</td>
           <td>
             <img
