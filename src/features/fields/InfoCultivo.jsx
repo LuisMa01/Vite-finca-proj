@@ -19,8 +19,8 @@ import AppDate from "../../components/AppDate";
 const infoCultivo = () => {
   const { id } = useParams();
   const [actKey, setActKey] = useState("");
-  const [dateInit, setDateInit] = useState(null);
-  const [dateEnd, setDateEnd] = useState(null);
+  const [dateInit, setDateInit] = useState("");
+  const [dateEnd, setDateEnd] = useState("");
   const [userRep, setUserRep] = useState("");
 
   const { crop } = useGetCropsQuery("cropsList", {
@@ -89,12 +89,18 @@ const infoCultivo = () => {
     e.preventDefault();
     setUserRep(e.target.value);
   };
-
+  const handleClearClick = (e) => {
+    e.preventDefault()
+    setActKey("");
+      setDateInit("");
+      setDateEnd("");
+      setUserRep("");
+  };
   useEffect(() => {
     if (addDateSuc) {
       setActKey("");
-      setDateInit(null);
-      setDateEnd(null);
+      setDateInit("");
+      setDateEnd("");
       setUserRep("");
     }
   }, [addDateSuc]);
@@ -148,7 +154,7 @@ const infoCultivo = () => {
         ids?.length &&
         ids.map((Id) => {
           if (entities[Id].date_crop_key == crop.crop_id) {
-            return <AppDate key={Id} dateId={Id} />;
+            return <AppDate key={Id} dateId={Id} Lista={"Lista1"} />;
           }
         });
     }
@@ -179,7 +185,7 @@ const infoCultivo = () => {
             </select>
           </div>
           <div className="col-md-6 col-lg-3 mb-3">
-            <label htmlFor="campo_cultivo">Responsable de la actividad</label>
+            <label htmlFor="campo_cultivo">Responsable</label>
             <select
               className="form-control"
               value={userRep}
@@ -216,6 +222,7 @@ const infoCultivo = () => {
             >
               Agregar Actividad
             </button>
+            <button className="btn btn-danger" onClick={handleClearClick}>Limpiar</button>
           </div>
         </div>
         </form>

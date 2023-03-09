@@ -14,7 +14,7 @@ import RemoveImg from "../images/remove.svg";
 import Swal from "sweetalert2";
 import { ROLES } from "../config/roles";
 
-const AppDate = ({ dateId }) => {
+const AppDate = ({ dateId, Lista }) => {
   const { date } = useGetDatesQuery("datesList", {
     selectFromResult: ({ data }) => ({
       date: data?.entities[dateId],
@@ -100,27 +100,45 @@ const AppDate = ({ dateId }) => {
       if (isSuccess) {
         console.log(`no hay error ${errContent}`);
       }
+      let contenido
+      if (Lista == "Lista1") {
+        contenido = (
+          <tr key={dateId}>
+            <td>
+              <Link to={`/dash/cultivos/info-app/${dateId}`}>
+                <div type="button">{actname}</div>
+              </Link>
+            </td>
+            <td>{fechaIni=="null"?"no fecha asignada":fechaIni}</td>
+            <td>{fechaFin=="null"?"no fecha asignada":fechaFin}</td>
+            <td>{user.user_name}</td>
+            <td>
+              <img
+                onClick={onDeleteDateClicked}
+                className="remove-img"
+                src={RemoveImg}
+                alt="Remove"
+              />
+            </td>
+          </tr>
+        );
+        
+      }
+      if (Lista == "Lista2") {
+        contenido = (
+          <tr key={dateId}>
+            <td>
+              <Link to={`/dash/cultivos/info-app/${dateId}`}>
+                <div type="button">{actname}</div>
+              </Link>
+            </td>
+            <td>{fechaIni=="null"?"no fecha asignada":fechaIni}</td>
+            <td>{user.user_name}</td>
+          </tr>
+        );
+      }
 
-      const contenido = (
-        <tr key={dateId}>
-          <td>
-            <Link to={`/dash/cultivos/info-app/${dateId}`}>
-              <div type="button">{actname}</div>
-            </Link>
-          </td>
-          <td>{fechaIni?fechaIni:"no fecha asignada"}</td>
-          <td>{fechaFin?fechaFin:"no fecha asignada"}</td>
-          <td>{user.user_name}</td>
-          <td>
-            <img
-              onClick={onDeleteDateClicked}
-              className="remove-img"
-              src={RemoveImg}
-              alt="Remove"
-            />
-          </td>
-        </tr>
-      );
+      
 
       return contenido;
     }

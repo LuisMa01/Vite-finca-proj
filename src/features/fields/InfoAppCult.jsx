@@ -91,6 +91,13 @@ const InfoAppCult = () => {
     });
   };
   //  costItemKey, costQuantity, costDateKey
+  const handleClearClick = (e) => {
+    e.preventDefault()
+    setItemCostKey("");
+        setCostDateKey(id);
+        setItemPrecioKey(0);
+        setCostQuantityKey(1);
+  };
   useEffect(
     () => {
       if (date || costs) {
@@ -104,8 +111,7 @@ const InfoAppCult = () => {
         setCostQuantityKey(1);
       }
     },
-    [date],
-    [costs]
+    [date, costs]
   );
 
   let itemOption;
@@ -184,8 +190,8 @@ const InfoAppCult = () => {
           MATERIALES, INSUMOS Y MANO DE OBRA 
         </div>
         <div className="nuevo-cultivo-header">
-          {usuario} {actividad} {fechaIni}{" "}
-          {fechaFin}
+          {usuario} {actividad} {fechaIni=="null"?"":fechaIni}{" "}
+          {fechaFin=="null"?"":fechaFin}
         </div>
         <form>
           <div className="new-activity-miniform d-flex justify-content-center col-12 col-md-10 col-xl-9 form-row bg-light">
@@ -219,6 +225,7 @@ const InfoAppCult = () => {
               >
                 Agregar Artículo
               </button>
+              <button className="btn btn-danger" onClick={handleClearClick}>Limpiar</button>
             </div>
           </div>
         </form>

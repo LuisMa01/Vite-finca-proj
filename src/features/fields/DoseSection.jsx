@@ -45,7 +45,8 @@ const DoseSection = () => {
   const onDoseNameChanged = (e) => seDoseName(e.target.value);
   const onItemDescChanged = (e) => setDesc(e.target.value);
   const onDoseUnitChanged = (e) => setDoseUnit(e.target.value);
-  const handleClearClick = () => {
+  const handleClearClick = (e) => {
+    e.preventDefault()
     seDoseName("");
       setDesc("");
       setDoseUnit("");

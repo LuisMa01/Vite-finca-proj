@@ -4,6 +4,9 @@ import ReImage from "../../images/return.svg"
 import { Link } from 'react-router-dom'
 import focusClick from '../../components/DashHeader'
 import actividades from '../jsons/proximas.json'
+import { useGetDatesQuery } from "./redux/appApiSlice";
+
+import AppDate from "../../components/AppDate"
 
 const Actividades = () => {
     return(
@@ -21,6 +24,32 @@ const Actividades = () => {
 }
 
 const navProximas = () => {
+    const {
+        data: dates,
+        isLoading,
+        isSuccess,
+        isError,
+        error,
+      } = useGetDatesQuery("datesList", {
+        pollingInterval: 60000,
+        refetchOnFocus: true,
+        refetchOnMountOrArgChange: true,
+      });
+
+      let dateList
+
+      if (dates) {
+        const { ids, entities } = dates;
+  
+        dateList =
+          ids?.length &&
+          ids.map((Id) => {
+           if (entities[Id].date_end == null) {
+
+              return <AppDate key={Id} dateId={Id} Lista={"Lista2"} />;
+            }
+          });
+      }
     return(
             <>
                 <div className="return-div"><Link to={'/dash'}><div onClick={focusClick} className="return-button">
@@ -38,7 +67,7 @@ const navProximas = () => {
                         <th className="align-middle" scope="col">Responsable</th> 
                     </thead>
                     <tbody>
-                       <Actividades /> 
+                       {dateList}
                     </tbody>
                 </table></div>
             </>
