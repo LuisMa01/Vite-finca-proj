@@ -21,7 +21,7 @@ const infoCultivo = () => {
   const [actKey, setActKey] = useState("");
   const [dateInit, setDateInit] = useState("");
   const [dateEnd, setDateEnd] = useState("");
-  const [userRep, setUserRep] = useState("");
+  const [userRep, setUserRep] = useState(""); 
 
   const { crop } = useGetCropsQuery("cropsList", {
     selectFromResult: ({ data }) => ({

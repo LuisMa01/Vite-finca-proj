@@ -8,21 +8,6 @@ import { useGetDatesQuery } from "./redux/appApiSlice";
 
 import AppDate from "../../components/AppDate"
 
-const Actividades = () => {
-    return(
-        actividades.map((item) => (
-            <>
-                <tr key={item.index}>
-                    <td className="align-middle">{item.name}</td>
-                    <td className="align-middle">{item.cultivo}</td>
-                    <td className="align-middle">{item.campo}</td>
-                    <td className="align-middle">{item.fechap}</td>
-                    <td className="align-middle">{item.responsable}</td>
-                </tr>
-            </>
-        )))
-}
-
 const navProximas = () => {
     const {
         data: dates,

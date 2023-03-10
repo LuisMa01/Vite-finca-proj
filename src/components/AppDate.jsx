@@ -8,11 +8,50 @@ import {
 import { useEffect, useState } from "react";
 import { useGetActsQuery } from "../features/fields/redux/actApiSlice";
 import { useGetUsersQuery } from "../features/fields/redux/usersApiSlice";
+import { useGetCropsQuery } from "../features/fields/redux/cropApiSlice";
+import { useGetCampsQuery } from "../features/fields/redux/campApiSlice";
 import { memo } from "react";
 import { Link } from "react-router-dom";
 import RemoveImg from "../images/remove.svg";
 import Swal from "sweetalert2";
 import { ROLES } from "../config/roles";
+import Modal from "react-modal";
+
+Modal.setAppElement("#root");
+
+const Crop = ({ cropId }) => {
+  const { crop } = useGetCropsQuery("cropsList", {
+    selectFromResult: ({ data }) => ({
+      crop: data?.entities[cropId],
+    }),
+  });
+
+  if (crop) {
+    return <>{crop.crop_name}</>;
+  }
+};
+const Camp = ({ campId }) => {
+  const { camp } = useGetCampsQuery("campsList", {
+    selectFromResult: ({ data }) => ({
+      camp: data?.entities[campId],
+    }),
+  });
+
+  if (camp) {
+    return <>{camp.camp_name}</>;
+  }
+};
+const Act = ({ actId }) => {
+  const { act } = useGetActsQuery("actsList", {
+    selectFromResult: ({ data }) => ({
+      act: data?.entities[actId],
+    }),
+  });
+
+  if (act) {
+    return <>{act.act_name ? act.act_name : "sin nombre"}</>;
+  }
+};
 
 const AppDate = ({ dateId, Lista }) => {
   const { date } = useGetDatesQuery("datesList", {
@@ -20,11 +59,18 @@ const AppDate = ({ dateId, Lista }) => {
       date: data?.entities[dateId],
     }),
   });
+  const { data: rpuser } = useGetUsersQuery("usersList", {
+    pollingInterval: 60000,
+    refetchOnFocus: true,
+    refetchOnMountOrArgChange: true,
+  });
   const [actKey, setActKey] = useState(date.date_act_key);
   const [dateInit, setDateInit] = useState(date.date_init);
   const [dateEnd, setDateEnd] = useState(date.date_end);
   const [cropKey, setCropKey] = useState(date.date_crop_key);
+  const [plantId, setPlantKey] = useState(date.crop_plant_key);
   const [userRep, setUserRep] = useState(date.date_user_key);
+  const [isOpen, setIsOpen] = useState(false);
 
   const [updateDate, { isLoading, isSuccess, isError, error }] =
     useUpdateDateMutation();
@@ -34,17 +80,6 @@ const AppDate = ({ dateId, Lista }) => {
     { isSuccess: isDelSuccess, isError: isDelError, error: delerror },
   ] = useDeleteDateMutation();
 
-  const onActiveChanged = async (e) => {
-    await updateDate({
-      id: dateId,
-      dateInit,
-      dateEnd,
-      actKey,
-      cropKey,
-      plantId: date.crop_plant_key,
-      userRep,
-    });
-  };
   // id, dateInit, dateEnd, actKey, cropKey, plantId, userRep
   const onDeleteDateClicked = async () => {
     Swal.fire({
@@ -73,26 +108,141 @@ const AppDate = ({ dateId, Lista }) => {
     });
   };
 
-  if (date) {
-    //const handleEdit = () => navigate(`/dash/users/${actId}`)
-    const { act } = useGetActsQuery("actsList", {
-      selectFromResult: ({ data }) => ({
-        act: data?.entities[actKey],
-      }),
+  const onDateInitChanged = (e) => {
+    e.preventDefault();
+    setDateInit(e.target.value);
+  };
+  const onDateEndChanged = (e) => {
+    e.preventDefault();
+    setDateEnd(e.target.value);
+  };
+  const onUserRepChanged = (e) => {
+    e.preventDefault();
+    setUserRep(e.target.value);
+  };
+  const onActiveChanged = async (e) => {
+    e.preventDefault();
+    await updateDate({
+      id: dateId,
+      dateInit,
+      dateEnd,
+      actKey,
+      plantId,
+      userRep,
     });
+  };
+  //id, dateInit, dateEnd, actKey, plantId, userRep
+  const handleClearClick = (e) => {
+    e.preventDefault();
+    setActKey(date.date_act_key);
+    setDateInit(date.date_init);
+    setDateEnd(date.date_end);
+    setUserRep(date.date_user_key);
+  };
+  useEffect(() => {
+    if (date) {
+      setIsOpen(false)
+      setActKey(date.date_act_key);
+      setDateInit(date.date_init);
+      setDateEnd(date.date_end);
+      setUserRep(date.date_user_key);
+      setPlantKey(date.crop_plant_key);
+      setCropKey(date.date_crop_key);
+    }
+  }, [date]);
+
+  const fechaIni = dateInit == "null" ? "" : `${dateInit}`.split("T")[0];
+
+  const fechaFin = dateEnd == "null" ? "" : `${dateEnd}`.split("T")[0];
+
+  if (date) {
+    let userOption;
+    if (rpuser) {
+      const { ids, entities } = rpuser;
+
+      userOption = ids.map((Id) => {
+        if (entities[Id].user_status) {
+          return (
+            <option key={Id} value={entities[Id].user_id}>
+              {entities[Id].user_nombre
+                ? entities[Id].user_nombre
+                : entities[Id].user_name}
+            </option>
+          );
+        }
+      });
+    }
+
+    const updateApp = (
+      <Modal isOpen={isOpen} onRequestClose={() => setIsOpen(false)}>
+        <button className="btn btn-danger" onClick={() => setIsOpen(false)}>
+          Cerrar
+        </button>
+        <div className="cultivos_button-section">
+          <Act key={actKey} actId={actKey} />
+          <form>
+            <div className="new-activity-miniform d-flex justify-content-center col-12 col-md-10 col-xl-9 form-row bg-light">
+              <div className="col-md-6 col-lg-3 mb-3">
+                <label htmlFor="campo_cultivo">Responsable</label>
+                <select
+                  className="form-control"
+                  value={userRep}
+                  onChange={onUserRepChanged}
+                >
+                  <option disabled value={""}>
+                    Elegir Responsable
+                  </option>
+                  {userOption}
+                </select>
+              </div>
+              <div className="col-md-6 col-lg-3 mb-3">
+                <label htmlFor="siembra_cultivo">Fecha de Programada</label>
+                <input
+                  type="date"
+                  className="form-control"
+                  value={fechaIni}
+                  onChange={onDateInitChanged}
+                />
+              </div>
+              <div className="col-md-6 col-lg-3 mb-3">
+                <label htmlFor="siembra_cultivo">Fecha de Ejecución</label>
+                <input
+                  type="date"
+                  className="form-control"
+                  value={fechaFin}
+                  onChange={onDateEndChanged}
+                />
+              </div>
+
+              <div className="cultivos_button-section">
+                <button
+                  className="btn btn-success"
+                  onClick={onActiveChanged}
+                  type="submit"
+                >
+                  Guardar Cambios
+                </button>
+                <button className="btn btn-danger" onClick={handleClearClick}>
+                  Limpiar
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </Modal>
+    );
+
+    //const handleEdit = () => navigate(`/dash/users/${actId}`)
+    
     const { user } = useGetUsersQuery("usersList", {
       selectFromResult: ({ data }) => ({
         user: data?.entities[userRep],
       }),
     });
 
-    if (act && user) {
-      const actname = act.act_name ? act.act_name : "sin nombre";
-      console.log(typeof dateInit);
+    if (user) {
       
-      const fechaIni = (`${dateInit}`).split("T")[0];
-      
-      const fechaFin = (`${dateEnd}`).split("T")[0];
+
       const errContent =
         (error?.data?.message || delerror?.data?.message) ?? "";
 
@@ -100,17 +250,22 @@ const AppDate = ({ dateId, Lista }) => {
       if (isSuccess) {
         console.log(`no hay error ${errContent}`);
       }
-      let contenido
+      let contenido;
       if (Lista == "Lista1") {
         contenido = (
           <tr key={dateId}>
             <td>
               <Link to={`/dash/cultivos/info-app/${dateId}`}>
-                <div type="button">{actname}</div>
+                <div type="button"><Act key={actKey} actId={actKey} /></div>
               </Link>
             </td>
-            <td>{fechaIni=="null"?"no fecha asignada":fechaIni}</td>
-            <td>{fechaFin=="null"?"no fecha asignada":fechaFin}</td>
+            <td onClick={() => setIsOpen(true)}>
+              {fechaIni == "null" ? "no fecha asignada" : fechaIni}
+            </td>
+            {updateApp}
+            <td onClick={() => setIsOpen(true)}>
+              {fechaFin == "null" ? "no fecha asignada" : fechaFin}
+            </td>
             <td>{user.user_name}</td>
             <td>
               <img
@@ -122,23 +277,30 @@ const AppDate = ({ dateId, Lista }) => {
             </td>
           </tr>
         );
-        
       }
       if (Lista == "Lista2") {
         contenido = (
           <tr key={dateId}>
             <td>
               <Link to={`/dash/cultivos/info-app/${dateId}`}>
-                <div type="button">{actname}</div>
+                <div type="button">
+                  <Act key={actKey} actId={actKey} />
+                </div>
               </Link>
             </td>
-            <td>{fechaIni=="null"?"no fecha asignada":fechaIni}</td>
+            <td>
+              <Camp key={date.crop_camp_key} campId={date.crop_camp_key} />
+            </td>
+            <td>
+              <Link to={`/dash/cultivos/info-cultivo/${date.date_crop_key}`}>
+                <Crop key={date.date_crop_key} cropId={date.date_crop_key} />
+              </Link>
+            </td>
+            <td>{fechaIni == "null" ? "no fecha asignada" : fechaIni}</td>
             <td>{user.user_name}</td>
           </tr>
         );
       }
-
-      
 
       return contenido;
     }
