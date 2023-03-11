@@ -52,7 +52,7 @@ const EditarCampos = () => {
   if (isSuccess) {
     const { ids } = camps;
     
-    tableContent = ids?.length && ids.map((Id) => <Camp key={Id} campId={Id} />);
+    tableContent = ids?.length && ids.map((Id) => <Camp key={Id} campId={Id} Lista={"Lista1"} />);
   }
 
 
@@ -87,8 +87,10 @@ const EditarCampos = () => {
              <div className=" container col-12 col-md-9 col-lg-6 edit_table-container"><table className="table table-hover table-sm table-striped table-bordered">
                 <thead className="thead-loyola">
                     <th className="align-middle" scope="col">Campo</th>
+                    <th className="align-middle" scope="col">area</th>
                     <th className="align-middle" scope="col">Habilitar</th>
                     <th className="align-middle" scope="col">Eliminar</th>
+                    <th className="align-middle" scope="col">Editar</th>
                 </thead>
                 <tbody>
                     {tableContent}

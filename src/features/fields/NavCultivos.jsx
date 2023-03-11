@@ -3,53 +3,32 @@ import "../../styles/nav_cultivos.css"
 import ReImage from "../../images/return.svg"
 import { Link } from 'react-router-dom'
 import cultivos from '../jsons/cultivos.json'
-
-const Cultivos = () => {
-    return(
-        cultivos.map((item) => (
-            <div className="big-cont col-12 col-sm-6 col-md-4 col-xl-3" style={allOrSome(item.finalizado)}>
-                <div className="card">
-                    <div className="card-header rounded"><h5>{item.name}</h5></div>
-                    <ul className='cultivos_general'>
-                        <li className='col-12'><b>Variedad: </b>{item.variedad}</li>
-                        <li className='col-12'><b>Área: </b>{item.area} tareas</li>
-                        <li className='col-12'><b>Marco de plantacion: </b>{item.marco_plantacion}</li>
-                        <li className='col-12'><b>Campo#: </b>{item.campo}</li>
-                        <li className='col-12'><b>Fecha de siembra: </b>{item.fecha_siembra}</li>
-                        <li className='col-12'><b>Fecha de cosecha: </b>{item.fecha_cosecha}</li>
-                        <li className='col-12'><b>Producto final: </b>{item.producto_final}</li>
-                        <li className='col-12'><b>Costo acumulado: </b>${numberWithCommas(item.costo)}</li>
-                        <li className='col-12'><b>Finalizado: </b>{isCompleted(item.finalizado)}</li>
-                    </ul>
-                </div>
-            </div>
-        ))
-    )
-}
-
-function allOrSome(a){
-    if (a===1){
-    return {display : 'none'};
-    }
-    return;
-}
-
-function numberWithCommas(x) {
-    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-}
-
-function isCompleted(a){
-    if (a === 1){
-        return "sí"
-    }
-    else {
-        return "no"
-    }
-}
-
+import { useGetCropsQuery } from "./redux/cropApiSlice";
+import Crop from "../../components/Crop"
 
 
 const NavCultivos = () => {
+    const {
+        data: crops,
+        isLoading,
+        isSuccess: cropSuc,
+        isError,
+        error,
+      } = useGetCropsQuery("cropsList", {
+        pollingInterval: 60000,
+        refetchOnFocus: true,
+        refetchOnMountOrArgChange: true,
+      });
+
+
+    let tableContent;
+    if (cropSuc) {
+        const { ids } = crops;
+    
+        tableContent =
+          ids?.length && ids.map((Id) => <Crop key={Id} cropId={Id} Lista={"Lista2"} />);
+      }
+
     return(
             <>
                 <div className="return-div"><Link to={'/dash'}><div className="return-button">
@@ -80,7 +59,7 @@ const NavCultivos = () => {
                                 <div><input type="checkBox" className="finalizados" defaultChecked={false} /><span>Cultivos finalizados</span></div>
                         </div>
                     <div className="card-deck cultivos_big-card">
-                        <Cultivos />
+                        {tableContent}
                     </div>
                 </div>
             </>

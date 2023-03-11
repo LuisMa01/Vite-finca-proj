@@ -9,7 +9,7 @@ import { useGetPlantsQuery } from "./redux/plantApiSlice";
 import { useGetUsersQuery } from "./redux/usersApiSlice";
 import { useEffect, useState } from "react";
 import Crop from "../../components/Crop";
-
+ 
 const nuevoCultivo = () => {
   const {
     data: crops,
@@ -116,14 +116,35 @@ const nuevoCultivo = () => {
       cropArea,
     });
   };
-  const onCropNameChanged = (e) => setCropName(e.target.value);
+  const onCropNameChanged = (e) => {
+    e.preventDefault()
+    setCropName(e.target.value);
+  }
   const onRepUserChanged = (e) => setRepUser(e.target.value);
-  const onCropPlantChanged = (e) => setCropPlant(e.target.value);
-  const onCropHarvestChanged = (e) => setCropHarvest(e.target.value);
-  const onCropFinalProdChanged = (e) => setCropProd(e.target.value);
-  const onCropCampChanged = (e) => setCropCamp(e.target.value);
-  const onCropPlantKeyChanged = (e) => setCropPlantKey(e.target.value);
-  const onCropAreaChanged = (e) => setCropArea(e.target.value);
+  const onCropPlantChanged = (e) => {
+    e.preventDefault()
+    setCropPlant(e.target.value);
+  }
+  const onCropHarvestChanged = (e) => {
+    e.preventDefault()
+    setCropHarvest(e.target.value);
+  } 
+  const onCropFinalProdChanged = (e) => {
+    e.preventDefault()
+    setCropProd(e.target.value);
+  }
+  const onCropCampChanged = (e) => {
+    e.preventDefault()
+    setCropCamp(e.target.value);
+  }
+  const onCropPlantKeyChanged = (e) => {
+    e.preventDefault()
+    setCropPlantKey(e.target.value);
+  }
+  const onCropAreaChanged = (e) => {
+    e.preventDefault()
+    setCropArea(e.target.value);
+  }
 
   useEffect(() => {
     if (addissuccess) {
@@ -147,7 +168,7 @@ const nuevoCultivo = () => {
     const { ids } = crops;
 
     tableContent =
-      ids?.length && ids.map((Id) => <Crop key={Id} cropId={Id} />);
+      ids?.length && ids.map((Id) => <Crop key={Id} cropId={Id} Lista={"Lista1"} />);
   }
 
   return (
@@ -201,7 +222,7 @@ const nuevoCultivo = () => {
             />
           </div>
         </div>
-
+ 
 
         <div className="form-row">  
           <div className="col-md-3 mb-3">
@@ -289,10 +310,19 @@ const nuevoCultivo = () => {
                 Cultivos
               </th>
               <th className="align-middle" scope="col">
+                Planta
+              </th>
+              <th className="align-middle" scope="col">
+                Campo
+              </th>
+              <th className="align-middle" scope="col">
                 Estatus
               </th>
               <th className="align-middle" scope="col">
                 Eliminar
+              </th>
+              <th className="align-middle" scope="col">
+                Editar
               </th>
             </thead>
             <tbody>{tableContent}</tbody>

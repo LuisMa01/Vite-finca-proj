@@ -141,7 +141,7 @@ const InfoAppCult = () => {
         if (entities[Id].cost_date_key == date.date_id) {
           let list = <Cost key={Id} costId={Id} />
           costTotal.push(parseFloat(entities[Id].cost_price))
-          return list;
+          return list; 
         }
       });
   }
@@ -254,6 +254,7 @@ const InfoAppCult = () => {
               <th className="align-middle" scope="col">
                 Eliminar
               </th>
+              
             </thead>
             <tbody>
               {costList}

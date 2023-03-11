@@ -52,6 +52,17 @@ const Act = ({ actId }) => {
     return <>{act.act_name ? act.act_name : "sin nombre"}</>;
   }
 };
+const User = ({ userId }) => {
+  const { user } = useGetUsersQuery("usersList", {
+    selectFromResult: ({ data }) => ({
+      user: data?.entities[userId],
+    }),
+  });
+
+  if (user) {
+    return <>{user.user_nombre ? user.user_nombre : user.user_name}</>;
+  }
+};
 
 const AppDate = ({ dateId, Lista }) => {
   const { date } = useGetDatesQuery("datesList", {
@@ -141,7 +152,7 @@ const AppDate = ({ dateId, Lista }) => {
   };
   useEffect(() => {
     if (date) {
-      setIsOpen(false)
+      setIsOpen(false);
       setActKey(date.date_act_key);
       setDateInit(date.date_init);
       setDateEnd(date.date_end);
@@ -150,10 +161,6 @@ const AppDate = ({ dateId, Lista }) => {
       setCropKey(date.date_crop_key);
     }
   }, [date]);
-
-  const fechaIni = dateInit == "null" ? "" : `${dateInit}`.split("T")[0];
-
-  const fechaFin = dateEnd == "null" ? "" : `${dateEnd}`.split("T")[0];
 
   if (date) {
     let userOption;
@@ -172,6 +179,9 @@ const AppDate = ({ dateId, Lista }) => {
         }
       });
     }
+    const fechaIni = dateInit == "null" ? "" : `${dateInit}`.split("T")[0];
+
+    const fechaFin = dateEnd == "null" ? "" : `${dateEnd}`.split("T")[0];
 
     const updateApp = (
       <Modal isOpen={isOpen} onRequestClose={() => setIsOpen(false)}>
@@ -233,77 +243,72 @@ const AppDate = ({ dateId, Lista }) => {
     );
 
     //const handleEdit = () => navigate(`/dash/users/${actId}`)
-    
-    const { user } = useGetUsersQuery("usersList", {
-      selectFromResult: ({ data }) => ({
-        user: data?.entities[userRep],
-      }),
-    });
 
-    if (user) {
-      
+    const errContent = (error?.data?.message || delerror?.data?.message) ?? "";
 
-      const errContent =
-        (error?.data?.message || delerror?.data?.message) ?? "";
-
-      //console.log(`${user.user_id} ${userName} ${userRolesString} ${active} ${errContent}`);
-      if (isSuccess) {
-        console.log(`no hay error ${errContent}`);
-      }
-      let contenido;
-      if (Lista == "Lista1") {
-        contenido = (
-          <tr key={dateId}>
-            <td>
-              <Link to={`/dash/cultivos/info-app/${dateId}`}>
-                <div type="button"><Act key={actKey} actId={actKey} /></div>
-              </Link>
-            </td>
-            <td onClick={() => setIsOpen(true)}>
-              {fechaIni == "null" ? "no fecha asignada" : fechaIni}
-            </td>
-            {updateApp}
-            <td onClick={() => setIsOpen(true)}>
-              {fechaFin == "null" ? "no fecha asignada" : fechaFin}
-            </td>
-            <td>{user.user_name}</td>
-            <td>
-              <img
-                onClick={onDeleteDateClicked}
-                className="remove-img"
-                src={RemoveImg}
-                alt="Remove"
-              />
-            </td>
-          </tr>
-        );
-      }
-      if (Lista == "Lista2") {
-        contenido = (
-          <tr key={dateId}>
-            <td>
-              <Link to={`/dash/cultivos/info-app/${dateId}`}>
-                <div type="button">
-                  <Act key={actKey} actId={actKey} />
-                </div>
-              </Link>
-            </td>
-            <td>
-              <Camp key={date.crop_camp_key} campId={date.crop_camp_key} />
-            </td>
-            <td>
-              <Link to={`/dash/cultivos/info-cultivo/${date.date_crop_key}`}>
-                <Crop key={date.date_crop_key} cropId={date.date_crop_key} />
-              </Link>
-            </td>
-            <td>{fechaIni == "null" ? "no fecha asignada" : fechaIni}</td>
-            <td>{user.user_name}</td>
-          </tr>
-        );
-      }
-
-      return contenido;
+    //console.log(`${user.user_id} ${userName} ${userRolesString} ${active} ${errContent}`);
+    if (isSuccess) {
+      console.log(`no hay error ${errContent}`);
     }
+    let contenido;
+    if (Lista == "Lista1") {
+      contenido = (
+        <tr key={dateId}>
+          <td>
+            <Link to={`/dash/cultivos/info-app/${dateId}`}>
+              <div type="button">
+                <Act key={actKey} actId={actKey} />
+              </div>
+            </Link>
+          </td>
+          <td>{fechaIni == "null" ? "no fecha asignada" : fechaIni}</td>
+
+          <td>{fechaFin == "null" ? "no fecha asignada" : fechaFin}</td>
+          <td>
+            <User key={userRep} userId={userRep} />
+          </td>
+          <td>
+            <img
+              onClick={onDeleteDateClicked}
+              className="remove-img"
+              src={RemoveImg}
+              alt="Remove"
+            />
+          </td>
+          <td onClick={() => setIsOpen(true)}>Editar</td>
+          {updateApp}
+        </tr>
+      );
+    }
+    if (Lista == "Lista2") {
+      contenido = (
+        <tr key={dateId}>
+          <td>
+            <Link to={`/dash/cultivos/info-app/${dateId}`}>
+              <div type="button">
+                <Act key={actKey} actId={actKey} />
+              </div>
+            </Link>
+          </td>
+          <td>
+            <Link to={`/dash/campos`}>
+              <Camp key={date.crop_camp_key} campId={date.crop_camp_key} />
+            </Link>
+          </td>
+          <td>
+            <Link to={`/dash/cultivos/info-cultivo/${date.date_crop_key}`}>
+              <Crop key={date.date_crop_key} cropId={date.date_crop_key} />
+            </Link>
+          </td>
+          <td>{fechaIni == "null" ? "no fecha asignada" : fechaIni}</td>
+          <td>
+            <User key={userRep} userId={userRep} />
+          </td>
+        </tr>
+      );
+    }
+
+    return contenido;
   } else return null;
 };
 

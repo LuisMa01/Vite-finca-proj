@@ -10,6 +10,14 @@ import { ROLES } from "../../config/roles";
 
 const MiPerfil = () => {
   const { username, roles, isManager, isAdmin, userId, nombres, apellidos, email, phone } = useAuth();
+  const { user } = useGetUsersQuery("usersList", {
+    selectFromResult: ({ data }) => ({
+      user: data?.entities[userId],
+    }),
+  });
+
+  //id,  username, roles,  status,  password,  names,  surname,  email,  phone,
+
   console.log(`Aqui ${username}, ${userId}`);
 /*
   const { post, isLoading, isSuccess, isError, error } = useGetUsersQuery(

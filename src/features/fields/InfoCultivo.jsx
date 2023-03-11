@@ -196,7 +196,7 @@ const infoCultivo = () => {
             </select>
           </div>
           <div className="col-md-6 col-lg-3 mb-3">
-            <label htmlFor="siembra_cultivo">Fecha de Inicio</label>
+            <label htmlFor="siembra_cultivo">Fecha Programada</label>
             <input
               type="date"
               className="form-control"
@@ -205,7 +205,7 @@ const infoCultivo = () => {
             />
           </div>
           <div className="col-md-6 col-lg-3 mb-3">
-            <label htmlFor="siembra_cultivo">Fecha de Fin</label>
+            <label htmlFor="siembra_cultivo">Fecha Ejecutada</label>
             <input
               type="date"
               className="form-control"
@@ -234,16 +234,19 @@ const infoCultivo = () => {
                 Actividad
               </th>
               <th className="align-middle" scope="col">
-                Fecha de Inicio
+              Fecha Programada
               </th>
               <th className="align-middle" scope="col">
-                Fecha de Fin
+              Fecha Ejecutada
               </th>
               <th className="align-middle" scope="col">
                 Responsable
               </th>
               <th className="align-middle" scope="col">
                 Eliminar
+              </th>
+              <th className="align-middle" scope="col">
+                Editar
               </th>
             </thead>
             <tbody>

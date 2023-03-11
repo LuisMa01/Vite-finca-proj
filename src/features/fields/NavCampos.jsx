@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom'
 import MaizImag from '../../images/maiz.jpg'
 import campos from '../jsons/campos.json'
 import { useGetCampsQuery } from "../fields/redux/campApiSlice";
+import Camp from "../../components/Camp";
 
 const Campos = ({ campId }) => {
     const { camp } = useGetCampsQuery("campsList", {
@@ -33,7 +34,7 @@ function isCampoEnabled(a){
     return;
 }
 
-const navCampos = () => { 
+const navCampos = () => {  
 
     const {
         data: camps,
@@ -54,7 +55,7 @@ const navCampos = () => {
       if (isSuccess) {
         const { ids } = camps;
         
-        tableContent = ids?.length && ids.map((Id) => <Campos key={Id} campId={Id} />);
+        tableContent = ids?.length && ids.map((Id) => <Camp key={Id} campId={Id} Lista={"Lista2"} />);
       }
     
 
