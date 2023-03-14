@@ -15,32 +15,18 @@ import { Outlet } from 'react-router-dom';
 const Prefetch = () => {
     useEffect(() => {
         console.log('subscribing')        
-        const users = store.dispatch(usersApiSlice.endpoints.getUsers.initiate())
-        const acts = store.dispatch(actApiSlice.endpoints.getActs.initiate())
-        const dates = store.dispatch(dateApiSlice.endpoints.getDates.initiate())
-        const camps = store.dispatch(campApiSlice.endpoints.getCamps.initiate())
-        const comts = store.dispatch(comtApiSlice.endpoints.getComts.initiate())
-        const costs = store.dispatch(costApiSlice.endpoints.getCosts.initiate())
-        const crops = store.dispatch(cropApiSlice.endpoints.getCrops.initiate())
-        const doses = store.dispatch(doseApiSlice.endpoints.getDoses.initiate())
-        const items = store.dispatch(itemApiSlice.endpoints.getItems.initiate())
-        const plants = store.dispatch(plantApiSlice.endpoints.getPlants.initiate())
+        
+        store.dispatch(usersApiSlice.util.prefetch('getUsers', 'usersList', {force: true}))
+        store.dispatch(actApiSlice.util.prefetch('getActs', 'actsList', {force: true}))
+        store.dispatch(dateApiSlice.util.prefetch('getDates', 'datesList', {force: true}))
+        store.dispatch(campApiSlice.util.prefetch('getCamps', 'campsList', {force: true}))
+        store.dispatch(comtApiSlice.util.prefetch('getComts', 'comtsList', {force: true}))
+        store.dispatch(costApiSlice.util.prefetch('getCosts', 'cotsList', {force: true}))
+         store.dispatch(cropApiSlice.util.prefetch('getCrops', 'cropsList', {force: true}))
+         store.dispatch(doseApiSlice.util.prefetch('getDoses', 'dosesList', {force: true}))
+        store.dispatch(itemApiSlice.util.prefetch('getItems', 'itemsList', {force: true}))
+         store.dispatch(plantApiSlice.util.prefetch('getPlants', 'plantsList', {force: true}))
 
-
-
-        return () => {
-            console.log('unsubscribing')
-            users.unsubscribe()
-            acts.unsubscribe()
-            dates.unsubscribe()
-            camps.unsubscribe()
-            comts.unsubscribe()
-            costs.unsubscribe()
-            crops.unsubscribe()
-            doses.unsubscribe()
-            items.unsubscribe()
-            plants.unsubscribe()
-        }
     }, [])
 
     return <Outlet />

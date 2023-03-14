@@ -34,7 +34,7 @@ const userList = () => {
   if (isSuccess) {
     const { ids } = users;
     const tableContent =
-      ids?.length && ids.map((userId) => <User key={userId} userId={userId} />);
+      ids?.length && ids.map((userId) => <User key={userId} userId={userId} Lista={"Lista1"} />);
 
     content = (
       <>
@@ -81,6 +81,9 @@ const userList = () => {
               </th>
               <th className="align-middle" scope="col">
                 Eliminar
+              </th>
+              <th className="align-middle" scope="col">
+                Editar
               </th>
             </thead>
             <tbody>

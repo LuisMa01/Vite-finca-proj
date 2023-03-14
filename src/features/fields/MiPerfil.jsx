@@ -1,24 +1,47 @@
 import React from "react";
-import { useGetUsersQuery } from "./redux/usersApiSlice";
-import ReImage from "../../images/return.svg";
-import PeopleImg from "../../images/users.svg"
+//import { useGetUsersQuery } from "./redux/usersApiSlice";
+//import ReImage from "../../images/return.svg";
+//import PeopleImg from "../../images/users.svg"
 import "../../styles/mi_perfil.css";
-import { Link } from "react-router-dom";
+//import { Link } from "react-router-dom";
 import useAuth from "../../hooks/useAuth";
-import { useEffect } from "react";
+//import { useEffect, useState } from "react";
 import { ROLES } from "../../config/roles";
+import User from "../../components/User";
 
 const MiPerfil = () => {
-  const { username, roles, isManager, isAdmin, userId, nombres, apellidos, email, phone } = useAuth();
+  const {  isManager, isAdmin, userId } = useAuth();
+  /*
   const { user } = useGetUsersQuery("usersList", {
     selectFromResult: ({ data }) => ({
       user: data?.entities[userId],
     }),
   });
+  */
+/*
+  const [username, setUserName] = useState(user.user_name)
+  const [roles, setRoles] = useState(user.user_rol)
+  const [status, setStatus] = useState(user.user_status)
+  const [names, setNames] = useState(user.user_nombre)
+  const [surname, setSurname] = useState(user.user_apellido)
+  const [email, setEmail] = useState(user.email)
+  const [phone, setPhone] = useState(user.user_phone)
+
 
   //id,  username, roles,  status,  password,  names,  surname,  email,  phone,
 
-  console.log(`Aqui ${username}, ${userId}`);
+  useEffect(() => {
+    if (user) {
+      setUserName(user.user_name)
+      setRoles(user.user_rol)
+      setStatus(user.user_status)
+      setNames(user.user_nombre)
+      setSurname(user.user_apellido)
+      setEmail(user.email)
+      setPhone(user.user_phone)
+    }
+  }, [user]);
+  */
 /*
   const { post, isLoading, isSuccess, isError, error } = useGetUsersQuery(
     "usersList",
@@ -61,8 +84,9 @@ const MiPerfil = () => {
   });
   console.log(`${users}`);
 */
-  const nombre = nombres ? nombres : "Sin nombre";
-  const apellido = apellidos ? apellidos : "";
+/*
+  const nombre = names ? names : "Sin nombre";
+  const apellido = surname ? surname : "";
   const correo = email ? email : "No tiene correo";
   const telefono = phone ? phone : "no tiene";
 
@@ -76,51 +100,16 @@ const MiPerfil = () => {
   if (roles==Object.values(ROLES)[2]) {
     llave = Object.keys(ROLES)[2]
   }
+  */
+  let contenido
+  if (userId) {
+    console.log(userId);
+    contenido = (<><User key={userId} userId={userId} Lista={"Lista2"} /></>)
+  } else {
+    contenido = (<>No Carga</>)
+  }
 
-  return (
-    <>
-      <div className="return-div">
-        <Link to={"/dash"}>
-          <div className="return-button">
-            <img className="return-button-img" src={ReImage} alt="Atrás" />
-          </div>
-        </Link>
-      </div>
-      <h1 className="encabezado">Mi información</h1>
-      <div className="profile-card">
-        <div className="name-header">
-          <h2>
-            {nombre} {apellido}
-          </h2>
-          <div className="small-icon-container"><img className="reduced-icon" src={PeopleImg} alt="."/></div>
-        </div>
-        
-        <p className="p-cargo">{llave}</p>
-        <p>
-          <b>Usuario: </b> {username}
-        </p>
-        <p>
-          <b>Correo:</b> {correo}
-        </p>
-        <p>
-          <b>Teléfono:</b> {telefono}
-        </p>
-        <div className="split-line"></div>
-        <div className="button-section">
-          <Link key={userId} to={`/dash/usuario/mi-perfil/act-info/${userId}`}>
-            <button type="button" class="btn thead-loyola btn-lg">
-              Actualizar información
-            </button>
-          </Link>
-          <Link to={"/dash/usuario/mi-perfil/pswd-change"}>
-            <button type="button" class="btn btn-secondary btn-lg">
-              Cambiar contraseña
-            </button>
-          </Link>
-        </div>
-      </div>
-    </>
-  );
+  return contenido
 };
 
 export default MiPerfil;
