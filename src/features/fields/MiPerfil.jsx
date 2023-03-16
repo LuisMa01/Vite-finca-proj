@@ -101,9 +101,9 @@ const MiPerfil = () => {
     llave = Object.keys(ROLES)[2]
   }
   */
-  let contenido
+  let contenido 
   if (userId) {
-    console.log(userId);
+    
     contenido = (<><User key={userId} userId={userId} Lista={"Lista2"} /></>)
   } else {
     contenido = (<>No Carga</>)

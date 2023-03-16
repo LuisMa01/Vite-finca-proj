@@ -10,7 +10,7 @@ import { useNavigate } from "react-router-dom";
 const USER_REGEX = /^[A-z]{3,20}$/;
 const PWD_REGEX = /^[A-z0-9!@#$%]{4,12}$/;
 const EMAIL_REGEX = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
-const PHONE_REGEX = /^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]*$/; 
+const PHONE_REGEX = /^[1-9]\d{2}-\d{3}-\d{4}/; 
 
 const NuevoUsuario = () => {
   const [addNewUser, { isLoading, isSuccess, isError, error }] =

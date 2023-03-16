@@ -12,7 +12,7 @@ import Swal from "sweetalert2";
 import { ROLES } from "../config/roles";
 import Modal from "react-modal";
 import ReImage from "../images/return.svg";
-import PeopleImg from "../images/users.svg"
+import PeopleImg from "../images/users.svg";
 
 Modal.setAppElement("#root");
 
@@ -24,7 +24,7 @@ const PHONE_REGEX = /^[1-9]\d{2}-\d{3}-\d{4}/;
 //^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]*$/;
 
 const User = ({ userId, Lista }) => {
-  const { user } = useGetUsersQuery("usersList", {
+  const { user, isLoading: userIsLoading, isSuccess: userIsSuc, isError: userIsErr } = useGetUsersQuery("usersList", {
     selectFromResult: ({ data }) => ({
       user: data?.entities[userId],
     }),
@@ -38,8 +38,10 @@ const User = ({ userId, Lista }) => {
   const [validUsername, setValidUsername] = useState(false);
   const [validUserphone, setValidUserphone] = useState(false);
   const [password, setPassword] = useState("");
+  const [passwordDu, setPasswordDu] = useState("");
   const [passwordAnt, setPasswordAnt] = useState("");
   const [validPassword, setValidPassword] = useState(false);
+  const [validPasswordAnt, setValidPasswordAnt] = useState(false);
   const [roles, setRoles] = useState(user.user_rol);
   const [status, setStatus] = useState(user.user_status);
   const [isOpen, setIsOpen] = useState(false);
@@ -52,7 +54,17 @@ const User = ({ userId, Lista }) => {
     deleteUser,
     { isSuccess: isDelSuccess, isError: isDelError, error: delerror },
   ] = useDeleteUserMutation();
-
+  useEffect(() => {
+    if (user) {
+      setUsername(user.user_name);
+      setNames(user.user_nombre);
+      setSurname(user.user_apellido);
+      setRoles(user.user_rol);
+      setEmail(user.email);
+      setPhone(user.user_phone);
+      setStatus(user.user_status);
+    }
+  }, [user, userIsSuc]);
   const handleClearClick = (e) => {
     e.preventDefault();
     setUsername(user.user_name);
@@ -96,17 +108,6 @@ const User = ({ userId, Lista }) => {
       }
     });
   };
-  useEffect(() => {
-    if (user) {
-      setUsername(user.user_name);
-      setNames(user.user_nombre);
-      setSurname(user.user_apellido);
-      setRoles(user.user_rol);
-      setEmail(user.email);
-      setPhone(user.user_phone);
-      setStatus(user.user_status);
-    }
-  }, [user]);
 
   useEffect(() => {
     setValidUsername(USER_REGEX.test(username));
@@ -118,6 +119,9 @@ const User = ({ userId, Lista }) => {
     setValidPassword(PWD_REGEX.test(password));
   }, [password]);
   useEffect(() => {
+    setValidPasswordAnt(PWD_REGEX.test(passwordAnt));
+  }, [password]);
+  useEffect(() => {
     setValidUserphone(PHONE_REGEX.test(phone));
   }, [phone]);
 
@@ -125,6 +129,8 @@ const User = ({ userId, Lista }) => {
     setUsername(e.target.value);
   };
   const onPasswordChanged = (e) => setPassword(e.target.value);
+  const onPasswordDuChanged = (e) => setPasswordDu(e.target.value);
+  const onPasswordAntChanged = (e) => setPasswordAnt(e.target.value);
   const onEmailChanged = (e) => setEmail(e.target.value);
   const onNamesChanged = (e) => setNames(e.target.value);
   const onSurnameChanged = (e) => setSurname(e.target.value);
@@ -139,6 +145,14 @@ const User = ({ userId, Lista }) => {
       validUsername,
       email ? validEmail : true,
       phone ? validUserphone : true,
+    ].every(Boolean) && !isLoading;
+
+  const canSavePs =
+    [
+      validPassword,
+      validPasswordAnt,
+      passwordDu == password,
+      password != passwordAnt,
     ].every(Boolean) && !isLoading;
 
   const onSaveUserClicked = async (e) => {
@@ -156,7 +170,19 @@ const User = ({ userId, Lista }) => {
       });
     }
   };
-
+  const onChangePsClicked = async (e) => {
+    e.preventDefault();
+    if (canSavePs) {
+      await updateUser({
+        id: user.user_id,
+        username,
+        status,
+        roles,
+        password,
+        passwordAnt,
+      });
+    }
+  };
   const options = Object.keys(ROLES).map((role) => {
     return (
       <option key={ROLES[role]} value={ROLES[role]}>
@@ -165,6 +191,8 @@ const User = ({ userId, Lista }) => {
       </option>
     );
   });
+
+  
 
   const actuUser = (
     <Modal isOpen={isOpen} onRequestClose={() => setIsOpen(false)}>
@@ -294,44 +322,73 @@ const User = ({ userId, Lista }) => {
       <button className="btn btn-danger" onClick={() => setIsisAbierto(false)}>
         Cerrar
       </button>
-      
-        <>
-            
-            <p className='titulo_cambiar'>Cambiar contraseña</p>
-            <div className="my-card card-outline-secondary col-8 col-sm-6 col-md-5 col-lg-4">
-                        <div className="card-body">
-                            <form className="form" autocomplete="off">
-                                <div className="form-group">
-                                    <label for="inputPasswordOld">Contraseña actual</label>
-                                    <input type="password" className="form-control" id="inputPasswordOld" required autoFocus  />
-                                </div>
-                                <div className="form-group">
-                                    <label for="inputPasswordNew">Nueva contraseña</label>
-                                    <input type="password" className="form-control" id="inputPasswordNew" required />
-                                    <span className="form-text small text-muted">
-                                            La contraseña debe contener entre 8-20 caracteres, y <b>no</b> debe contener espacios.
-                                        </span>
-                                </div>
-                                <div className="form-group">
-                                    <label for="inputPasswordNewVerify">Verificar</label>
-                                    <input type="password" className="form-control" id="inputPasswordNewVerify" required />
-                                    <span className="form-text small text-muted">
-                                            Para confirmar, escriba la nueva contraseña.
-                                        </span>
-                                </div>
-                                <div className="button-section">
-                                    <button type="submit" className="btn btn-success btn-lg">Guardar</button>
-                                    <Link to={'/dash/usuario/mi-perfil'} className=".Link">
-                                        <button type="submit" className="btn btn-danger btn-lg">Cancelar</button></Link>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-        </>
-      
+
+      <p className="titulo_cambiar">Cambiar contraseña</p>
+      <div className="my-card card-outline-secondary col-8 col-sm-6 col-md-5 col-lg-4">
+        <div className="card-body">
+          <form className="form" onSubmit={onChangePsClicked}>
+            <div className="form-group">
+              <label for="inputPasswordOld">Contraseña actual</label>
+              <input
+                type="password"
+                className="form-control"
+                id="inputPasswordOld"
+                value={passwordAnt}
+                onChange={onPasswordAntChanged}
+                autoFocus
+              />
+            </div>
+            <div className="form-group">
+              <label for="inputPasswordNew">Nueva contraseña</label>
+              <input
+                type="password"
+                className="form-control"
+                id="inputPasswordNew"
+                value={password}
+                onChange={onPasswordChanged}
+              />
+              <span className="form-text small text-muted">
+                La contraseña debe contener entre 8-20 caracteres, y <b>no</b>{" "}
+                debe contener espacios.
+              </span>
+            </div>
+            <div className="form-group">
+              <label for="inputPasswordNewVerify">Verificar</label>
+              <input
+                type="password"
+                className="form-control"
+                id="inputPasswordNewVerify"
+                value={passwordDu}
+                onChange={onPasswordDuChanged}
+              />
+              <span className="form-text small text-muted">
+                Para confirmar, escriba la nueva contraseña.
+              </span>
+            </div>
+            <div className="button-section">
+              <button
+                type="submit"
+                className="btn btn-success btn-lg"
+                disabled={!canSavePs}
+              >
+                Guardar
+              </button>
+              <button className="btn btn-danger" onClick={handleClearClick}>
+                Limpiar
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
     </Modal>
   );
 
+if (userIsLoading) {
+  return <>Cargando...</>
+}
+if (userIsErr) {
+  return <>Error...</>
+}
   if (user) {
     //const handleEdit = () => navigate(`/dash/users/${userId}`)
     const nombre = names ? names : "Sin nombre";
@@ -355,9 +412,7 @@ const User = ({ userId, Lista }) => {
     }
 
     //console.log(`${user.user_id} ${userName} ${userRolesString} ${active} ${errContent}`);
-    if (isSuccess) {
-      console.log(`no hay error ${errContent}`);
-    }
+   
 
     let contenido;
     if (Lista == "Lista1") {
@@ -390,7 +445,7 @@ const User = ({ userId, Lista }) => {
       );
     }
     if (Lista == "Lista2") {
-      console.log("lalalallalala");
+      
       contenido = (
         <>
           <div className="return-div">
@@ -432,11 +487,15 @@ const User = ({ userId, Lista }) => {
               </button>
 
               {actuUser}
-              
-              <button type="button" class="btn btn-secondary btn-lg" onClick={() => setIsisAbierto(true)}>
-                  Cambiar contraseña
-                </button>
-            {actuPass}
+
+              <button
+                type="button"
+                class="btn btn-secondary btn-lg"
+                onClick={() => setIsisAbierto(true)}
+              >
+                Cambiar contraseña
+              </button>
+              {actuPass}
             </div>
           </div>
         </>
