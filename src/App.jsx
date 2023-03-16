@@ -5,7 +5,7 @@ import Layouts from "./components/Layouts";
 
 import Login from "./features/auth/Login";
 import DashLayout from "./components/DashLayout";
-import Profile from "./features/users/Profile";
+
 import Prefetch from "./features/auth/Prefetch";
 import PersistLogin from "./features/auth/PersistLogin";
 import RequireAuth from "./features/auth/RequireAuth";
@@ -43,10 +43,6 @@ function App() {
           >
             <Route element={<Prefetch />}>
               <Route path="dash" element={<DashLayout />}>
-                <Route path="perfil">
-                  <Route index element={<Profile />} />
-                  {/*<Route path="users" element={<Users />} />*/}
-                </Route>
                 {/*lo agregado aqui en adelante es de fran*/}
                 <Route index element={<NavInicio />} />
                 <Route path="proximas" element={<NavProximas />} />

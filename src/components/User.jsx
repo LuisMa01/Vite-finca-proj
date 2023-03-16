@@ -24,11 +24,21 @@ const PHONE_REGEX = /^[1-9]\d{2}-\d{3}-\d{4}/;
 //^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]*$/;
 
 const User = ({ userId, Lista }) => {
-  const { user, isLoading: userIsLoading, isSuccess: userIsSuc, isError: userIsErr } = useGetUsersQuery("usersList", {
+  const {
+    user,
+    isLoading: userIsLoading,
+    isSuccess: userIsSuc,
+    isError: userIsErr,
+  } = useGetUsersQuery("usersList", {
     selectFromResult: ({ data }) => ({
       user: data?.entities[userId],
     }),
   });
+  console.log(userId);
+  console.log(Lista);
+  if (user) {
+    
+  console.log('aqui');
   const [username, setUsername] = useState(user.user_name);
   const [names, setNames] = useState(user.user_nombre);
   const [surname, setSurname] = useState(user.user_apellido);
@@ -64,7 +74,7 @@ const User = ({ userId, Lista }) => {
       setPhone(user.user_phone);
       setStatus(user.user_status);
     }
-  }, [user, userIsSuc]);
+  }, [user]);
   const handleClearClick = (e) => {
     e.preventDefault();
     setUsername(user.user_name);
@@ -191,8 +201,6 @@ const User = ({ userId, Lista }) => {
       </option>
     );
   });
-
-  
 
   const actuUser = (
     <Modal isOpen={isOpen} onRequestClose={() => setIsOpen(false)}>
@@ -382,128 +390,133 @@ const User = ({ userId, Lista }) => {
       </div>
     </Modal>
   );
+  let contenido;
+  if (userIsLoading) {
+    contenido = <>Cargando...</>;
+  }
+  if (userIsErr) {
+    contenido(<>Error...</>);
+  }
+  
+   // if (user) {
+      //const handleEdit = () => navigate(`/dash/users/${userId}`)
+      const nombre = names ? names : "Sin nombre";
+      const apellido = surname ? surname : "";
+      const correo = email ? email : "No tiene correo";
+      const telefono = phone ? phone : "no tiene";
 
-if (userIsLoading) {
-  return <>Cargando...</>
-}
-if (userIsErr) {
-  return <>Error...</>
-}
-  if (user) {
-    //const handleEdit = () => navigate(`/dash/users/${userId}`)
-    const nombre = names ? names : "Sin nombre";
-    const apellido = surname ? surname : "";
-    const correo = email ? email : "No tiene correo";
-    const telefono = phone ? phone : "no tiene";
+      let llave;
 
-    let llave;
+      const userName = names ? names : "no tiene";
 
-    const userName = names ? names : "no tiene";
+      const errContent =
+        (error?.data?.message || delerror?.data?.message) ?? "";
+      if (roles == Object.values(ROLES)[0]) {
+        llave = Object.keys(ROLES)[0];
+      }
+      if (roles == Object.values(ROLES)[1]) {
+        llave = Object.keys(ROLES)[1];
+      }
+      if (roles == Object.values(ROLES)[2]) {
+        llave = Object.keys(ROLES)[2];
+      }
 
-    const errContent = (error?.data?.message || delerror?.data?.message) ?? "";
-    if (roles == Object.values(ROLES)[0]) {
-      llave = Object.keys(ROLES)[0];
-    }
-    if (roles == Object.values(ROLES)[1]) {
-      llave = Object.keys(ROLES)[1];
-    }
-    if (roles == Object.values(ROLES)[2]) {
-      llave = Object.keys(ROLES)[2];
-    }
+      //console.log(`${user.user_id} ${userName} ${userRolesString} ${active} ${errContent}`);
 
-    //console.log(`${user.user_id} ${userName} ${userRolesString} ${active} ${errContent}`);
-   
-
-    let contenido;
-    if (Lista == "Lista1") {
-      contenido = (
-        <>
-          <tr key={userId} onClick={console.log("")}>
-            <td>{userName}</td>
-            <td id="username">{username}</td>
-            <td>{llave}</td>
-            <td>
-              <input
-                type="checkbox"
-                checked={status}
-                onChange={onActiveChanged}
-              />
-            </td>
-            <td>
-              {" "}
-              <img
-                onClick={onDeleteUserClicked}
-                className="remove-img"
-                src={RemoveImg}
-                alt="Remove"
-              />
-            </td>
-            <td onClick={() => setIsOpen(true)}>Editar</td>
-            {actuUser}
-          </tr>
-        </>
-      );
-    }
-    if (Lista == "Lista2") {
-      
-      contenido = (
-        <>
-          <div className="return-div">
-            <Link to={"/dash"}>
-              <div className="return-button">
-                <img className="return-button-img" src={ReImage} alt="Atrás" />
-              </div>
-            </Link>
-          </div>
-          <h1 className="encabezado">Mi información</h1>
-          <div className="profile-card">
-            <div className="name-header">
-              <h2>
-                {nombre} {apellido}
-              </h2>
-              <div className="small-icon-container">
-                <img className="reduced-icon" src={PeopleImg} alt="." />
-              </div>
-            </div>
-
-            <p className="p-cargo">{llave}</p>
-            <p>
-              <b>Usuario: </b> {username}
-            </p>
-            <p>
-              <b>Correo:</b> {correo}
-            </p>
-            <p>
-              <b>Teléfono:</b> {telefono}
-            </p>
-            <div className="split-line"></div>
-            <div className="button-section">
-              <button
-                type="button"
-                class="btn thead-loyola btn-lg"
-                onClick={() => setIsOpen(true)}
-              >
-                Actualizar información
-              </button>
-
+      if (Lista == "Lista1") {
+        contenido = (
+          <>
+            <tr key={userId} onClick={console.log("")}>
+              <td>{userName}</td>
+              <td id="username">{username}</td>
+              <td>{llave}</td>
+              <td>
+                <input
+                  type="checkbox"
+                  checked={status}
+                  onChange={onActiveChanged}
+                />
+              </td>
+              <td>
+                {" "}
+                <img
+                  onClick={onDeleteUserClicked}
+                  className="remove-img"
+                  src={RemoveImg}
+                  alt="Remove"
+                />
+              </td>
+              <td onClick={() => setIsOpen(true)}>Editar</td>
               {actuUser}
-
-              <button
-                type="button"
-                class="btn btn-secondary btn-lg"
-                onClick={() => setIsisAbierto(true)}
-              >
-                Cambiar contraseña
-              </button>
-              {actuPass}
+            </tr>
+          </>
+        );
+      }
+      if (Lista == "Lista2") {
+        contenido = (
+          <>
+            <div className="return-div">
+              <Link to={"/dash"}>
+                <div className="return-button">
+                  <img
+                    className="return-button-img"
+                    src={ReImage}
+                    alt="Atrás"
+                  />
+                </div>
+              </Link>
             </div>
-          </div>
-        </>
-      );
-    }
+            <h1 className="encabezado">Mi información</h1>
+            <div className="profile-card">
+              <div className="name-header">
+                <h2>
+                  {nombre} {apellido}
+                </h2>
+                <div className="small-icon-container">
+                  <img className="reduced-icon" src={PeopleImg} alt="." />
+                </div>
+              </div>
 
-    return contenido;
-  } else return null;
+              <p className="p-cargo">{llave}</p>
+              <p>
+                <b>Usuario: </b> {username}
+              </p>
+              <p>
+                <b>Correo:</b> {correo}
+              </p>
+              <p>
+                <b>Teléfono:</b> {telefono}
+              </p>
+              <div className="split-line"></div>
+              <div className="button-section">
+                <button
+                  type="button"
+                  class="btn thead-loyola btn-lg"
+                  onClick={() => setIsOpen(true)}
+                >
+                  Actualizar información
+                </button>
+
+                {actuUser}
+
+                <button
+                  type="button"
+                  class="btn btn-secondary btn-lg"
+                  onClick={() => setIsisAbierto(true)}
+                >
+                  Cambiar contraseña
+                </button>
+                {actuPass}
+              </div>
+            </div>
+          </>
+        );
+      }
+    //}
+  
+
+  return contenido;
+  }else{ return null}
 };
 
 const memoizedUser = memo(User);

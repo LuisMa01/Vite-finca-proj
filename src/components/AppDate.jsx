@@ -70,99 +70,100 @@ const AppDate = ({ dateId, Lista }) => {
       date: data?.entities[dateId],
     }),
   });
+//console.log(dateId);
   const { data: rpuser } = useGetUsersQuery("usersList", {
     pollingInterval: 60000,
     refetchOnFocus: true,
     refetchOnMountOrArgChange: true,
   });
-  const [actKey, setActKey] = useState(date.date_act_key);
-  const [dateInit, setDateInit] = useState(date.date_init);
-  const [dateEnd, setDateEnd] = useState(date.date_end);
-  const [cropKey, setCropKey] = useState(date.date_crop_key);
-  const [plantId, setPlantKey] = useState(date.crop_plant_key);
-  const [userRep, setUserRep] = useState(date.date_user_key);
-  const [isOpen, setIsOpen] = useState(false);
+  if (date) {
+    const [actKey, setActKey] = useState(date.date_act_key);
+    const [dateInit, setDateInit] = useState(date.date_init);
+    const [dateEnd, setDateEnd] = useState(date.date_end);
+    const [cropKey, setCropKey] = useState(date.date_crop_key);
+    const [plantId, setPlantKey] = useState(date.crop_plant_key);
+    const [userRep, setUserRep] = useState(date.date_user_key);
+    const [isOpen, setIsOpen] = useState(false);
 
-  const [updateDate, { isLoading, isSuccess, isError, error }] =
-    useUpdateDateMutation();
+    const [updateDate, { isLoading, isSuccess, isError, error }] =
+      useUpdateDateMutation();
 
-  const [
-    deleteDate,
-    { isSuccess: isDelSuccess, isError: isDelError, error: delerror },
-  ] = useDeleteDateMutation();
+    const [
+      deleteDate,
+      { isSuccess: isDelSuccess, isError: isDelError, error: delerror },
+    ] = useDeleteDateMutation();
 
-  // id, dateInit, dateEnd, actKey, cropKey, plantId, userRep
-  const onDeleteDateClicked = async () => {
-    Swal.fire({
-      title: "¿Seguro de eliminar?",
-      text: `Eliminar esta actividad afectará todos los datos asociados a esta. Esta acción será irreversible.`,
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Sí, eliminar!",
-      cancelButtonText: "Cancelar",
-    }).then(async (result) => {
-      if (result.isConfirmed) {
-        await deleteDate({ id: date.date_id });
-        if (isDelSuccess) {
-          Swal.fire(
-            "¡Eliminada!",
-            "Esta actividad ha sido eliminada.",
-            "success"
-          );
+    // id, dateInit, dateEnd, actKey, cropKey, plantId, userRep
+    const onDeleteDateClicked = async () => {
+      Swal.fire({
+        title: "¿Seguro de eliminar?",
+        text: `Eliminar esta actividad afectará todos los datos asociados a esta. Esta acción será irreversible.`,
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Sí, eliminar!",
+        cancelButtonText: "Cancelar",
+      }).then(async (result) => {
+        if (result.isConfirmed) {
+          await deleteDate({ id: date.date_id });
+          if (isDelSuccess) {
+            Swal.fire(
+              "¡Eliminada!",
+              "Esta actividad ha sido eliminada.",
+              "success"
+            );
+          }
+          if (isDelError) {
+            Swal.fire("¡No se pudo eliminar!", `${delerror?.data?.message}.`);
+          }
         }
-        if (isDelError) {
-          Swal.fire("¡No se pudo eliminar!", `${delerror?.data?.message}.`);
-        }
-      }
-    });
-  };
+      });
+    };
 
-  const onDateInitChanged = (e) => {
-    e.preventDefault();
-    setDateInit(e.target.value);
-  };
-  const onDateEndChanged = (e) => {
-    e.preventDefault();
-    setDateEnd(e.target.value);
-  };
-  const onUserRepChanged = (e) => {
-    e.preventDefault();
-    setUserRep(e.target.value);
-  };
-  const onActiveChanged = async (e) => {
-    e.preventDefault();
-    await updateDate({
-      id: dateId,
-      dateInit,
-      dateEnd,
-      actKey,
-      plantId,
-      userRep,
-    });
-  };
-  //id, dateInit, dateEnd, actKey, plantId, userRep
-  const handleClearClick = (e) => {
-    e.preventDefault();
-    setActKey(date.date_act_key);
-    setDateInit(date.date_init);
-    setDateEnd(date.date_end);
-    setUserRep(date.date_user_key);
-  };
-  useEffect(() => {
-    if (date) {
-      setIsOpen(false);
+    const onDateInitChanged = (e) => {
+      e.preventDefault();
+      setDateInit(e.target.value);
+    };
+    const onDateEndChanged = (e) => {
+      e.preventDefault();
+      setDateEnd(e.target.value);
+    };
+    const onUserRepChanged = (e) => {
+      e.preventDefault();
+      setUserRep(e.target.value);
+    };
+    const onActiveChanged = async (e) => {
+      e.preventDefault();
+      await updateDate({
+        id: dateId,
+        dateInit,
+        dateEnd,
+        actKey,
+        plantId,
+        userRep,
+      });
+    };
+    //id, dateInit, dateEnd, actKey, plantId, userRep
+    const handleClearClick = (e) => {
+      e.preventDefault();
       setActKey(date.date_act_key);
       setDateInit(date.date_init);
       setDateEnd(date.date_end);
       setUserRep(date.date_user_key);
-      setPlantKey(date.crop_plant_key);
-      setCropKey(date.date_crop_key);
-    }
-  }, [date]);
+    };
+    useEffect(() => {
+      if (date) {
+        setIsOpen(false);
+        setActKey(date.date_act_key);
+        setDateInit(date.date_init);
+        setDateEnd(date.date_end);
+        setUserRep(date.date_user_key);
+        setPlantKey(date.crop_plant_key);
+        setCropKey(date.date_crop_key);
+      }
+    }, [date]);
 
-  if (date) {
     let userOption;
     if (rpuser) {
       const { ids, entities } = rpuser;
@@ -305,6 +306,27 @@ const AppDate = ({ dateId, Lista }) => {
             <User key={userRep} userId={userRep} />
           </td>
         </tr>
+      );
+    }
+    if (Lista == "Lista3") {
+      contenido = (
+        <>
+          <div className="nuevo-cultivo-header">
+            <h2>
+              <Act key={actKey} actId={actKey} />{" "}
+            </h2>
+            <h3>
+              <Crop key={date.date_crop_key} cropId={date.date_crop_key} />{" "}
+            </h3>
+            <h3>
+              <User key={userRep} userId={userRep} />{" "}
+            </h3>
+            <div>{fechaIni == "null" ? "no fecha asignada" : fechaIni} </div>
+            <div>{fechaFin == "null" ? "no fecha asignada" : fechaFin} </div>
+            <button className="btn btn-success" onClick={() => setIsOpen(true)}>Editar Fecha</button>
+            {updateApp}
+          </div>
+        </>
       );
     }
 

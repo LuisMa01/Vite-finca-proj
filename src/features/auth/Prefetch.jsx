@@ -14,7 +14,7 @@ import { Outlet } from 'react-router-dom';
 
 const Prefetch = () => {
     useEffect(() => {
-        console.log('subscribing')        
+              
         
         store.dispatch(usersApiSlice.util.prefetch('getUsers', 'usersList', {force: true}))
         store.dispatch(actApiSlice.util.prefetch('getActs', 'actsList', {force: true}))

@@ -1,5 +1,5 @@
 import React from "react";
-//import { useGetUsersQuery } from "./redux/usersApiSlice";
+import { useGetUsersQuery } from "./redux/usersApiSlice";
 //import ReImage from "../../images/return.svg";
 //import PeopleImg from "../../images/users.svg"
 import "../../styles/mi_perfil.css";
@@ -10,7 +10,18 @@ import { ROLES } from "../../config/roles";
 import User from "../../components/User";
 
 const MiPerfil = () => {
-  const {  isManager, isAdmin, userId } = useAuth();
+  const { isManager, isAdmin, userId } = useAuth();
+  const {
+    data: users,
+    isLoading,
+    isSuccess,
+    isError,
+    error,
+  } = useGetUsersQuery("usersList", {
+    pollingInterval: 60000,
+    refetchOnFocus: true,
+    refetchOnMountOrArgChange: true,
+  });
   /*
   const { user } = useGetUsersQuery("usersList", {
     selectFromResult: ({ data }) => ({
@@ -18,7 +29,7 @@ const MiPerfil = () => {
     }),
   });
   */
-/*
+  /*
   const [username, setUserName] = useState(user.user_name)
   const [roles, setRoles] = useState(user.user_rol)
   const [status, setStatus] = useState(user.user_status)
@@ -42,7 +53,7 @@ const MiPerfil = () => {
     }
   }, [user]);
   */
-/*
+  /*
   const { post, isLoading, isSuccess, isError, error } = useGetUsersQuery(
     "usersList",
     {
@@ -84,7 +95,7 @@ const MiPerfil = () => {
   });
   console.log(`${users}`);
 */
-/*
+  /*
   const nombre = names ? names : "Sin nombre";
   const apellido = surname ? surname : "";
   const correo = email ? email : "No tiene correo";
@@ -101,15 +112,28 @@ const MiPerfil = () => {
     llave = Object.keys(ROLES)[2]
   }
   */
-  let contenido 
-  if (userId) {
-    
-    contenido = (<><User key={userId} userId={userId} Lista={"Lista2"} /></>)
+  let contenido;
+  let Id;
+  if (isSuccess) {
+    const { ids, entities } = users;
+    ids.map((p) => {
+      if (entities[p].user_id == userId) {
+        Id = entities[p].user_id;
+        stop;
+      }
+    });
+
+    console.log(Id);
+    contenido = (
+      <>
+        <User key={Id} userId={Id} Lista={"Lista2"} />
+      </>
+    );
   } else {
-    contenido = (<>No Carga</>)
+    contenido = <>No Carga</>;
   }
 
-  return contenido
+  return contenido;
 };
 
 export default MiPerfil;
