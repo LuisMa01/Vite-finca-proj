@@ -43,7 +43,7 @@ const ItemSection = () => {
  
   //itemName, desc, itemPrice, itemDose
 
-  const onSavePlantClicked = async (e) => {
+  const onSaveItemClicked = async (e) => {
     e.preventDefault();
 
     await addNewItem({ itemName, desc, itemPrice, itemDose });
@@ -115,6 +115,9 @@ const ItemSection = () => {
               </th>
               <th className="align-middle" scope="col">
                 Eliminar
+              </th>
+              <th className="align-middle" scope="col">
+                Editar
               </th>
             </thead>
             <tbody>{tableContent}</tbody>
@@ -198,10 +201,10 @@ const ItemSection = () => {
         <div className="cultivos_button-section">
           <button
             className="btn btn-success"
-            onClick={onSavePlantClicked}
+            onClick={onSaveItemClicked}
             type="submit"
           >
-            Guardar cultivo
+            Guardar Item
           </button>
           <Link to={"/dash/cultivos"} className="Link">
             <button className="btn btn-danger">Descartar</button>

@@ -143,10 +143,22 @@ const RegistrarPlanta = () => {
                 Plantas
               </th>
               <th className="align-middle" scope="col">
+                Variedad
+              </th>
+              <th className="align-middle" scope="col">
+                Marco de Plantación
+              </th>
+              <th className="align-middle" scope="col">
+                Descripción
+              </th>
+              <th className="align-middle" scope="col">
                 Estatus
               </th>
               <th className="align-middle" scope="col">
                 Eliminar
+              </th>
+              <th className="align-middle" scope="col">
+                Editar
               </th>
             </thead>
             <tbody>{tableContent}</tbody>

@@ -14,6 +14,7 @@ import {
 import { useGetActsQuery } from "./redux/actApiSlice";
 import { useGetUsersQuery } from "./redux/usersApiSlice";
 import AppDate from "../../components/AppDate";
+import Crop from "../../components/Crop";
 
 
 const infoCultivo = () => {
@@ -109,10 +110,14 @@ const infoCultivo = () => {
   let contenido;
   let userOption;
   let actOption;
-
+  let cropDato
   if (crop) {
     //para asegurar que obtenga los datos del cultivo
+    if(crop.crop_id){
 
+      cropDato = (crop.crop_id).length ?? <Crop key={crop.crop_id} cropId={crop.crop_id} Lista={"Lista3"} />
+
+    }
     if (rpuser) {
       const { ids, entities } = rpuser;
 
@@ -170,7 +175,8 @@ const infoCultivo = () => {
           </Link>
         </div>
 
-        <div className="nuevo-cultivo-header">{cropName}</div>
+        <div>{cropDato}</div>
+        
         <form>
         <div className="new-activity-miniform d-flex justify-content-center col-12 col-md-10 col-xl-9 form-row bg-light">
           <div className="col-md-6 col-lg-3 mb-3">

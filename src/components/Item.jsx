@@ -13,6 +13,9 @@ import { Link } from "react-router-dom";
 import RemoveImg from "../images/remove.svg";
 import Swal from "sweetalert2";
 import { ROLES } from "../config/roles";
+import Modal from "react-modal";
+
+Modal.setAppElement("#root");
 
 const Dose = ({doseId}) =>{
   const { dose } = useGetDosesQuery("dosesList", {
@@ -34,11 +37,11 @@ const Item = ({ itemId }) => {
       item: data?.entities[itemId],
     }),
   });
-  const [itemName, setItemName] = useState(item.item_name);
-  const [itemPrice, setItemPrice] = useState(item.item_price);
-  const [desc, setDesc] = useState(item.item_desc);
-  const [itemDose, setItemDose] = useState(item.item_dose_key);
-
+  const { data: doses } = useGetDosesQuery("dosesList", {
+    pollingInterval: 60000,
+    refetchOnFocus: true,
+    refetchOnMountOrArgChange: true,
+  });
   const [updateItem, { isLoading, isSuccess: itemUpSuc, isError, error }] =
     useUpdateItemMutation();
 
@@ -46,6 +49,16 @@ const Item = ({ itemId }) => {
     deleteItem,
     { isSuccess: isDelSuccess, isError: isDelError, error: delerror },
   ] = useDeleteItemMutation();
+
+  if (item) {
+  const [itemName, setItemName] = useState(item.item_name);
+  const [itemPrice, setItemPrice] = useState(item.item_price);
+  const [desc, setDesc] = useState(item.item_desc);
+  const [itemDose, setItemDose] = useState(item.item_dose_key);
+  const [active, setActive] = useState(item.item_status);
+  const [isOpen, setIsOpen] = useState(false);
+
+  
 
   const onItemNameChanged = (e) => setItemName(e.target.value);
   const onItemPriceChanged = (e) => setItemPrice(e.target.value);
@@ -62,7 +75,19 @@ const Item = ({ itemId }) => {
       active: e.target.checked,
     });
   };
-  //id, itemName, desc, itemPrice, active, itemDose 
+  const onItemChanged = async (e) => {
+    e.preventDefault();
+    await updateItem({
+      id: item.item_id,
+      itemName,
+      itemPrice,
+      desc,
+      itemDose,
+      active,
+    });
+    setIsOpen(false)
+  };
+  //id, itemName, desc, itemPrice, active, itemDose
 
   const onDeleteItemClicked = async () => {
     Swal.fire({
@@ -81,20 +106,124 @@ const Item = ({ itemId }) => {
       }
     });
   };
+  const handleClearClick = (e) => {
+    e.preventDefault();
+    setItemName(item.item_name);
+    setItemPrice(item.item_price);
+    setDesc(item.item_desc);
+    setItemDose(item.item_dose_key);
+    setActive(item.item_status)
+  };
+
   useEffect(() => {
-    if (itemUpSuc) {
-      setItemName(item.item_dose_key);
-      setItemPrice(item.item_dose_key);
-      setDesc(item.item_dose_key);
+    if (item) {
+      setItemName(item.item_name);
+      setItemPrice(item.item_price);
+      setDesc(item.item_desc);
       setItemDose(item.item_dose_key);
+      setActive(item.item_status)
     }
-  }, [itemUpSuc]);
-  if (item) {
+  }, [item]);
+
+  let doseOption;
+  if (doses) {
+    const { ids, entities } = doses;
+
+    doseOption = ids.map((Id) => {
+      if (entities[Id].dose_status) {
+        return (
+          <option key={Id} value={Id}>
+            {entities[Id].dose_name}
+          </option>
+        );
+      }
+    });
+  }
+  
     //const handleEdit = () => navigate(`/dash/users/${cropId}`)
     let precio = new Intl.NumberFormat("es-do", {
       style: "currency",
       currency: "DOP",
     }).format(parseFloat(itemPrice));
+
+
+    const updItem = (
+      <Modal isOpen={isOpen} onRequestClose={() => setIsOpen(false)}>
+        <button className="btn btn-danger" onClick={() => setIsOpen(false)}>
+          Cerrar
+        </button>
+        <div className="cultivos_button-section">
+        <form className="container needs-validation nuevo-cultivo-form">
+        <div className="form-row bg-light">
+          <div className="col-md-4 mb-3">
+            <label for="nombre_cultivo">Nombre del Artículo</label>
+            <input
+              type="text"
+              className="form-control"
+              placeholder="Fruta ##"
+              value={itemName}
+              onChange={onItemNameChanged}
+              required
+            />
+          </div>
+        </div>
+        <div className="form-row">
+          <div className="col-md-3 mb-3">
+            <label for="campo_cultivo">Dosis y Unidad</label>
+            <select
+              className="form-control"
+              value={itemDose}
+              onChange={onItemDoseChanged}
+            >
+              <option disabled value={""}>
+                Elegir dosis
+              </option>
+              {doseOption}
+            </select>
+          </div>
+        </div>
+        <div className="form-row bg-light">
+          <div className="col-12 col-md-6 mb-2">
+            <label for="variedad_cultivo">Precio del Artículo</label>
+            <input
+              type="number"
+              step="any"
+              min={0}
+              className="form-control"
+              id="variedad_cultivo"
+              value={itemPrice}
+              onChange={onItemPriceChanged}
+            />
+          </div>
+          <div className="col-md-6 mb-3">
+            <label for="producto_final">Descripción del Artículo</label>
+            <input
+              type="text"
+              class="form-control"
+              value={desc}
+              onChange={onItemDescChanged}
+            />
+          </div>
+        </div>
+        <div className="cultivos_button-section">
+          <button
+            className="btn btn-success"
+            onClick={onItemChanged}
+            type="submit"
+          >
+            Guardar Cambios
+          </button>
+          <button
+                onClick={handleClearClick}
+                className="btn btn-outline-danger limpiar"
+              >
+                Limpiar
+              </button>
+        </div>
+      </form>
+        </div>
+      </Modal>
+    );
 
     const itemname = itemName ? itemName : "no tiene";
 
@@ -127,6 +256,8 @@ const Item = ({ itemId }) => {
             alt="Remove"
           />
         </td>
+        <td onClick={() => setIsOpen(true)}>Editar</td>
+          {updItem}
       </tr>
     );
 

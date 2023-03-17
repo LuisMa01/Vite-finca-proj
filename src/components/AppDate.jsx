@@ -292,15 +292,16 @@ const AppDate = ({ dateId, Lista }) => {
             </Link>
           </td>
           <td>
-            <Link to={`/dash/campos`}>
-              <Camp key={date.crop_camp_key} campId={date.crop_camp_key} />
-            </Link>
-          </td>
-          <td>
             <Link to={`/dash/cultivos/info-cultivo/${date.date_crop_key}`}>
               <Crop key={date.date_crop_key} cropId={date.date_crop_key} />
             </Link>
           </td>
+          <td>
+            <Link to={`/dash/campos`}>
+              <Camp key={date.crop_camp_key} campId={date.crop_camp_key} />
+            </Link>
+          </td>
+          
           <td>{fechaIni == "null" ? "no fecha asignada" : fechaIni}</td>
           <td>
             <User key={userRep} userId={userRep} />

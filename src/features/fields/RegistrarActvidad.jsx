@@ -61,13 +61,19 @@ const registrarActividad = () => {
           <table className="table table-hover table-sm table-striped table-bordered">
             <thead className="thead-loyola">
               <th className="align-middle" scope="col">
-                Campo
+                Actividad
+              </th>
+              <th className="align-middle" scope="col">
+                Descripción
               </th>
               <th className="align-middle" scope="col">
                 Habilitar
               </th>
               <th className="align-middle" scope="col">
                 Eliminar
+              </th>
+              <th className="align-middle" scope="col">
+                Editar
               </th>
             </thead>
             <tbody>{tableContent}</tbody>

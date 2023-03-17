@@ -1,5 +1,6 @@
 //import { useNavigate } from 'react-router-dom'
 import "../../src/styles/registrar-actividad.css";
+import { useState, useEffect } from "react";
 import {
   useGetActsQuery,
   useUpdateActMutation,
@@ -10,7 +11,9 @@ import { Link } from "react-router-dom";
 import RemoveImg from "../images/remove.svg";
 import Swal from "sweetalert2";
 import { ROLES } from "../config/roles";
+import Modal from "react-modal";
 
+Modal.setAppElement("#root");
 
 const Act = ({ actId }) => {
   const { act } = useGetActsQuery("actsList", {
@@ -18,51 +21,141 @@ const Act = ({ actId }) => {
       act: data?.entities[actId],
     }),
   });
-
-  const [updateAct, { isLoading, isSuccess, isError, error }] =
-    useUpdateActMutation();
-
-  const [
-    deleteAct,
-    { isSuccess: isDelSuccess, isError: isDelError, error: delerror },
-  ] = useDeleteActMutation();
-
-  const onActiveChanged = async (e) => {
-    await updateAct({
-      id: act.act_id,
-      actName: act.act_name,
-      active: e.target.checked,
-    });
-  };
-  // id, actName, desc, active
-  const onDeleteActClicked = async () => {
-
-    Swal.fire({
-      title: '¿Seguro de eliminar?',
-      text: `Eliminar esta actividad afectará todos los datos asociados a esta. Esta acción será irreversible.`,
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Sí, eliminar!',
-      cancelButtonText: 'Cancelar'
-    }).then(async (result) => {
-      if (result.isConfirmed) {
-        await deleteAct({ id: act.act_id });
-        Swal.fire(
-          '¡Eliminada!',
-          'Esta actividad ha sido eliminada.',
-          'success'
-        )
-      }
-    })
-    
-  };
-
   if (act) {
+    const [actName, setActName] = useState(act.act_name);
+    const [desc, setDesc] = useState(act.act_desc);
+    const [active, setActive] = useState(act.act_status);
+    const [isOpen, setIsOpen] = useState(false);
+
+    //id, actName, desc, active
+    const [updateAct, { isLoading, isSuccess, isError, error }] =
+      useUpdateActMutation();
+
+    const [
+      deleteAct,
+      { isSuccess: isDelSuccess, isError: isDelError, error: delerror },
+    ] = useDeleteActMutation();
+
+    const onActNameChanged = (e) => setActName(e.target.value);
+    const onActDescChanged = (e) => setDesc(e.target.value);
+
+    const handleClearClick = (e) => {
+      e.preventDefault();
+      setActName(act.act_name);
+      setDesc(act.act_desc);
+      setActive(act.act_status);
+    };
+
+    const onActiveChanged = async (e) => {
+
+      await updateAct({
+        id: act.act_id,
+        actName,
+        active: e.target.checked,
+      });
+    };
+    const onActChanged = async (e) => {
+      e.preventDefault()
+      await updateAct({
+        id: act.act_id,
+        actName,
+        active,
+        desc,
+      });
+      setIsOpen(false);
+    };
+    // id, actName, desc, active
+    const onDeleteActClicked = async () => {
+      Swal.fire({
+        title: "¿Seguro de eliminar?",
+        text: `Eliminar esta actividad afectará todos los datos asociados a esta. Esta acción será irreversible.`,
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Sí, eliminar!",
+        cancelButtonText: "Cancelar",
+      }).then(async (result) => {
+        if (result.isConfirmed) {
+          await deleteAct({ id: act.act_id });
+          Swal.fire(
+            "¡Eliminada!",
+            "Esta actividad ha sido eliminada.",
+            "success"
+          );
+        }
+      });
+    };
+
+    useEffect(() => {
+      if (act) {
+        setIsOpen(false);
+        setActName(act.act_name);
+        setDesc(act.act_desc);
+        setActive(act.act_status);
+      }
+    }, [act]);
+
+    const updAct = (
+      <Modal isOpen={isOpen} onRequestClose={() => setIsOpen(false)}>
+        <button className="btn btn-danger" onClick={() => setIsOpen(false)}>
+          Cerrar
+        </button>
+        <div className="cultivos_button-section">
+          <form className="container myform col-6 needs-validation" novalidate>
+            <div className="form-row bg-light">
+              <div className="col-12">
+                <label for="nombre_actividad">Nombre de actividad</label>
+                <input
+                  type="text"
+                  className="form-control"
+                  placeholder="Actividad X"
+                  value={actName}
+                  onChange={onActNameChanged}
+                  required
+                />
+              </div>
+              
+              
+              <div className="col-12">
+                <label for="descripcion_actividad">
+                  Descripción (opcional)
+                </label>
+                
+                <textarea
+                type="text"
+                className="form-control rounded-1"
+                placeholder="Ingresar descripción"
+                value={desc}
+                onChange={onActDescChanged}
+                rows="10"
+                cols="50"
+              />
+              </div>
+            </div>
+            <div className="edit-campo-button-section_parent">
+              <button
+                type="submit"
+                onClick={onActChanged}
+                className="btn btn-outline-primary limpiar"
+              >
+                Guardar Cambios
+              </button>
+              <button
+                onClick={handleClearClick}
+                className="btn btn-outline-danger limpiar"
+              >
+                Limpiar
+              </button>
+            </div>
+          </form>
+        </div>
+      </Modal>
+    );
+
     //const handleEdit = () => navigate(`/dash/users/${actId}`)
 
-    const actname = act.act_name ? act.act_name : "no tiene";
+    const actname = actName ? actName : "no tiene";
 
     const errContent = (error?.data?.message || delerror?.data?.message) ?? "";
 
@@ -74,12 +167,9 @@ const Act = ({ actId }) => {
     const contenido = (
       <tr key={actId}>
         <td>{actname}</td>
+        <td>{desc ? desc : ""}</td>
         <td>
-          <input
-            type="checkbox"
-            checked={act.act_status}
-            onChange={onActiveChanged}
-          />
+          <input type="checkbox" checked={active} onChange={onActiveChanged} />
         </td>
         <td>
           <img
@@ -89,6 +179,8 @@ const Act = ({ actId }) => {
             alt="Remove"
           />
         </td>
+        <td onClick={() => setIsOpen(true)}>Editar</td>
+          {updAct}
       </tr>
     );
 
