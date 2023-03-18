@@ -21,8 +21,23 @@ import { Link } from "react-router-dom";
 import RemoveImg from "../images/remove.svg";
 import Swal from "sweetalert2";
 import { ROLES } from "../config/roles";
+import Modal from "react-modal";
 
-const Comt = ({ comtId }) => {
+Modal.setAppElement("#root");
+
+const Act = ({ actId }) => {
+  const { act } = useGetActsQuery("actsList", {
+    selectFromResult: ({ data }) => ({
+      act: data?.entities[actId],
+    }),
+  });
+
+  if (act) {
+    return <>{act.act_name ? act.act_name : "sin nombre"}</>;
+  }
+};
+
+const Comt = ({ comtId, Lista }) => {
   const { comt } = useGetComtsQuery("comtsList", {
     selectFromResult: ({ data }) => ({
       comt: data?.entities[comtId],
@@ -33,6 +48,7 @@ const Comt = ({ comtId }) => {
   const [comtDateKey, setComtDateKey] = useState(comt.comt_date_key);
   const [comtDateActKey, setComtDateActKey] = useState(comt.date_act_key);
   const [comtUserKey, setComtUserKey] = useState(comt.comt_user_key);
+  const [isOpen, setIsOpen] = useState(false);
 
   const [updateComt, { isLoading, isSuccess, isError, error }] =
     useUpdateComtMutation();
@@ -42,12 +58,23 @@ const Comt = ({ comtId }) => {
     { isSuccess: isDelSuccess, isError: isDelError, error: delerror },
   ] = useDeleteComtMutation();
 
-  const onActiveChanged = async (e) => {
+  const onComtDescChange = (e) => {
+    e.preventDefault();
+    setComtDesc(e.target.value);
+  };
+
+  const handleClearClick = (e) => {
+    e.preventDefault();
+    setComtDesc(comt.comt_desc);
+  };
+  const onComtChanged = async (e) => {
+    e.preventDefault();
     await updateComt({
       id: comtId,
       desc,
       comtDateKey,
     });
+    setIsOpen(false)
   };
   //
   const onDeleteComtClicked = async () => {
@@ -85,6 +112,51 @@ const Comt = ({ comtId }) => {
     }
   }, [comt]);
 
+  const updComt = (
+      <Modal isOpen={isOpen} onRequestClose={() => setIsOpen(false)}>
+        <button className="btn btn-danger" onClick={() => setIsOpen(false)}>
+          Cerrar
+        </button>
+        <div className="cultivos_button-section">
+          <p className="titulo_tipos-de-actividades col-12">Comentario</p>
+      <form className="container myform col-6 needs-validation" novalidate>
+        <div className="form-row bg-light">
+          <div className="col-12 col-md-6 mb-2">
+            <label for="nombre_actividad">Ingresar</label>
+            <div className="col-12 col-md-6 mb-2">
+              <textarea
+                type="text"
+                placeholder="Ingresar Comentario"
+                value={desc}
+                onChange={onComtDescChange}
+                rows={5}
+                cols={25}
+                               
+              />
+            </div>
+          </div>
+        </div>
+        <div className="edit-campo-button-section_parent col-12">
+          <button
+            type="submit"
+            onClick={onComtChanged}
+            className="btn btn-outline-primary limpiar"
+          >
+            Guardar Cambios
+          </button>
+          <button
+            className="btn btn-outline-danger limpiar"
+            onClick={handleClearClick}
+          >
+            Limpiar
+          </button>
+        </div>
+      </form>
+          
+        </div>
+      </Modal>
+    );
+
   if (comt) {
     //const handleEdit = () => navigate(`/dash/users/${actId}`)
     /*
@@ -110,7 +182,7 @@ const Comt = ({ comtId }) => {
     }).format(parseFloat(costPrice));
 */
     if (comt) {
-      const fecha = (`${comtDate}`).split("T")[0];
+      const fecha = `${comtDate}`.split("T")[0];
 
       const errContent =
         (error?.data?.message || delerror?.data?.message) ?? "";
@@ -119,21 +191,45 @@ const Comt = ({ comtId }) => {
       if (isSuccess) {
         console.log(`no hay error ${errContent}`);
       }
-
-      const contenido = (
-        <tr key={comtId}>
-          <td>{fecha}</td>
-          <td>{desc}</td>
-          <td>
-            <img
-              onClick={onDeleteComtClicked}
-              className="remove-img"
-              src={RemoveImg}
-              alt="Remove"
-            />
-          </td>
-        </tr>
-      );
+      let contenido
+      if (Lista == "Lista1") {
+        contenido = (
+          <tr key={comtId}>
+            <td>{fecha}</td>
+            <td>{desc}</td>
+            <td>
+              <img
+                onClick={onDeleteComtClicked}
+                className="remove-img"
+                src={RemoveImg}
+                alt="Remove"
+              />
+            </td>
+            <td onClick={() => setIsOpen(true)}>Editar</td>
+            {updComt}
+          </tr>
+        );
+      }
+      if (Lista == "Lista2") {
+        contenido = (
+          <tr key={comtId}>
+            <td>{fecha}</td>
+            <td><Act key={comtDateActKey} actId={comtDateActKey} /></td>
+            <td>{desc}</td>
+            <td>
+              <img
+                onClick={onDeleteComtClicked}
+                className="remove-img"
+                src={RemoveImg}
+                alt="Remove"
+              />
+            </td>
+            <td onClick={() => setIsOpen(true)}>Editar</td>
+            {updComt}
+          </tr>
+        );
+      }
+       
 
       return contenido;
     }

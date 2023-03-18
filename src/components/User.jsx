@@ -11,6 +11,15 @@ import RemoveImg from "../images/remove.svg";
 import Swal from "sweetalert2";
 import { ROLES } from "../config/roles";
 import Modal from "react-modal";
+import {
+  MDBBtn,
+  MDBModal,
+  MDBModalDialog,
+  MDBModalContent,
+  MDBModalHeader,
+  MDBModalTitle,
+  MDBModalBody
+} from 'mdb-react-ui-kit';
 import ReImage from "../images/return.svg";
 import PeopleImg from "../images/users.svg";
 
@@ -326,69 +335,69 @@ const User = ({ userId, Lista }) => {
     </Modal>
   );
   const actuPass = (
-    <Modal isOpen={isAbierto} onRequestClose={() => setIsisAbierto(false)}>
-      <button className="btn btn-danger" onClick={() => setIsisAbierto(false)}>
-        Cerrar
-      </button>
+      <Modal isOpen={isAbierto} onRequestClose={() => setIsisAbierto(false)}>
+        <button className="btn btn-danger" onClick={() => setIsisAbierto(false)}>
+          Cerrar
+        </button>
 
-      <p className="titulo_cambiar">Cambiar contraseña</p>
-      <div className="my-card card-outline-secondary col-8 col-sm-6 col-md-5 col-lg-4">
-        <div className="card-body">
-          <form className="form" onSubmit={onChangePsClicked}>
-            <div className="form-group">
-              <label for="inputPasswordOld">Contraseña actual</label>
-              <input
-                type="password"
-                className="form-control"
-                id="inputPasswordOld"
-                value={passwordAnt}
-                onChange={onPasswordAntChanged}
-                autoFocus
-              />
-            </div>
-            <div className="form-group">
-              <label for="inputPasswordNew">Nueva contraseña</label>
-              <input
-                type="password"
-                className="form-control"
-                id="inputPasswordNew"
-                value={password}
-                onChange={onPasswordChanged}
-              />
-              <span className="form-text small text-muted">
-                La contraseña debe contener entre 8-20 caracteres, y <b>no</b>{" "}
-                debe contener espacios.
-              </span>
-            </div>
-            <div className="form-group">
-              <label for="inputPasswordNewVerify">Verificar</label>
-              <input
-                type="password"
-                className="form-control"
-                id="inputPasswordNewVerify"
-                value={passwordDu}
-                onChange={onPasswordDuChanged}
-              />
-              <span className="form-text small text-muted">
-                Para confirmar, escriba la nueva contraseña.
-              </span>
-            </div>
-            <div className="button-section">
-              <button
-                type="submit"
-                className="btn btn-success btn-lg"
-                disabled={!canSavePs}
-              >
-                Guardar
-              </button>
-              <button className="btn btn-danger" onClick={handleClearClick}>
-                Limpiar
-              </button>
-            </div>
-          </form>
+        <p className="titulo_cambiar">Cambiar contraseña</p>
+        <div className="my-card card-outline-secondary col-12 col-sm-10 col-md-8 col-lg-6">
+          <div className="card-body">
+            <form className="form" onSubmit={onChangePsClicked}>
+              <div className="form-group">
+                <label htmlFor="inputPasswordOld">Contraseña actual</label>
+                <input
+                  type="password"
+                  className="form-control"
+                  id="inputPasswordOld"
+                  value={passwordAnt}
+                  onChange={onPasswordAntChanged}
+                  autoFocus
+                />
+              </div>
+              <div className="form-group">
+                <label htmlFor="inputPasswordNew">Nueva contraseña</label>
+                <input
+                  type="password"
+                  className="form-control"
+                  id="inputPasswordNew"
+                  value={password}
+                  onChange={onPasswordChanged}
+                />
+                <span className="form-text small text-muted">
+                  La contraseña debe contener entre 8-20 caracteres, y <b>no</b>{" "}
+                  debe contener espacios.
+                </span>
+              </div>
+              <div className="form-group">
+                <label htmlFor="inputPasswordNewVerify">Verificar</label>
+                <input
+                  type="password"
+                  className="form-control"
+                  id="inputPasswordNewVerify"
+                  value={passwordDu}
+                  onChange={onPasswordDuChanged}
+                />
+                <span className="form-text small text-muted">
+                  Para confirmar, escriba la nueva contraseña.
+                </span>
+              </div>
+              <div className="button-section">
+                <button
+                  type="submit"
+                  className="btn btn-success btn-lg"
+                  disabled={!canSavePs}
+                >
+                  Guardar
+                </button>
+                <button className="btn btn-danger" onClick={handleClearClick}>
+                  Limpiar
+                </button>
+              </div>
+            </form>
+          </div>
         </div>
-      </div>
-    </Modal>
+      </Modal>
   );
   let contenido;
   if (userIsLoading) {

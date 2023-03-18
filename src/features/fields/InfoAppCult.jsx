@@ -54,24 +54,24 @@ const Comentario = ({ dateId }) => {
   }, [comts]);
   const contenidoEdit = (
     <>
-      <p className="titulo_tipos-de-actividades">Comentario</p>
-      <form className="container myform col-6 needs-validation" novalidate>
+      <p className="titulo_tipos-de-actividades col-12">Comentario</p>
+      <form className="container myform col-6 needs-validation">
         <div className="form-row bg-light">
           <div className="col-12 col-md-6 mb-2">
-            <label for="nombre_actividad">Ingresar</label>
+            <label htmlFor="nombre_actividad">Ingresar</label>
             <div className="col-12 col-md-6 mb-2">
               <textarea
                 type="text"
                 placeholder="Ingresar Comentario"
                 value={desc}
                 onChange={onComtDescChange}
-                rows="10"
-                cols="50"
+                rows={"5"}
+                cols={"25"}                               
               />
             </div>
           </div>
         </div>
-        <div className="edit-campo-button-section_parent">
+        <div className="edit-campo-button-section_parent col-12">
           <button
             type="submit"
             onClick={onAddComtClicked}
@@ -101,7 +101,7 @@ const Comentario = ({ dateId }) => {
         ids?.length &&
         ids.map((Id) => {
           if (entities[Id].comt_date_key == dateId) {
-            return <Comt key={Id} comtId={Id} />;
+            return <Comt key={Id} comtId={Id} Lista={"Lista1"} />;
           }
         });
     }
@@ -158,10 +158,10 @@ const InfoAppCult = () => {
     refetchOnMountOrArgChange: true,
   });
 
-  const { data: date } = useGetDatesQuery("datesList", {
-    pollingInterval: 60000,
-    refetchOnFocus: true,
-    refetchOnMountOrArgChange: true,
+  const { date } = useGetDatesQuery("datesList", {
+    selectFromResult: ({ data }) => ({
+      date: data?.entities[id],
+    }),
   });
   const { data: items } = useGetItemsQuery("itemsList");
 
@@ -234,7 +234,7 @@ const InfoAppCult = () => {
       ids?.length &&
       ids.map((Id) => {
         if (entities[Id].cost_date_key == id) {
-          let list = <Cost key={Id} costId={Id} />;
+          let list = <Cost key={Id} costId={Id} Lista={"Lista1"} />;
           costTotal.push(parseFloat(entities[Id].cost_price));
           return list;
         }
@@ -248,27 +248,17 @@ const InfoAppCult = () => {
     currency: "DOP",
   }).format(parseFloat(TT));
 
-  console.log(costTotal);
   if (costIsError) {
     console.log(costError?.data?.message);
   }
-  console.log(date);
+
   if (date) {
     let contentApp;
+
     if (date) {
-      const { ids, entities } = date;
-      ids.map((p) => {
-        if (entities[p].date_id == id) {
-          contentApp = (
-            <AppDate
-              key={entities[p].date_id}
-              dateId={entities[p].date_id}
-              Lista={"Lista3"}
-            />
-          );
-          stop;
-        }
-      });
+      contentApp = date.date_id.length ?? (
+        <AppDate key={date.date_id} dateId={date.date_id} Lista={"Lista3"} />
+      );
     }
 
     let precio = new Intl.NumberFormat("es-do", {
@@ -323,25 +313,29 @@ const InfoAppCult = () => {
                 onChange={onCostQuantityChanged}
               />
             </div>
+            
 
-            <div className="cultivos_button-section">
-              <button
-                className="btn btn-success"
-                onClick={onAddCostClicked}
-                type="submit"
-              >
-                Agregar Artículo
-              </button>
-              <button className="btn btn-danger" onClick={handleClearClick}>
-                Limpiar
-              </button>
-            </div>
+            <p className="col-12">
+              <div className="cultivos_button-section">
+                <button
+                  className="btn btn-success"
+                  onClick={onAddCostClicked}
+                  type="submit"
+                >
+                  Agregar Artículo
+                </button>
+                <button className="btn btn-danger" onClick={handleClearClick}>
+                  Limpiar
+                </button>
+              </div>
+            </p>
           </div>
         </form>
 
         <div className="table-container col-12 col-md-9 col-xl-6">
           <table className="table table-hover table-sm table-striped table-responsive-sm table-bordered">
             <thead className="thead-loyola">
+              <tr>
               <th className="align-middle" scope="col">
                 Articulo
               </th>
@@ -363,11 +357,14 @@ const InfoAppCult = () => {
               <th className="align-middle" scope="col">
                 Eliminar
               </th>
+              </tr>
             </thead>
             <tbody>{costList}</tbody>
             <tfoot>
+              <tr>
               <td colSpan={"5"}>Total:</td>
               <td>{precioTT}</td>
+              </tr>
             </tfoot>
           </table>
         </div>
@@ -376,7 +373,7 @@ const InfoAppCult = () => {
             className="btn btn-success"
             onClick={() => setIsOpen(!isOpen)}
           >
-            {isOpen ? "Close" : "Comentario"}
+            {isOpen ? "Cerrar Observaciones" : "OBSERVACIONES"}
           </button>
           <Collapse isOpened={isOpen}>
             <>

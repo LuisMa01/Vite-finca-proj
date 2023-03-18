@@ -361,7 +361,7 @@ const Crop = ({ cropId, Lista }) => {
                 <label htmlFor="producto_final">Producto final</label>
                 <input
                   type="text"
-                  class="form-control"
+                  className="form-control"
                   value={finalProd}
                   onChange={onCropFinalProdChanged}
                 />
@@ -448,7 +448,7 @@ const Crop = ({ cropId, Lista }) => {
                   />
                 </h5>
               </div>
-            </Link>
+            
             <ul className="cultivos_general">
               <li className="col-12">
                 <b>Cultivo: </b>
@@ -491,6 +491,7 @@ const Crop = ({ cropId, Lista }) => {
                 <Cost key={cropId} cropId={cropId} />
               </li>
             </ul>
+            </Link>
           </div>
         </div>
       );
@@ -499,45 +500,55 @@ const Crop = ({ cropId, Lista }) => {
       contenido = (
         <div
           key={cropId}
-          className="big-cont col-12 col-sm-6 col-md-4 col-xl-3"
+          className="general-info col-12 col-lg-9"
         >
-          <div>
+          <h1 className="the_crop_header">
+            <b>{cropName} </b>
+          </h1>
+          <div className="first-section">
+            <p className="general-info_subh"><b>Información general:</b></p>
+            <div className="row">
             <p>
-              <b>Cultivo: </b>
-              {cropName}
-            </p>
-            <p>
-              <b>Variedad: </b>
-              <Plant key={cropPlantKey} plantId={cropPlantKey} Opt={"vary"} />
-            </p>
-            <p>
-              <b>Área: </b>
-              {cropArea ? cropArea : 0} tareas
-            </p>
-            <p>
-              <b>Marco de plantacion: </b>
-              <Plant key={cropPlantKey} plantId={cropPlantKey} Opt={"marco"} />
-            </p>
-            <p>
-              <b>Campo#: </b>
-              <Camp key={cropCampKey} campId={cropCampKey} />
-            </p>
-            <p>
-              <b>Fecha de siembra: </b>
-              {fechaIni}
-            </p>
-            <p>
-              <b>Fecha de cosecha: </b>
-              {fechaFin}
-            </p>
-            <p>
-              <b>Producto final: </b>
-              {finalProd}
-            </p>
-            <p>
-              <b>Costo acumulado: </b>
-              <Cost key={cropId} cropId={cropId} />
-            </p>
+                <b>Planta a cultivar: </b>
+                <Plant key={cropPlantKey} plantId={cropPlantKey} Opt={"name"} />
+              </p>
+              <p>
+                <b>Variedad: </b>
+                <Plant key={cropPlantKey} plantId={cropPlantKey} Opt={"vary"} />
+              </p>
+              <p>
+                <b>Área: </b>
+                {cropArea ? cropArea : 0} tareas
+              </p>
+            </div>
+            <div className="row">
+              <p>
+                <b>Marco de plantacion: </b>
+                <Plant key={cropPlantKey} plantId={cropPlantKey} Opt={"marco"} />
+              </p>
+              <p>
+                <b>Campo#: </b>
+                <Camp key={cropCampKey} campId={cropCampKey} />
+              </p>
+              <p>
+                <b>Fecha de siembra: </b>
+                {fechaIni}
+              </p>
+            </div>
+            <div className="row">
+              <p>
+                <b>Fecha de cosecha: </b>
+                {fechaFin}
+              </p>
+              <p>
+                <b>Producto final: </b>
+                {finalProd}
+              </p>
+              <p>
+                <b>Costo acumulado: </b>
+                <Cost key={cropId} cropId={cropId} />
+              </p>
+            </div>
           </div>
         </div>
       );

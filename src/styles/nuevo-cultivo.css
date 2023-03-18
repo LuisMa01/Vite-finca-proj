@@ -23,3 +23,11 @@
 .nuevo-cultivo-form{
     margin: 0 auto 20px;
 }
+.already-existing-activities{
+    margin: 80px auto 0;
+    font-size: 1.2rem;
+}
+.add-new-activities{
+    margin: 30px auto;
+    font-size: 1.2rem;
+}

@@ -312,19 +312,44 @@ const AppDate = ({ dateId, Lista }) => {
     if (Lista == "Lista3") {
       contenido = (
         <>
-          <div className="nuevo-cultivo-header">
-            <h2>
+          <div className="general-info col-12 col-lg-9">
+            <h2 className="the_crop_header">
               <Act key={actKey} actId={actKey} />{" "}
             </h2>
-            <h3>
-              <Crop key={date.date_crop_key} cropId={date.date_crop_key} />{" "}
-            </h3>
-            <h3>
-              <User key={userRep} userId={userRep} />{" "}
-            </h3>
-            <div>{fechaIni == "null" ? "no fecha asignada" : fechaIni} </div>
-            <div>{fechaFin == "null" ? "no fecha asignada" : fechaFin} </div>
-            <button className="btn btn-success" onClick={() => setIsOpen(true)}>Editar Fecha</button>
+            <div className="first-section">
+            <p className="general-info_subh"><b>Información general:</b></p>
+            <div class="row">
+            <p>
+                <b>Cultivo: </b>
+                <Crop key={date.date_crop_key} cropId={date.date_crop_key} />{" "}
+              </p>
+              <p>
+                <b>Responsable de la actividad: </b>
+                <User key={userRep} userId={userRep} />{" "}
+              </p>
+              
+            </div>
+            <div className="row">
+              <p>
+                <b>Fecha programada: </b>
+                {fechaIni == "null" ? "no fecha asignada" : fechaIni}
+              </p>
+              <p>
+                <b>Fecha de ejecución: </b>
+                {fechaFin == "null" ? "no fecha asignada" : fechaFin}
+              </p>
+              
+            </div>
+            <div class="row">
+              <p>
+                <button className="btn btn-success" onClick={() => setIsOpen(true)}>Editar Fecha</button>
+              </p>             
+              
+            </div>
+          </div>
+            
+            
+            
             {updateApp}
           </div>
         </>

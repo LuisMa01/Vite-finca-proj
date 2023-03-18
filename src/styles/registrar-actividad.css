@@ -13,3 +13,24 @@
     border: none 1px;
     padding: 20px 0px ;
 }
+.general-info{
+    margin: 50px auto;
+    
+}
+.general-info div{
+    margin: auto 15px
+}
+.the_crop_header{
+    font-size: 1.6rem;
+    margin: 30px;
+}
+.general-info_subh{
+    margin: 30px auto 10px;
+    font-size: 1.2rem;
+}
+.first-section{
+    background-color: #116FA2;
+    color: white;
+    padding: 5px 0 15px; 
+    border-radius: 15px;
+}

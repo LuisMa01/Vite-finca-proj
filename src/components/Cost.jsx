@@ -17,7 +17,19 @@ import RemoveImg from "../images/remove.svg";
 import Swal from "sweetalert2";
 import { ROLES } from "../config/roles";
 
-const Cost = ({ costId }) => {
+const Act = ({ actId }) => {
+  const { act } = useGetActsQuery("actsList", {
+    selectFromResult: ({ data }) => ({
+      act: data?.entities[actId],
+    }),
+  });
+
+  if (act) {
+    return <>{act.act_name ? act.act_name : "sin nombre"}</>;
+  }
+};
+
+const Cost = ({ costId, Lista }) => {
   const { cost } = useGetCostsQuery("costsList", {
     selectFromResult: ({ data }) => ({
       cost: data?.entities[costId],
@@ -118,26 +130,53 @@ const Cost = ({ costId }) => {
         console.log(`no hay error ${errContent}`);
       }
 
-      const contenido = (
-        <tr key={costId}>
-          <td>
-            <div type="button">{itemname}</div>
-          </td>
-          <td>{dose.dose_name}</td>
-          <td>{costQuantity}</td>
-          <td>{dose.dose_unit}</td>
-          <td>{precioItem}</td>
-          <td>{precio}</td>
-          <td>
-            <img
-              onClick={onDeleteDateClicked}
-              className="remove-img"
-              src={RemoveImg}
-              alt="Remove"
-            />
-          </td>
-        </tr>
-      );
+      let contenido 
+      if (Lista == "Lista1") {
+        contenido = (
+          <tr key={costId}>
+            <td>
+              <div type="button">{itemname}</div>
+            </td>
+            <td>{dose.dose_name}</td>
+            <td>{costQuantity}</td>
+            <td>{dose.dose_unit}</td>
+            <td>{precioItem}</td>
+            <td>{precio}</td>
+            <td>
+              <img
+                onClick={onDeleteDateClicked}
+                className="remove-img"
+                src={RemoveImg}
+                alt="Remove"
+              />
+            </td>
+          </tr>
+        );        
+      }
+      if (Lista == "Lista2") {
+        contenido = (
+          <tr key={costId}>
+            <td>
+              <div type="button">{itemname}</div>
+            </td>
+            <td><Act key={cost.date_act_key} actId={cost.date_act_key} /></td>
+            <td>{dose.dose_name}</td>            
+            <td>{costQuantity}</td>
+            <td>{dose.dose_unit}</td>
+            <td>{precioItem}</td>
+            <td>{precio}</td>
+            <td>
+              <img
+                onClick={onDeleteDateClicked}
+                className="remove-img"
+                src={RemoveImg}
+                alt="Remove"
+              />
+            </td>
+          </tr>
+        ); 
+      }
+      
 
       return contenido;
     }
