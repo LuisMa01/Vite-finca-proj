@@ -4,23 +4,37 @@ import ReImage from "../../images/return.svg"
 import { Link } from 'react-router-dom'
 import focusClick from '../../components/DashHeader'
 import actividades from '../jsons/proximas.json'
+import { useGetDatesQuery } from "./redux/appApiSlice";
 
-const Actividades = () => {
-    return(
-        actividades.map((item) => (
-            <>
-                <tr key={item.index}>
-                    <td className="align-middle">{item.name}</td>
-                    <td className="align-middle">{item.cultivo}</td>
-                    <td className="align-middle">{item.campo}</td>
-                    <td className="align-middle">{item.fechap}</td>
-                    <td className="align-middle">{item.responsable}</td>
-                </tr>
-            </>
-        )))
-}
+import AppDate from "../../components/AppDate"
 
 const navProximas = () => {
+    const {
+        data: dates,
+        isLoading,
+        isSuccess,
+        isError,
+        error,
+      } = useGetDatesQuery("datesList", {
+        pollingInterval: 60000,
+        refetchOnFocus: true,
+        refetchOnMountOrArgChange: true,
+      });
+
+      let dateList
+
+      if (dates) {
+        const { ids, entities } = dates;
+  
+        dateList =
+          ids?.length &&
+          ids.map((Id) => {
+           if (entities[Id].date_end == null) {
+
+              return <AppDate key={Id} dateId={Id} Lista={"Lista2"} />;
+            }
+          });
+      }
     return(
             <>
                 <div className="return-div"><Link to={'/dash'}><div onClick={focusClick} className="return-button">
@@ -30,7 +44,7 @@ const navProximas = () => {
                     Estas son las próximas actividades a realizar en la finca, de todos los campos y cultivos
                 </p>
                 <div className="table-container col-12 col-md-10 col-lg-8"><table className="table table-hover table-sm table-striped table-responsive-sm table-bordered">
-                    <thead className="thead-blue">
+                    <thead className="thead-loyola">
                         <th className="align-middle" scope="col">Actividad</th>
                         <th className="align-middle" scope="col">Cultivo</th>
                         <th className="align-middle" scope="col">Campo</th>
@@ -38,7 +52,7 @@ const navProximas = () => {
                         <th className="align-middle" scope="col">Responsable</th> 
                     </thead>
                     <tbody>
-                       <Actividades /> 
+                       {dateList}
                     </tbody>
                 </table></div>
             </>

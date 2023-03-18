@@ -1,15 +1,16 @@
 .button-section_parent{
     display: flex;
     justify-content: center;
-    margin: 20px 0 0 0;
+    margin: 20px 20px 0;
     padding: auto;
+    flex-wrap: wrap;
 }
 .seccion_cultivos_btn-agr{ 
     display: flex;
     align-items: center;
     gap: 10px;
     padding: 10px;
-    margin: 0 10px auto 0;  
+    margin: 10px 5px 0;  
     cursor: pointer;
     border-radius: 5px;
     font-size: 1.1rem;
@@ -38,13 +39,13 @@
     flex-wrap: wrap;
     padding: 10px;
     margin: 0;
-    border-bottom: 1px solid black;
 }
 .cultivos_general li{
     margin: 3px 5px;
 }
 .card{
     padding: 0;
+    border-radius: 20px;
 }
 .card:hover{
     background-color: #e8e8e8;
@@ -53,16 +54,17 @@
 .big-cont{
     margin: 5px 0;
     padding: 0;
+    border-radius: 20px;
 }
 .card-header{
-    margin: -1px;
     text-align: center;
     color: white;
-    background-color: #1d56b3;
+    background-color: #116FA2;
+    margin: 10px;
 }
 .row{
     padding: 0;
 }
 .cultivos_big-card{
     margin-top: 0;
-}
+}   

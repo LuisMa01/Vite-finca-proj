@@ -6,7 +6,6 @@ import { Link } from "react-router-dom";
 import User from "../../components/User";
 
 import { useGetUsersQuery } from "./redux/usersApiSlice";
-import { useGetPlantsQuery } from "./redux/plantApiSlice";
 
 const userList = () => {
   const {
@@ -20,33 +19,25 @@ const userList = () => {
     refetchOnFocus: true,
     refetchOnMountOrArgChange: true,
   });
-  
+
   let content;
 
   if (isLoading) {
     content = <p>Cargando...</p>;
-    
   }
-  
 
   if (isError) {
     content = <p className="errmsg">{error?.data?.message}</p>;
   }
-
+  if (users) {
+  }
   if (isSuccess) {
     const { ids } = users;
     const tableContent =
-      ids?.length && ids.map((userId) => <User key={userId} userId={userId} />);
+      ids?.length && ids.map((userId) => <User key={userId} userId={userId} Lista={"Lista1"} />);
 
     content = (
       <>
-        <div className="return-div">
-          <Link to={"/dash"}>
-            <div className="return-button">
-              <img className="return-button-img" src={ReImage} alt="" />
-            </div>
-          </Link>
-        </div>
         <h1 className="user-list_header">Lista de usuarios</h1>
         <div className="button_section_parent">
           <Link
@@ -75,7 +66,7 @@ const userList = () => {
         </div>
         <div className="table-container col-12 col-md-9 col-xl-6">
           <table className="table table-hover table-sm table-striped table-responsive-sm table-bordered">
-            <thead className="thead-blue">
+            <thead className="thead-loyola">
               <th className="align-middle" scope="col">
                 Nombre
               </th>
@@ -91,6 +82,9 @@ const userList = () => {
               <th className="align-middle" scope="col">
                 Eliminar
               </th>
+              <th className="align-middle" scope="col">
+                Editar
+              </th>
             </thead>
             <tbody>
               <>{tableContent}</>
@@ -100,8 +94,20 @@ const userList = () => {
       </>
     );
   }
+  const cabeza = (
+      <div className="return-div">
+        <Link to={"/dash"}>
+          <div className="return-button">
+            <img className="return-button-img" src={ReImage} alt="" />
+          </div>
+        </Link>
+      </div>    
+  );
 
-  return content;
+  return (<>
+  {cabeza}
+  {content}
+  </>);
 };
 
 export default userList;

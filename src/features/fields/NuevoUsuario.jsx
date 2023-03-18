@@ -10,7 +10,7 @@ import { useNavigate } from "react-router-dom";
 const USER_REGEX = /^[A-z]{3,20}$/;
 const PWD_REGEX = /^[A-z0-9!@#$%]{4,12}$/;
 const EMAIL_REGEX = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
-const PHONE_REGEX = /^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]*$/;
+const PHONE_REGEX = /^[1-9]\d{2}-\d{3}-\d{4}/; 
 
 const NuevoUsuario = () => {
   const [addNewUser, { isLoading, isSuccess, isError, error }] =
@@ -43,7 +43,7 @@ const NuevoUsuario = () => {
     setValidUserphone(PHONE_REGEX.test(phone));
   }, [phone]);
 
-  console.log(roles);
+  
   useEffect(() => {
     if (isSuccess) {
       setUsername("");
@@ -57,7 +57,10 @@ const NuevoUsuario = () => {
     }
   }, [isSuccess, navigate]);
 
-  const onUsernameChanged = (e) => setUsername(e.target.value);
+  const onUsernameChanged = (e) => {
+    setUsername(e.target.value);
+    
+  };
   const onPasswordChanged = (e) => setPassword(e.target.value);
   const onEmailChanged = (e) => setEmail(e.target.value);
   const onNamesChanged = (e) => setNames(e.target.value);
@@ -147,11 +150,11 @@ console.log(`${validUsername} ${validPassword} ${email?validEmail:true} ${phone?
           </div>
           <div class="col-md-4 mb-3">
             <label id="username_label" htmlFor="phone">Telefono</label>
-            <input 
-              
+            <input    
+              type="tel"
+              pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"           
               className="form-control"
-              name="surname"
-              type="text"
+              name="surname"              
               autoComplete="off"
               autoFocus
               placeholder="Ej: 1-809-000-0000"

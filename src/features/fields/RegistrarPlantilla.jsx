@@ -63,7 +63,7 @@ const RegistrarPlantilla = () => {
                     <hr/>
                     <p className='subheader'>Actividades de esta plantilla</p>
                     <div className="table-container-1"><table className="table table-hover table-sm table-striped table-responsive-sm table-bordered">
-                        <thead className="thead-blue">
+                        <thead className="thead-loyola">
                             <th className="align-middle" scope="col">Actividad</th>
                             <th className="align-middle" scope="col">Fecha programada</th>
                             <th className="align-middle" scope="col">Responsable</th> 

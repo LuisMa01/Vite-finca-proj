@@ -5,8 +5,57 @@ import { Link } from "react-router-dom"
 import RemoveImg from "../../images/remove.svg"
 import campos from '../jsons/campos.json'
 import Swal from "sweetalert2"
+import { useGetCampsQuery, useAddNewCampMutation } from "../fields/redux/campApiSlice";
+import Camp from "../../components/Camp";
+import { useState, useEffect } from "react";
 
-const EditarCampos = () => {
+const EditarCampos = () => { 
+    const {
+        data: camps,
+        isLoading,
+        isSuccess,
+        isError,
+        error,
+      } = useGetCampsQuery("campsList", {
+        pollingInterval: 60000,
+        refetchOnFocus: true,
+        refetchOnMountOrArgChange: true,
+      });
+
+      const [addNewCamp, { isSuccess : addissuccess, isError: addiserror, error: adderror }] = useAddNewCampMutation();
+
+      const [campName, setCampname] = useState("");
+      const [area, setArea] = useState("");
+    
+      const onSaveCampClicked = async (e) => {
+        e.preventDefault();
+        
+          await addNewCamp({ campName, area});  
+      };
+    
+      const onCampNameChanged = (e) => setCampname(e.target.value);
+      const onCampAreaChanged = (e) => setArea(e.target.value);
+      useEffect(() => {
+        if (addissuccess) {
+          setCampname("");
+          setArea("");      
+        }
+      }, [addissuccess]);
+    
+
+
+      let tableContent;
+  if (isError) {
+    tableContent = <p className="errmsg">{error?.data?.message}</p>;
+    console.log(error?.data?.message);
+  }
+  if (isSuccess) {
+    const { ids } = camps;
+    
+    tableContent = ids?.length && ids.map((Id) => <Camp key={Id} campId={Id} Lista={"Lista1"} />);
+  }
+
+
     return(
         <>
             <div className="return-div"><Link to={'/dash/campos'}><div className="return-button">
@@ -18,15 +67,15 @@ const EditarCampos = () => {
                 <div className="form-row bg-light">
                     <div className="col-12 col-md-6 mb-2">
                         <label for="nombre_cultivo">Nombre del campo</label>
-                        <input type="text" className="form-control" id="nombre_cultivo" placeholder="Campo X" required />
+                        <input type="text" className="form-control" id="nombre_cultivo" placeholder="Campo X" value={campName} onChange={onCampNameChanged} required />
                     </div>
                     <div className="col-12 col-md-6 mb-2">
                         <label for="variedad_cultivo">Área (tareas)</label>
-                        <input type="text" className="form-control" id="variedad_cultivo" />
+                        <input type="number" step="any" min={0} className="form-control" id="variedad_cultivo" value={area} onChange={onCampAreaChanged} />
                     </div>
                 </div>
                 <div className="edit-campo-button-section_parent">
-                    <button type="submit" className="btn btn-outline-primary limpiar">Añadir campo</button>
+                    <button type="submit" className="btn btn-outline-primary limpiar" onClick={onSaveCampClicked}>Añadir campo</button>
                     <button type="reset" className="btn btn-outline-danger limpiar">Limpiar</button>
                 </div>
             </form> 
@@ -36,13 +85,15 @@ const EditarCampos = () => {
                 <div><input type="checkBox" /><span>Campos inhabilitados</span></div>
             </div>
              <div className=" container col-12 col-md-9 col-lg-6 edit_table-container"><table className="table table-hover table-sm table-striped table-bordered">
-                <thead className="thead-blue">
+                <thead className="thead-loyola">
                     <th className="align-middle" scope="col">Campo</th>
+                    <th className="align-middle" scope="col">area</th>
                     <th className="align-middle" scope="col">Habilitar</th>
                     <th className="align-middle" scope="col">Eliminar</th>
+                    <th className="align-middle" scope="col">Editar</th>
                 </thead>
                 <tbody>
-                    <Lista />
+                    {tableContent}
                 </tbody>
             </table></div>
         </>
@@ -50,49 +101,3 @@ const EditarCampos = () => {
 }
 
 export default EditarCampos
-
-const Lista = () => {
-    return(
-        campos.map((item) => (
-            <>
-                <tr>
-                    <td>{item.name}</td>
-                    <td>
-                        <input type="checkbox" defaultChecked={campoIsEnabled(item.enable)} />
-                    </td>
-                    <td onClick={Delete}><img id={item.id} className="remove-img" src={RemoveImg} alt="Remove"/></td>
-                </tr>
-            </>
-        )
-    ))
-}
-
-function campoIsEnabled(a){
-    if (a === 1) {
-        return true;
-    }
-    else {
-        return false;
-    }
-}
-
-function Delete(a){
-    Swal.fire({
-        title: '¿Seguro de eliminar?',
-        text: `Eliminar este campo afectará todos los datos asociados a este. Esta acción será irreversible.`,
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Sí, eliminar!',
-        cancelButtonText: 'Cancelar'
-      }).then((result) => {
-        if (result.isConfirmed) {
-          Swal.fire(
-            '¡Eliminado!',
-            'Este campo ha sido eliminado.',
-            'success'
-          )
-        }
-      })
-}
