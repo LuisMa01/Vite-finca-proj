@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import "../../styles/user-list.css";
 import ReImage from "../../images/return.svg";
 import AddImage from "../../images/add.svg";
@@ -19,8 +19,20 @@ const userList = () => {
     refetchOnFocus: true,
     refetchOnMountOrArgChange: true,
   });
+  const [search, setSearch] = useState("");
+  const [estado, setEstado] = useState("");
+
+  const searchEstado = (e) => {
+    e.preventDefault();
+    setEstado(e.target.value);
+  };
+
+  const searcher = (e) => {
+    setSearch(e.target.value);
+  };
 
   let content;
+  
 
   if (isLoading) {
     content = <p>Cargando...</p>;
@@ -30,11 +42,27 @@ const userList = () => {
     content = <p className="errmsg">{error?.data?.message}</p>;
   }
   if (users) {
-  }
-  if (isSuccess) {
-    const { ids } = users;
-    const tableContent =
-      ids?.length && ids.map((userId) => <User key={userId} userId={userId} Lista={"Lista1"} />);
+
+    const { ids, entities } = users;
+    
+    const results = !search
+      ? ids
+      : ids.filter((dato) =>
+          `${entities[dato].user_nombre?entities[dato].user_nombre:entities[dato].user_name}`
+            .toLocaleLowerCase()
+            .includes(search.toLocaleLowerCase())
+        );
+
+      const results2 = !estado ? results : results.filter((dato) =>
+          (`${entities[dato].user_status}` == estado));
+
+     const tableContent =
+      results2?.length &&
+      results2.map((userId) => {
+        let lista = <User key={userId} userId={userId} Lista={"Lista1"} /> 
+        
+        return lista
+      });
 
     content = (
       <>
@@ -52,18 +80,24 @@ const userList = () => {
         </div>
         <div className="seccion_cultivos_checkbox-div">
           <div>
-            <input type="checkBox" className="curso" defaultChecked={true} />
-            <span>Usuarios activos</span>
-          </div>
-          <div>
-            <input
-              type="checkBox"
-              className="finalizados"
-              defaultChecked={false}
-            />
-            <span>Usuarios inactivos</span>
+            <select
+              className="form-control"
+              value={estado}
+              onChange={searchEstado}
+            >
+              <option value={""}>Todos</option>
+              <option value={true}>Activos</option>
+              <option value={false}>Inactivos</option>
+            </select>
           </div>
         </div>
+        <input
+          value={search}
+          onChange={searcher}
+          type="text"
+          placeholder="Search"
+          className="form-control"
+        />
         <div className="table-container col-12 col-md-9 col-xl-6">
           <table className="table table-hover table-sm table-striped table-responsive-sm table-bordered">
             <thead className="thead-loyola">
@@ -95,19 +129,21 @@ const userList = () => {
     );
   }
   const cabeza = (
-      <div className="return-div">
-        <Link to={"/dash"}>
-          <div className="return-button">
-            <img className="return-button-img" src={ReImage} alt="" />
-          </div>
-        </Link>
-      </div>    
+    <div className="return-div">
+      <Link to={"/dash"}>
+        <div className="return-button">
+          <img className="return-button-img" src={ReImage} alt="" />
+        </div>
+      </Link>
+    </div>
   );
 
-  return (<>
-  {cabeza}
-  {content}
-  </>);
+  return (
+    <>
+      {cabeza}
+      {content}
+    </>
+  );
 };
 
 export default userList;
