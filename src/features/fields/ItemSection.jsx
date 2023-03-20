@@ -94,7 +94,7 @@ const ItemSection = () => {
 
     content = (
       <div className="ventana_plantillas">
-        <p className="subheader">Lista de Artículos</p>
+        <p className="subheader font-weight-bold">Lista de Artículos</p>
         <div className="table-container-1">
           <table className="table table-hover table-sm table-striped table-responsive-sm table-bordered">
             <thead className="thead-loyola">
@@ -137,25 +137,25 @@ const ItemSection = () => {
         </Link>
       </div>
       <h1 className="item-section_titulo">Materiales y mano de obra</h1>
-      <p className="nuevo-cultivo-header">Crear Artículo</p>
-
-      <form className="container needs-validation nuevo-cultivo-form">
+      <p className="subheader font-weight-bold">Crear Artículo</p>
+      <div className=" container col-md-3 mb-3 item-button">
+        <button className=" btn btn-outline-secondary" onClick={() => setIsOpen(true)}>Crear Nueva Dosis</button>
+      </div>
+      <form className="container col-12 col-sm-11 col-lg-9 bg-light needs-validation nuevo-cultivo-form">
         <div className="form-row bg-light">
           <div className="col-md-4 mb-3">
-            <label for="nombre_cultivo">Nombre del Artículo</label>
+            <label htmlFor="nombre_cultivo">Nombre del Artículo</label>
             <input
               type="text"
               className="form-control"
-              placeholder="Fruta ##"
+              placeholder="Articulo X"
               value={itemName}
               onChange={onItemNameChanged}
               required
             />
           </div>
-        </div>
-        <div className="form-row">
-          <div className="col-md-3 mb-3">
-            <label for="campo_cultivo">Dosis y Unidad</label>
+          <div className="col-md-4 mb-3">
+            <label htmlFor="campo_cultivo">Dosis y Unidad</label>
             <select
               className="form-control"
               value={itemDose}
@@ -167,17 +167,8 @@ const ItemSection = () => {
               {doseOption}
             </select>
           </div>
-          <div className="cultivos_button-section">
-            <button className="btn btn-success" onClick={() => setIsOpen(true)}>Crear Dosis</button>
-            <Modal isOpen={isOpen} onRequestClose={() => setIsOpen(false)}>              
-              <button className="btn btn-danger" onClick={() => setIsOpen(false)}>Cerrar</button>
-              <DoseSection />
-            </Modal>
-          </div>
-        </div>
-        <div className="form-row bg-light">
-          <div className="col-12 col-md-6 mb-2">
-            <label for="variedad_cultivo">Precio del Artículo</label>
+          <div className="col-12 col-md-4 mb-2">
+            <label htmlFor="variedad_cultivo">Precio del Artículo</label>
             <input
               type="number"
               step="any"
@@ -188,8 +179,19 @@ const ItemSection = () => {
               onChange={onItemPriceChanged}
             />
           </div>
-          <div className="col-md-6 mb-3">
-            <label for="producto_final">Descripción del Artículo</label>
+        </div>
+        <div className="form-row">
+          
+          <div className="">
+            <Modal isOpen={isOpen} onRequestClose={() => setIsOpen(false)}>              
+              <button className="btn btn-danger" onClick={() => setIsOpen(false)}>Cerrar</button>
+              <DoseSection />
+            </Modal>
+          </div>
+        </div>
+        <div className="form-row bg-light">
+          <div className="col-12 mb-3">
+            <label htmlFor="producto_final">Descripción del Artículo</label>
             <input
               type="text"
               class="form-control"

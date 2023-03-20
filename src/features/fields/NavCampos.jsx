@@ -65,7 +65,7 @@ const navCampos = () => {
                 <img className="return-button-img" src={ReImage} alt="Atrás"/>
             </div></Link></div>
             <div className='campos_top-section'>
-                <p className='titulo_campos'>Campos existentes</p>
+                <p className='titulo_campos font-weight-bold'>Campos existentes</p>
                 <div className="button-section_edit">
                     <Link to={'/dash/campos/editar-campos'} className="Link"><div className="seccion_campos_btn-agr">
                         <img className="img-edit" src={AddImage} alt="Add-Icon"/>

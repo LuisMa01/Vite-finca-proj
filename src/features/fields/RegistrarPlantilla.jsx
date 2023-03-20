@@ -11,7 +11,7 @@ const RegistrarPlantilla = () => {
             <div className="return-div"><Link to={'/dash/cultivos'}><div className="return-button">
                 <img className="return-button-img" src={ReImage} alt="Atrás"/>
             </div></Link></div>
-            <h1 className='titulo_nueva-plantilla'>Nueva plantilla</h1>
+            <h1 className='titulo_nueva-plantilla font-weight-bold'>Nueva plantilla</h1>
             <div className="ventana_plantillas">   
                 {/* <form className="container col-12 col-md-10 col-lg-8 col-xl-6 col col needs-validation" novalidate>   */}
                     <div className="form-row justify-content-center">
@@ -25,7 +25,7 @@ const RegistrarPlantilla = () => {
                         </div>
                     </div>
                     <hr/>
-                    <p className="registrar-p-sub-header">Nueva actividad</p>
+                    <p className="subheader font-weight-bold">Nueva actividad</p>
                     <form disable>
                         <div className="form-row justify-content-center">
                             <div className="col-md-4 mb-3">
@@ -34,17 +34,7 @@ const RegistrarPlantilla = () => {
                                     <option disabled selected>Elija la actividad</option>
                                     <NuestrasActividades />
                                 </select>
-                                {/* <div className="dropdown">
-                                    <button className="btn btn-outline-secondary  dropdown-toggle" type="button" data-toggle="dropdown">Seleccionar nombre de la actividad
-                                    <span className="caret"></span></button>
-                                    <ul className="dropdown-menu">
-                                        <input onChange={myFilter} className="form-control" id="myInput" type="text" placeholder="Buscar..."/>
-                                        
-                                    </ul>
-                                </div> */}
                             </div>
-                                    {/* <input type="text" className="form-control" id="nombre_cultivo" placeholder="" required /> */}
-                            
                             <div className="col-md-4 mb-3">
                                 <label for="fecha-planeada">Fecha planeada</label>
                                 <input type="date" className="form-control" id="fecha-planeada" required />
@@ -61,7 +51,7 @@ const RegistrarPlantilla = () => {
                         </div>
                     </form>
                     <hr/>
-                    <p className='subheader'>Actividades de esta plantilla</p>
+                    <p className='subheader font-weight-bold'>Actividades de esta plantilla</p>
                     <div className="table-container-1"><table className="table table-hover table-sm table-striped table-responsive-sm table-bordered">
                         <thead className="thead-loyola">
                             <th className="align-middle" scope="col">Actividad</th>

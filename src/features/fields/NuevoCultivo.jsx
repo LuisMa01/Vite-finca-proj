@@ -180,7 +180,7 @@ const nuevoCultivo = () => {
           </div>
         </Link>
       </div>
-      <p className="nuevo-cultivo-header">Añadir cultivo</p>
+      <p className="nuevo-cultivo-header font-weight-bold">Añadir cultivo</p>
       <p className="nuevo-descripcion text-muted">
         A continuación describa el cultivo que desea implementar, ubicación y
         características generales que lo identifican.
@@ -275,7 +275,7 @@ const nuevoCultivo = () => {
           </div>
         </div>
         <div className="form-row bg-light">
-          <div className="col-md-6 mb-3">
+          <div className="col-12 mb-3">
             <label htmlFor="producto_final">Producto final</label>
             <input
               type="text"

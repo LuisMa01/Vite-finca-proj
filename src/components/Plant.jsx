@@ -151,9 +151,9 @@ const Plant = ({ plantId }) => {
             </div>
           </div>
 
-          <div className="form-row justify-content-center">
-            <div className="col-md-4 mb-3">
-              <label for="responsable">Descripcion</label>
+          <div className="form-row">
+            <div className="col-md-12 mb-3">
+              <label for="responsable">Descripción</label>
               <input type="text" className="form-control" id="responsable" value={desc} onChange={onPlantDescChanged} />
             </div>
           </div>

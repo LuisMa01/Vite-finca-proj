@@ -74,10 +74,9 @@ const RegistrarPlanta = () => {
           </div>
         </Link>
       </div>
-      <h1 className="titulo_nueva-plantilla">Planta</h1>
+      <h1 className="titulo_nueva-plantilla font-weight-bold">Planta</h1>
       <div className="ventana_plantillas">
-        {/* <form className="container col-12 col-md-10 col-lg-8 col-xl-6 col col needs-validation" novalidate>   */}
-        <form>
+        <form className="container col-12 col-sm-11 col-lg-9 bg-light">
           <div className="form-row justify-content-center">
             <div className="col-md-4 mb-3">
               <label for="nombre_cultivo" className="text-center">
@@ -120,8 +119,8 @@ const RegistrarPlanta = () => {
           </div>
 
           <div className="form-row justify-content-center">
-            <div className="col-md-4 mb-3">
-              <label for="responsable">Descripcion</label>
+            <div className="col-12 mb-3">
+              <label for="responsable">Descripción</label>
               <input type="text" className="form-control" id="responsable" value={desc} onChange={onPlantDescChanged} />
             </div>
           </div>
@@ -135,7 +134,7 @@ const RegistrarPlanta = () => {
           </div>
         </form>
         <hr />
-        <p className="subheader">Plantas</p>
+        <p className="subheader extra-margin font-weight-bold">Plantas agregadas</p>
         <div className="table-container-1">
           <table className="table table-hover table-sm table-striped table-responsive-sm table-bordered">
             <thead className="thead-loyola">

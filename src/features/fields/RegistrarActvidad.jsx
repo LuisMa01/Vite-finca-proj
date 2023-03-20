@@ -91,7 +91,7 @@ const registrarActividad = () => {
           </div>
         </Link>
       </div>
-      <p className="titulo_tipos-de-actividades">Actividades de cultivo</p>
+      <p className="titulo_tipos-de-actividades font-weight-bold">Actividades de cultivo</p>
       <p className="tipos_description">
         <i>
           Esta seccion es para la administración de la base de datos de las

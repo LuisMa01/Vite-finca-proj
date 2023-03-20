@@ -15,7 +15,6 @@ import NavInicio from "./features/fields/NavInicio";
 import NavProximas from "./features/fields/NavProximas";
 import MiPerfil from "./features/fields/MiPerfil";
 import UserList from "./features/fields/UserList";
-import PswdChange from "./features/fields/PswdChange";
 import NuevoUsuario from "./features/fields/NuevoUsuario";
 import InfoUser from "./features/fields/InfoUser";
 import NuevoCultivo from "./features/fields/NuevoCultivo";
@@ -73,7 +72,6 @@ function App() {
                   <Route path="mi-perfil">
                     <Route index element={<MiPerfil />} />
                     <Route path="act-info/:id" element={<ActInformacion />} />
-                    <Route path="pswd-change" element={<PswdChange />} />
                   </Route>
                   <Route path="lista-usuarios">
                     <Route index element={<UserList />} />

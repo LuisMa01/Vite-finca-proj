@@ -66,7 +66,7 @@ const userList = () => {
 
     content = (
       <>
-        <h1 className="user-list_header">Lista de usuarios</h1>
+        <h1 className="user-list_header font-weight-bold">Lista de usuarios</h1>
         <div className="button_section_parent">
           <Link
             to={"/dash/usuario/lista-usuarios/nuevo-usuario"}
@@ -78,10 +78,10 @@ const userList = () => {
             </div>
           </Link>
         </div>
-        <div className="seccion_cultivos_checkbox-div">
-          <div>
+        <div className="container col-12 col-lg-6">
+          <div className="col-6">
             <select
-              className="form-control"
+              className="form-control "
               value={estado}
               onChange={searchEstado}
             >
@@ -90,14 +90,15 @@ const userList = () => {
               <option value={false}>Inactivos</option>
             </select>
           </div>
+            <input
+            value={search}
+            onChange={searcher}
+            type="text"
+            placeholder="Search"
+            className="form-control"
+            />
         </div>
-        <input
-          value={search}
-          onChange={searcher}
-          type="text"
-          placeholder="Search"
-          className="form-control"
-        />
+        
         <div className="table-container col-12 col-md-9 col-xl-6">
           <table className="table table-hover table-sm table-striped table-responsive-sm table-bordered">
             <thead className="thead-loyola">

@@ -340,27 +340,25 @@ const User = ({ userId, Lista }) => {
           Cerrar
         </button>
 
-        <p className="titulo_cambiar">Cambiar contraseña</p>
+        <p className="titulo_cambiar font-weight-bold">Cambiar contraseña</p>
         <div className="my-card card-outline-secondary col-12 col-sm-10 col-md-8 col-lg-6">
           <div className="card-body">
             <form className="form" onSubmit={onChangePsClicked}>
               <div className="form-group">
-                <label htmlFor="inputPasswordOld">Contraseña actual</label>
                 <input
                   type="password"
-                  className="form-control"
-                  id="inputPasswordOld"
+                  className="form-control mb-3"
+                  placeholder="Contraseña actual"
                   value={passwordAnt}
                   onChange={onPasswordAntChanged}
                   autoFocus
                 />
               </div>
               <div className="form-group">
-                <label htmlFor="inputPasswordNew">Nueva contraseña</label>
                 <input
                   type="password"
-                  className="form-control"
-                  id="inputPasswordNew"
+                  className="form-control mb-3"
+                  placeholder="Nueva contraseña"
                   value={password}
                   onChange={onPasswordChanged}
                 />
@@ -370,11 +368,10 @@ const User = ({ userId, Lista }) => {
                 </span>
               </div>
               <div className="form-group">
-                <label htmlFor="inputPasswordNewVerify">Verificar</label>
                 <input
                   type="password"
-                  className="form-control"
-                  id="inputPasswordNewVerify"
+                  className="form-control mb-3"
+                  placeholder="Verificar contraseña"
                   value={passwordDu}
                   onChange={onPasswordDuChanged}
                 />
@@ -475,7 +472,6 @@ const User = ({ userId, Lista }) => {
                 </div>
               </Link>
             </div>
-            <h1 className="encabezado">Mi información</h1>
             <div className="profile-card">
               <div className="name-header">
                 <h2>

@@ -74,7 +74,7 @@ const DoseSection = () => {
 
     content = (
       <div className="ventana_plantillas">
-        <p className="subheader">Lista</p>
+        <p className="font-weight-bold subheader">Lista de dosis existentes</p>
         <div className="table-container-1">
           <table className="table table-hover table-sm table-striped table-responsive-sm table-bordered">
             <thead className="thead-loyola">
@@ -101,53 +101,54 @@ const DoseSection = () => {
   return (
     <>
       <h1 className="item-section_titulo">Dosis y Unidad</h1>
-      <form className="container needs-validation nuevo-cultivo-form">
-        <div className="form-row bg-light">
-          <div className="col-md-2 mb-3">
-            <label for="nombre_cultivo">Dosis</label>
-            <input
-              type="text"
-              className="form-control"
-              placeholder=""
-              value={doseName}
-              onChange={onDoseNameChanged}
-              required
-            />
+      <div className="container centered-form">
+        <form className="col-12 col-lg-9  justify-content-center needs-validation">
+         <p className="font-weight-bold subheader">Agregar dosis</p>
+          <div className="form-row bg-light">
+            <div className="col-md-3 mb-3">
+              <input
+                type="text"
+                className="form-control"
+                placeholder="Ej: hora/hombre"
+                value={doseName}
+                onChange={onDoseNameChanged}
+                required
+              />
+            </div>
+            <div className="col-12 col-md-3 mb-2">
+              <input
+                type="text"
+                className="form-control"
+                placeholder="Unidad"
+                value={doseUnit}
+                onChange={onDoseUnitChanged}
+              />
+            </div>
+            <div className="col-12 col-md-6 mb-3">
+              <input
+                type="text"
+                class="form-control"
+                placeholder="Descripción"
+                value={desc}
+                onChange={onItemDescChanged}
+              />
+            </div>
+          </div>  
+        
+          <div className="form-row cultivos_button-section">
+            <button
+              className="btn btn-success"
+              onClick={onSaveDoseClicked}
+              type="submit"
+            >
+              Guardar
+            </button>
+            
+              <button className="btn btn-danger" onClick={handleClearClick}>Limpiar</button>
+            
           </div>
-          <div className="col-12 col-md-2 mb-2">
-            <label for="variedad_cultivo">Unidad</label>
-            <input
-              type="text"
-              className="form-control"
-              placeholder=""
-              value={doseUnit}
-              onChange={onDoseUnitChanged}
-            />
-          </div>
-          <div className="col-12 col-md-6 mb-3">
-            <label for="producto_final">Descripción</label>
-            <input
-              type="text"
-              class="form-control"
-              value={desc}
-              onChange={onItemDescChanged}
-            />
-          </div>
-        </div>  
-       
-        <div className="cultivos_button-section">
-          <button
-            className="btn btn-success"
-            onClick={onSaveDoseClicked}
-            type="submit"
-          >
-            Guardar
-          </button>
-          
-            <button className="btn btn-danger" onClick={handleClearClick}>Limpiar</button>
-          
-        </div>
-      </form>
+        </form>
+      </div>
       <hr />
       {content}
     </>
