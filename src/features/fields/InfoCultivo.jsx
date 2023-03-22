@@ -20,6 +20,54 @@ import Crop from "../../components/Crop";
 import Cost from "../../components/Cost";
 import Comt from "../../components/Comt";
 
+const CultivoPl = () => {
+  const {
+    data: crops,
+    isLoading,
+    isSuccess: cropSuc,
+    isError,
+    error,
+  } = useGetCropsQuery("cropsList", {
+    pollingInterval: 60000,
+    refetchOnFocus: true,
+    refetchOnMountOrArgChange: true,
+  });
+  
+  let opciones
+  if (cropSuc) {
+    const { ids, entities } = crops;
+
+    opciones = ids?.length &&
+      ids.map((Id) => {
+        if (entities[Id].crop_status) {
+          let plnt = `${entities[Id].crop_name}`.split("-")[0];
+          let nomm = `${entities[Id].crop_name}`;
+          if (plnt == "Plantilla") {
+            console.log(nomm);
+            return (<option key={Id} value={Id}>
+              {nomm}
+            </option>)
+            
+          }
+        }
+      });
+
+
+      
+  }
+  return (
+    <>
+      <label htmlFor="campo_cultivo">Usar Plantillas</label>
+      <select className="form-control">
+        <option disabled value={""}>
+          Elegir plantilla
+        </option>
+        {opciones}
+      </select>
+    </>
+  );
+};
+
 const Costo = ({ crpId }) => {
   const {
     data: costs,
@@ -290,6 +338,8 @@ const infoCultivo = () => {
     }
 
     let dateList;
+    let plnt = <></>;
+    let cropUsado = 0
     if (dateIsError) {
       dateList = <p className="errmsg">{dateError?.data?.message}</p>;
     }
@@ -300,9 +350,29 @@ const infoCultivo = () => {
         ids?.length &&
         ids.map((Id) => {
           if (entities[Id].date_crop_key == crop.crop_id) {
+            cropUsado = cropUsado + 1;
             return <AppDate key={Id} dateId={Id} Lista={"Lista1"} />;
+          }else{
+            
+            return(<></>)
           }
         });
+
+        ids?.length &&
+        ids.map((Id) => {
+          if (entities[Id].date_crop_key == crop.crop_id) {            
+            
+            stop
+          }
+        });
+
+      if (cropUsado <= 0) {
+        plnt = (
+          <>
+            <CultivoPl />
+          </>
+        );
+      }
     }
 
     cropName = crop.crop_name ? crop.crop_name : "no tiene";
@@ -323,8 +393,10 @@ const infoCultivo = () => {
         </p>
         <form>
           <div className="new-activity-miniform d-flex justify-content-center col-12 col-md-10 col-lg-9 form-row bg-light">
+            <div className="col-12">{plnt}</div>
             <div className="col-md-6 col-lg-3 mb-3">
               <label htmlFor="campo_cultivo">Actividad</label>
+
               <select
                 className="form-control"
                 value={actKey}
@@ -418,7 +490,7 @@ const infoCultivo = () => {
       </>
     );
   } else {
-    contenido = null;
+    contenido = <>No Disponible</>;
   }
 
   return contenido;

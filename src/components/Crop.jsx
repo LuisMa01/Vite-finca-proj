@@ -215,7 +215,7 @@ const Crop = ({ cropId, Lista }) => {
 
       userOption = ids.map((Id) => {
         if (entities[Id].user_status) {
-          console.log(`${entities[Id].user_id}   ${Id}`);
+          
           return (
             <option key={Id} value={entities[Id].user_id}>
               {entities[Id].user_nombre
