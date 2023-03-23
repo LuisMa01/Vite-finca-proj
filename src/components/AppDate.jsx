@@ -10,6 +10,7 @@ import { useGetActsQuery } from "../features/fields/redux/actApiSlice";
 import { useGetUsersQuery } from "../features/fields/redux/usersApiSlice";
 import { useGetCropsQuery } from "../features/fields/redux/cropApiSlice";
 import { useGetCampsQuery } from "../features/fields/redux/campApiSlice";
+import { useNavigate } from "react-router-dom";
 import { memo } from "react";
 import { Link } from "react-router-dom";
 import RemoveImg from "../images/remove.svg";
@@ -42,6 +43,7 @@ const Camp = ({ campId }) => {
   }
 };
 const Act = ({ actId }) => {
+  
   const { act } = useGetActsQuery("actsList", {
     selectFromResult: ({ data }) => ({
       act: data?.entities[actId],
@@ -84,7 +86,8 @@ const AppDate = ({ dateId, Lista }) => {
     const [plantId, setPlantKey] = useState(date.crop_plant_key);
     const [userRep, setUserRep] = useState(date.date_user_key);
     const [isOpen, setIsOpen] = useState(false);
-
+    const navigate = useNavigate();
+    let plntCrop = `${date.crop_name}`.split("-")[0];
     const [updateDate, { isLoading, isSuccess, isError, error }] =
       useUpdateDateMutation();
 
@@ -125,6 +128,13 @@ const AppDate = ({ dateId, Lista }) => {
       e.preventDefault();
       setDateInit(e.target.value);
     };
+    const enlace = (e) => {
+      e.preventDefault();
+      if (plntCrop !== "Plantilla") {
+        navigate(`/dash/cultivos/info-app/${dateId}`);
+      }
+      
+    };
     const onDateEndChanged = (e) => {
       e.preventDefault();
       setDateEnd(e.target.value);
@@ -161,6 +171,7 @@ const AppDate = ({ dateId, Lista }) => {
         setUserRep(date.date_user_key);
         setPlantKey(date.crop_plant_key);
         setCropKey(date.date_crop_key);
+        plntCrop = `${date.crop_name}`.split("-")[0];
       }
     }, [date]);
 
@@ -256,11 +267,11 @@ const AppDate = ({ dateId, Lista }) => {
       contenido = (
         <tr key={dateId}>
           <td>
-            <Link to={`/dash/cultivos/info-app/${dateId}`}>
-              <div type="button">
+            
+              <div type="button" onClick={enlace}>
                 <Act key={actKey} actId={actKey} />
               </div>
-            </Link>
+          
           </td>
           <td>{fechaIni == "null" ? "no fecha asignada" : fechaIni}</td>
 
@@ -276,7 +287,9 @@ const AppDate = ({ dateId, Lista }) => {
               alt="Remove"
             />
           </td>
-          <td onClick={() => setIsOpen(true)}>Editar</td>
+          <td onClick={() => { if (plntCrop !== "Plantilla") {
+           setIsOpen(true)} 
+          }}>Editar</td>
           {updateApp}
         </tr>
       );
@@ -285,11 +298,11 @@ const AppDate = ({ dateId, Lista }) => {
       contenido = (
         <tr key={dateId}>
           <td>
-            <Link to={`/dash/cultivos/info-app/${dateId}`}>
-              <div type="button">
+            
+              <div type="button" onClick={enlace}>
                 <Act key={actKey} actId={actKey} />
               </div>
-            </Link>
+            
           </td>
           <td>
             <Link to={`/dash/cultivos/info-cultivo/${date.date_crop_key}`}>

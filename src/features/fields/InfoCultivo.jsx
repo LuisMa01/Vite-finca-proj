@@ -32,6 +32,7 @@ const Costo = ({ crpId }) => {
   });
   let costList;
   let costTotal = [];
+  let listSum = 0
   if (costs) {
     const { ids, entities } = costs;
 
@@ -39,6 +40,7 @@ const Costo = ({ crpId }) => {
       ids?.length &&
       ids.map((Id) => {
         if (entities[Id].date_crop_key == crpId) {
+          listSum = listSum + 1
           let list = <Cost key={Id} costId={Id} Lista={"Lista2"} />;
           costTotal.push(parseFloat(entities[Id].cost_price));
           return list;
@@ -52,52 +54,56 @@ const Costo = ({ crpId }) => {
       currency: "DOP",
     }).format(parseFloat(TT));
 
-    const contenido = (
-      <>
-        <p className="already-existing-activities col-12">
-          <b>MATERIALES, INSUMOS Y MANO DE OBRA:</b>
-        </p>
-        <div className="table-container col-12 col-md-9 col-xl-6">
-          <table className="table table-hover table-sm table-striped table-responsive-sm table-bordered">
-            <thead className="thead-loyola">
-              <tr>
-                <th className="align-middle" scope="col">
-                  Articulo
-                </th>
-                <th className="align-middle" scope="col">
-                  Actividad
-                </th>
-                <th className="align-middle" scope="col">
-                  Dosis
-                </th>
-                <th className="align-middle" scope="col">
-                  Cantidad
-                </th>
-                <th className="align-middle" scope="col">
-                  Unidad
-                </th>
-                <th className="align-middle" scope="col">
-                  Costo Unitario
-                </th>
-                <th className="align-middle" scope="col">
-                  Costo Total
-                </th>
-                <th className="align-middle" scope="col">
-                  Eliminar
-                </th>
-              </tr>
-            </thead>
-            <tbody>{costList}</tbody>
-            <tfoot>
-              <tr>
-                <td colSpan={"6"}>Total:</td>
-                <td>{precioTT}</td>
-              </tr>
-            </tfoot>
-          </table>
-        </div>
-      </>
-    );
+    let contenido = (<></>)
+    if (listSum > 0) {
+      contenido = (
+        <>
+          <p className="already-existing-activities col-12">
+            <b>MATERIALES, INSUMOS Y MANO DE OBRA:</b>
+          </p>
+          <div className="table-container col-12 col-md-9 col-xl-6">
+            <table className="table table-hover table-sm table-striped table-responsive-sm table-bordered">
+              <thead className="thead-loyola">
+                <tr>
+                  <th className="align-middle" scope="col">
+                    Articulo
+                  </th>
+                  <th className="align-middle" scope="col">
+                    Actividad
+                  </th>
+                  <th className="align-middle" scope="col">
+                    Dosis
+                  </th>
+                  <th className="align-middle" scope="col">
+                    Cantidad
+                  </th>
+                  <th className="align-middle" scope="col">
+                    Unidad
+                  </th>
+                  <th className="align-middle" scope="col">
+                    Costo Unitario
+                  </th>
+                  <th className="align-middle" scope="col">
+                    Costo Total
+                  </th>
+                  <th className="align-middle" scope="col">
+                    Eliminar
+                  </th>
+                </tr>
+              </thead>
+              <tbody>{costList}</tbody>
+              <tfoot>
+                <tr>
+                  <td colSpan={"6"}>Total:</td>
+                  <td>{precioTT}</td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+        </>
+      );
+    }
+    
     return contenido;
   }
 };
@@ -113,46 +119,52 @@ const Comentario = ({ cropId }) => {
     refetchOnMountOrArgChange: true,
   });
   let comtList;
+  let listSum = 0
   if (comts) {
     const { ids, entities } = comts;
     comtList =
       ids?.length &&
       ids.map((Id) => {
         if (entities[Id].date_crop_key == cropId) {
+          listSum = listSum+1
           return <Comt key={Id} comtId={Id} Lista={"Lista2"} />;
         }
       });
   }
 
-  const contenido = (
-    <>
-      <p className="already-existing-activities">
-        <b>Observaciones:</b>
-      </p>
-      <div className="table-container col-12 col-md-9 col-xl-6">
-        <table className="table table-hover table-sm table-striped table-responsive-sm table-bordered">
-          <thead className="thead-loyola">
-            <th className="align-middle" scope="col">
-              Fecha
-            </th>
-            <th className="align-middle" scope="col">
-              Actividad
-            </th>
-            <th className="align-middle" scope="col">
-              Comentario
-            </th>
-            <th className="align-middle" scope="col">
-              Eliminar
-            </th>
-            <th className="align-middle" scope="col">
-              Editar
-            </th>
-          </thead>
-          <tbody>{comtList}</tbody>
-        </table>
-      </div>
-    </>
-  );
+  let contenido = (<></>)
+  if (listSum > 0) {
+    contenido = (
+      <>
+        <p className="already-existing-activities">
+          <b>Observaciones:</b>
+        </p>
+        <div className="table-container col-12 col-md-9 col-xl-6">
+          <table className="table table-hover table-sm table-striped table-responsive-sm table-bordered">
+            <thead className="thead-loyola">
+              <th className="align-middle" scope="col">
+                Fecha
+              </th>
+              <th className="align-middle" scope="col">
+                Actividad
+              </th>
+              <th className="align-middle" scope="col">
+                Comentario
+              </th>
+              <th className="align-middle" scope="col">
+                Eliminar
+              </th>
+              <th className="align-middle" scope="col">
+                Editar
+              </th>
+            </thead>
+            <tbody>{comtList}</tbody>
+          </table>
+        </div>
+      </>
+    );
+  }
+  
   return <>{contenido}</>;
 };
 
@@ -163,7 +175,9 @@ const infoCultivo = () => {
   const [dateEnd, setDateEnd] = useState("");
   const [userRep, setUserRep] = useState("");
   const [plantillaKey, setPlantillaKey] = useState("");
-
+  const [isPlantilla, setIsPlantilla] = useState(false);
+  let actArr = [];
+  let plntCrop
   const { crop } = useGetCropsQuery("cropsList", {
     selectFromResult: ({ data }) => ({
       crop: data?.entities[id],
@@ -208,13 +222,39 @@ const infoCultivo = () => {
 
   const onAddActClicked = async (e) => {
     e.preventDefault();
-    await addNewDate({
-      actKey,
-      userRep,
-      dateInit,
-      dateEnd,
-      cropKey: crop.crop_id,
-      plantId: crop.crop_plant_key,
+    plntCrop = `${crop.crop_name}`.split("-")[0];
+    if (plntCrop == "Plantilla") {
+      await addNewDate({
+        actKey,
+        userRep: "",
+        dateInit: "",
+        dateEnd: "",
+        cropKey: crop.crop_id,
+        plantId: crop.crop_plant_key,
+      });
+    } 
+    if (plntCrop !== "Plantilla") {
+      await addNewDate({
+        actKey,
+        userRep,
+        dateInit,
+        dateEnd,
+        cropKey: crop.crop_id,
+        plantId: crop.crop_plant_key,
+      });
+    }
+  };
+  const onSecAddActClicked = (e) => {
+    e.preventDefault();
+    actArr.map((id) => {
+      addNewDate({
+        actKey: id,
+        userRep,
+        dateInit,
+        dateEnd,
+        cropKey: crop.crop_id,
+        plantId: crop.crop_plant_key,
+      });
     });
   };
 
@@ -237,6 +277,12 @@ const infoCultivo = () => {
     e.preventDefault();
     setUserRep(e.target.value);
   };
+  const onPlantillaKeyChanged = (e) => {
+    e.preventDefault();
+    setPlantillaKey(e.target.value);
+  };
+  
+
   const handleClearClick = (e) => {
     e.preventDefault();
     setActKey("");
@@ -256,49 +302,29 @@ const infoCultivo = () => {
   }, [addDateSuc]);
 
   let opciones;
-  if (cropSuc) {
-    const { ids, entities } = crops;
-
-    opciones =
-      ids?.length &&
-      ids.map((Id) => {
-        if (entities[Id].crop_status) {
-          let plnt = `${entities[Id].crop_name}`.split("-")[0];
-          let nomm = `${entities[Id].crop_name}`;
-          if (plnt == "Plantilla") {
-            return (
-              <option key={Id} value={Id}>
-                {nomm}
-              </option>
-            );
-          }
-        }
-      });
-  }
-
-  let cropName;
+  
   let contenido;
   let userOption;
   let actOption;
   let cropDato;
   let comtCrop;
   let costCrop;
+  let dateList;
+  let plnt = <></>;
+  let cropUsado = 0;
   if (crop) {
     //para asegurar que obtenga los datos del cultivo
-    if (crop.crop_id) {
-      cropDato = crop.crop_id.length ?? (
-        <Crop key={crop.crop_id} cropId={crop.crop_id} Lista={"Lista3"} />
-      );
-      comtCrop = crop.crop_id.length ?? (
-        <Comentario key={crop.crop_id} cropId={crop.crop_id} />
-      );
-      costCrop = crop.crop_id.length ?? (
-        <Costo key={crop.crop_id} crpId={crop.crop_id} />
-      );
-    }
+    
+    
+
+    cropDato = (
+      <Crop key={crop.crop_id} cropId={crop.crop_id} Lista={"Lista3"} />
+    );
+    comtCrop = <Comentario key={crop.crop_id} cropId={crop.crop_id} />;
+    costCrop = <Costo key={crop.crop_id} crpId={crop.crop_id} />;
+
     if (rpuser) {
       const { ids, entities } = rpuser;
-
       userOption = ids.map((Id) => {
         if (entities[Id].user_status) {
           return (
@@ -311,6 +337,27 @@ const infoCultivo = () => {
         }
       });
     }
+    if (cropSuc) {
+      const { ids, entities } = crops;
+
+      opciones =
+        ids?.length &&
+        ids.map((Id) => {
+          if (entities[Id].crop_status) {
+            let plnt = `${entities[Id].crop_name}`.split("-")[0];
+            let nomm = `${entities[Id].crop_name}`;
+
+            if (plnt == "Plantilla") {
+              return (
+                <option key={Id} value={Id}>
+                  {nomm}
+                </option>
+              );
+            }
+          }
+        });
+    }
+
     if (activ) {
       const { ids, entities } = activ;
 
@@ -325,14 +372,21 @@ const infoCultivo = () => {
       });
     }
 
-    let dateList;
-    let plnt = <></>;
-    let cropUsado = 0;
+    
     if (dateIsError) {
       dateList = <p className="errmsg">{dateError?.data?.message}</p>;
     }
     if (dates) {
       const { ids, entities } = dates;
+
+      if (plantillaKey) {
+        ids?.length &&
+          ids.map((Id) => {
+            if (entities[Id].date_crop_key == plantillaKey) {
+              actArr.push(entities[Id].date_act_key);
+            }
+          });
+      }
 
       dateList =
         ids?.length &&
@@ -345,39 +399,7 @@ const infoCultivo = () => {
           }
         });
 
-      let actArr = [];
       
-
-      const onPlantillaKeyChanged = async (e) => {
-        e.preventDefault();
-        setPlantillaKey(e.target.value);
-      };
-      useEffect(() => {
-        if (plantillaKey) {
-          ids?.length &&
-            ids.map((Id) => {
-              if (entities[Id].date_crop_key == plantillaKey) {
-                actArr.push(entities[Id].date_act_key);
-              }
-            });
-        }
-        
-      }, [plantillaKey]);
-
-      const onSecAddActClicked = async (e) => {
-        e.preventDefault();
-        await actArr.map((id)=>{
-          addNewDate({
-            actKey: id,
-            userRep,
-            dateInit,
-            dateEnd,
-            cropKey: crop.crop_id,
-            plantId: crop.crop_plant_key,
-          });
-        })
-        
-      };
 
       ids?.length &&
         ids.map((Id) => {
@@ -404,7 +426,11 @@ const infoCultivo = () => {
                 </select>
               </div>
               <div className="cultivos_button-section col-6">
-                <button className="btn btn-success" type="submit" onClick={onSecAddActClicked}>
+                <button
+                  className="btn btn-success"
+                  type="submit"
+                  onClick={onSecAddActClicked}
+                >
                   Usar Plantilla
                 </button>
               </div>
@@ -414,7 +440,6 @@ const infoCultivo = () => {
       }
     }
 
-    cropName = crop.crop_name ? crop.crop_name : "no tiene";
     contenido = (
       <>
         <div className="return-div">

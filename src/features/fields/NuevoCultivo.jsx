@@ -156,11 +156,28 @@ const nuevoCultivo = () => {
       cropArea,
     });
   };
+  const savePlantilla = async (e) => {
+    await addNewCrop({
+      repUser: "",
+      cropName,
+      datePlant: "",
+      dateHarvest: "",
+      finalProd: "",
+      cropCampKey: "",
+      cropPlantKey,
+      cropArea: "",
+    });
+  };
 
   const onSaveCropClicked = async (e) => {
     e.preventDefault();
-
-    save();
+    if (plantilla !== "Plantilla") {
+      save();
+    }
+    if (plantilla == "Plantilla") {
+      savePlantilla()
+    }
+    
   };
   useEffect(() => {
     
@@ -274,6 +291,19 @@ const nuevoCultivo = () => {
         </div>
 
         <div className="form-row">
+        <div className="col-md-3 mb-3">
+            <label htmlFor="campo_cultivo">Plantas</label>
+            <select
+              className="form-control"
+              value={cropPlantKey}
+              onChange={onCropPlantKeyChanged}
+            >
+              <option disabled value={""}>
+                Elegir Planta
+              </option>
+              {plantOption}
+            </select>
+          </div>
           <div className="col-md-3 mb-3">
             <label htmlFor="campo_cultivo">Responsable</label>
             <select
@@ -287,19 +317,7 @@ const nuevoCultivo = () => {
               {userOption}
             </select>
           </div>
-          <div className="col-md-3 mb-3">
-            <label htmlFor="campo_cultivo">Plantas</label>
-            <select
-              className="form-control"
-              value={cropPlantKey}
-              onChange={onCropPlantKeyChanged}
-            >
-              <option disabled value={""}>
-                Elegir Planta
-              </option>
-              {plantOption}
-            </select>
-          </div>
+          
           <div className="col-md-3 mb-3">
             <label htmlFor="campo_cultivo">Campos</label>
             <select

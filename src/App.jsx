@@ -29,8 +29,10 @@ import ItemSection from "./features/fields/ItemSection";
 import RegistrarPlanta from "./features/fields/RegistrarPlanta";
 import InfoCultivo from "./features/fields/InfoCultivo";
 import InfoAppCult from "./features/fields/InfoAppCult";
+import useAuth from "./hooks/useAuth";
 
 function App() {
+  const { isManager, isAdmin } = useAuth();
   return (
     <Routes>
       <Route path="/" element={<Layouts />}>
@@ -66,18 +68,33 @@ function App() {
                 </Route>
                 <Route path="campos">
                   <Route index element={<NavCampos />} />
-                  <Route path="editar-campos" element={<EditarCampos />} />
+                  <Route
+                    element={
+                      <RequireAuth
+                        allowedRoles={[ROLES.Administrador, ROLES.Supervisor]}
+                      />
+                    }
+                  >
+                    <Route path="editar-campos" element={<EditarCampos />} />
+                  </Route>
                 </Route>
                 <Route path="usuario">
                   <Route path="mi-perfil">
                     <Route index element={<MiPerfil />} />
                     <Route path="act-info/:id" element={<ActInformacion />} />
                   </Route>
-                  <Route path="lista-usuarios">
-                    <Route index element={<UserList />} />
-                    <Route path="nuevo-usuario" element={<NuevoUsuario />} />
-                    <Route path="editar-usuario" element={<EditUsuario />} />
-                    <Route path="info-user" element={<InfoUser />} />
+
+                  <Route
+                    element={
+                      <RequireAuth allowedRoles={[ROLES.Administrador]} />
+                    }
+                  >
+                    <Route path="lista-usuarios">
+                      <Route index element={<UserList />} />
+                      <Route path="nuevo-usuario" element={<NuevoUsuario />} />
+                      <Route path="editar-usuario" element={<EditUsuario />} />
+                      <Route path="info-user" element={<InfoUser />} />
+                    </Route>
                   </Route>
                 </Route>
                 {/*lo agregado aqui en adelante es de fran*/}

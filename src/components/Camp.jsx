@@ -30,12 +30,16 @@ const Crop = ({ campId }) => {
       ids?.length &&
       ids.map((id) => {
         if (entities[id].crop_camp_key == campId) {
-          return (
-            <>
-              <br />
-              {entities[id].crop_name}{" "}
-            </>
-          );
+          let plnt = `${entities[id].crop_name}`.split("-")[0];
+          if (plnt !== "Plantilla") {
+            return (
+              <>
+                <br />
+                {entities[id].crop_name}{" "}
+              </>
+            );
+          }
+          
         }
       });
     cont = (
