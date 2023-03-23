@@ -20,54 +20,6 @@ import Crop from "../../components/Crop";
 import Cost from "../../components/Cost";
 import Comt from "../../components/Comt";
 
-const CultivoPl = () => {
-  const {
-    data: crops,
-    isLoading,
-    isSuccess: cropSuc,
-    isError,
-    error,
-  } = useGetCropsQuery("cropsList", {
-    pollingInterval: 60000,
-    refetchOnFocus: true,
-    refetchOnMountOrArgChange: true,
-  });
-  
-  let opciones
-  if (cropSuc) {
-    const { ids, entities } = crops;
-
-    opciones = ids?.length &&
-      ids.map((Id) => {
-        if (entities[Id].crop_status) {
-          let plnt = `${entities[Id].crop_name}`.split("-")[0];
-          let nomm = `${entities[Id].crop_name}`;
-          if (plnt == "Plantilla") {
-            console.log(nomm);
-            return (<option key={Id} value={Id}>
-              {nomm}
-            </option>)
-            
-          }
-        }
-      });
-
-
-      
-  }
-  return (
-    <>
-      <label htmlFor="campo_cultivo">Usar Plantillas</label>
-      <select className="form-control">
-        <option disabled value={""}>
-          Elegir plantilla
-        </option>
-        {opciones}
-      </select>
-    </>
-  );
-};
-
 const Costo = ({ crpId }) => {
   const {
     data: costs,
@@ -210,11 +162,23 @@ const infoCultivo = () => {
   const [dateInit, setDateInit] = useState("");
   const [dateEnd, setDateEnd] = useState("");
   const [userRep, setUserRep] = useState("");
+  const [plantillaKey, setPlantillaKey] = useState("");
 
   const { crop } = useGetCropsQuery("cropsList", {
     selectFromResult: ({ data }) => ({
       crop: data?.entities[id],
     }),
+  });
+  const {
+    data: crops,
+    isLoading,
+    isSuccess: cropSuc,
+    isError,
+    error,
+  } = useGetCropsQuery("cropsList", {
+    pollingInterval: 60000,
+    refetchOnFocus: true,
+    refetchOnMountOrArgChange: true,
   });
   const { data: rpuser } = useGetUsersQuery("usersList", {
     pollingInterval: 60000,
@@ -260,6 +224,7 @@ const infoCultivo = () => {
     e.preventDefault();
     setActKey(e.target.value);
   };
+
   const onDateInitChanged = (e) => {
     e.preventDefault();
     setDateInit(e.target.value);
@@ -278,6 +243,7 @@ const infoCultivo = () => {
     setDateInit("");
     setDateEnd("");
     setUserRep("");
+    setPlantillaKey("");
   };
   useEffect(() => {
     if (addDateSuc) {
@@ -285,8 +251,30 @@ const infoCultivo = () => {
       setDateInit("");
       setDateEnd("");
       setUserRep("");
+      setPlantillaKey("");
     }
   }, [addDateSuc]);
+
+  let opciones;
+  if (cropSuc) {
+    const { ids, entities } = crops;
+
+    opciones =
+      ids?.length &&
+      ids.map((Id) => {
+        if (entities[Id].crop_status) {
+          let plnt = `${entities[Id].crop_name}`.split("-")[0];
+          let nomm = `${entities[Id].crop_name}`;
+          if (plnt == "Plantilla") {
+            return (
+              <option key={Id} value={Id}>
+                {nomm}
+              </option>
+            );
+          }
+        }
+      });
+  }
 
   let cropName;
   let contenido;
@@ -339,7 +327,7 @@ const infoCultivo = () => {
 
     let dateList;
     let plnt = <></>;
-    let cropUsado = 0
+    let cropUsado = 0;
     if (dateIsError) {
       dateList = <p className="errmsg">{dateError?.data?.message}</p>;
     }
@@ -352,24 +340,75 @@ const infoCultivo = () => {
           if (entities[Id].date_crop_key == crop.crop_id) {
             cropUsado = cropUsado + 1;
             return <AppDate key={Id} dateId={Id} Lista={"Lista1"} />;
-          }else{
-            
-            return(<></>)
+          } else {
+            return <></>;
           }
         });
 
-        ids?.length &&
+      let actArr = [];
+      
+
+      const onPlantillaKeyChanged = async (e) => {
+        e.preventDefault();
+        setPlantillaKey(e.target.value);
+      };
+      useEffect(() => {
+        if (plantillaKey) {
+          ids?.length &&
+            ids.map((Id) => {
+              if (entities[Id].date_crop_key == plantillaKey) {
+                actArr.push(entities[Id].date_act_key);
+              }
+            });
+        }
+        
+      }, [plantillaKey]);
+
+      const onSecAddActClicked = async (e) => {
+        e.preventDefault();
+        await actArr.map((id)=>{
+          addNewDate({
+            actKey: id,
+            userRep,
+            dateInit,
+            dateEnd,
+            cropKey: crop.crop_id,
+            plantId: crop.crop_plant_key,
+          });
+        })
+        
+      };
+
+      ids?.length &&
         ids.map((Id) => {
-          if (entities[Id].date_crop_key == crop.crop_id) {            
-            
-            stop
+          if (entities[Id].date_crop_key == crop.crop_id) {
+            stop;
           }
         });
 
       if (cropUsado <= 0) {
         plnt = (
           <>
-            <CultivoPl />
+            <label htmlFor="campo_cultivo">Seleccionar Plantillas</label>
+            <div className="col-12 row">
+              <div className="col-6">
+                <select
+                  className="form-control"
+                  value={plantillaKey}
+                  onChange={onPlantillaKeyChanged}
+                >
+                  <option disabled value={""}>
+                    Elegir plantilla
+                  </option>
+                  {opciones}
+                </select>
+              </div>
+              <div className="cultivos_button-section col-6">
+                <button className="btn btn-success" type="submit" onClick={onSecAddActClicked}>
+                  Usar Plantilla
+                </button>
+              </div>
+            </div>
           </>
         );
       }

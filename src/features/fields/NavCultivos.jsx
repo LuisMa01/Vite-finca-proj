@@ -23,11 +23,16 @@ const NavCultivos = () => {
 
   let tableContent;
   if (cropSuc) {
-    const { ids } = crops;
+    const { ids, entities } = crops;
 
     tableContent =
       ids?.length &&
-      ids.map((Id) => <Crop key={Id} cropId={Id} Lista={"Lista2"} />);
+      ids.map((Id) =>{ 
+        let plnt = `${entities[Id].crop_name}`.split("-")[0];
+        if (plnt !== "Plantilla") {
+          return <Crop key={Id} cropId={Id} Lista={"Lista2"} />
+        }      
+    });
   }
 
   return (
