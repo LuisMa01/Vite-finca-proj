@@ -11,8 +11,10 @@ import ReImage from "../../images/return.svg";
 import Cost from "../../components/Cost";
 import AppDate from "../../components/AppDate";
 import Comt from "../../components/Comt";
+import useAuth from "../../hooks/useAuth";
 
 const Comentario = ({ dateId }) => {
+  const { username, isManager, isAdmin } = useAuth();
   const {
     data: comts,
     isError,
@@ -117,9 +119,9 @@ const Comentario = ({ dateId }) => {
               <th className="align-middle" scope="col">
                 Comentario
               </th>
-              <th className="align-middle" scope="col">
+              {(isAdmin) &&  <th className="align-middle" scope="col">
                 Eliminar
-              </th>
+              </th>}
               <th className="align-middle" scope="col">
                 Editar
               </th>
@@ -139,6 +141,7 @@ const Comentario = ({ dateId }) => {
 };
 
 const InfoAppCult = () => {
+  const { username, isManager, isAdmin } = useAuth();
   const { id } = useParams();
 
   const [costItemKey, setItemCostKey] = useState("");
@@ -354,9 +357,9 @@ const InfoAppCult = () => {
               <th className="align-middle" scope="col">
                 Costo Total
               </th>
-              <th className="align-middle" scope="col">
+              {(isAdmin) && <th className="align-middle" scope="col">
                 Eliminar
-              </th>
+              </th>}
               </tr>
             </thead>
             <tbody>{costList}</tbody>

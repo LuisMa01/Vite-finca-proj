@@ -9,10 +9,12 @@ import { useState, useEffect } from "react";
 import Item from "../../components/Item";
 import Modal from "react-modal";
 import DoseSection from "./DoseSection";
+import useAuth from "../../hooks/useAuth";
 
 Modal.setAppElement("#root");
 
 const ItemSection = () => {
+  const { username, isManager, isAdmin } = useAuth();
   const {
     data: items,
     isLoading,
@@ -40,7 +42,7 @@ const ItemSection = () => {
   const [itemPrice, setItemPrice] = useState("");
   const [itemDose, setItemDose] = useState("");
   const [isOpen, setIsOpen] = useState(false);
- 
+
   //itemName, desc, itemPrice, itemDose
 
   const onSaveItemClicked = async (e) => {
@@ -52,9 +54,8 @@ const ItemSection = () => {
   const onItemNameChanged = (e) => setItemName(e.target.value);
   const onItemDescChanged = (e) => setDesc(e.target.value);
   const onItemPriceChanged = (e) => {
-    
     setItemPrice(e.target.value);
-  }
+  };
   const onItemDoseChanged = (e) => setItemDose(e.target.value);
   useEffect(() => {
     if (addissuccess) {
@@ -110,15 +111,21 @@ const ItemSection = () => {
               <th className="align-middle" scope="col">
                 Precio
               </th>
-              <th className="align-middle" scope="col">
-                Estatus
-              </th>
-              <th className="align-middle" scope="col">
-                Eliminar
-              </th>
-              <th className="align-middle" scope="col">
-                Editar
-              </th>
+              {(isManager || isAdmin) && (
+                <th className="align-middle" scope="col">
+                  Estatus
+                </th>
+              )}
+              {isAdmin && (
+                <th className="align-middle" scope="col">
+                  Eliminar
+                </th>
+              )}
+              {isAdmin && (
+                <th className="align-middle" scope="col">
+                  Editar
+                </th>
+              )}
             </thead>
             <tbody>{tableContent}</tbody>
           </table>
@@ -139,8 +146,20 @@ const ItemSection = () => {
       <h1 className="item-section_titulo">Materiales y mano de obra</h1>
       <p className="subheader font-weight-bold">Crear Artículo</p>
       <div className=" container col-md-3 mb-3 item-button">
-        <button className=" btn btn-outline-secondary" onClick={() => setIsOpen(true)}>Crear Nueva Dosis</button>
+        <button
+          className=" btn btn-outline-secondary"
+          onClick={() => setIsOpen(true)}
+        >
+          Crear Nueva Dosis
+        </button>
       </div>
+      <Modal isOpen={isOpen} onRequestClose={() => setIsOpen(false)}>
+        <button className="btn btn-danger" onClick={() => setIsOpen(false)}>
+          Cerrar
+        </button>
+        <DoseSection />
+      </Modal>
+      {(isAdmin) && 
       <form className="container col-12 col-sm-11 col-lg-9 bg-light needs-validation nuevo-cultivo-form">
         <div className="form-row bg-light">
           <div className="col-md-4 mb-3">
@@ -180,15 +199,7 @@ const ItemSection = () => {
             />
           </div>
         </div>
-        <div className="form-row">
-          
-          <div className="">
-            <Modal isOpen={isOpen} onRequestClose={() => setIsOpen(false)}>              
-              <button className="btn btn-danger" onClick={() => setIsOpen(false)}>Cerrar</button>
-              <DoseSection />
-            </Modal>
-          </div>
-        </div>
+
         <div className="form-row bg-light">
           <div className="col-12 mb-3">
             <label htmlFor="producto_final">Descripción del Artículo</label>
@@ -212,7 +223,7 @@ const ItemSection = () => {
             <button className="btn btn-danger">Descartar</button>
           </Link>
         </div>
-      </form>
+      </form>}
       <hr />
       {content}
     </>

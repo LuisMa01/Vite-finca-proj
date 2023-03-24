@@ -22,6 +22,7 @@ import {
 } from 'mdb-react-ui-kit';
 import ReImage from "../images/return.svg";
 import PeopleImg from "../images/users.svg";
+import useAuth from '../hooks/useAuth'
 
 Modal.setAppElement("#root");
 
@@ -33,6 +34,7 @@ const PHONE_REGEX = /^[1-9]\d{2}-\d{3}-\d{4}/;
 //^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]*$/;
 
 const User = ({ userId, Lista }) => {
+  const { username, isManager, isAdmin } = useAuth()
   const {
     user,
     isLoading: userIsLoading,
@@ -43,11 +45,10 @@ const User = ({ userId, Lista }) => {
       user: data?.entities[userId],
     }),
   });
-  console.log(userId);
-  console.log(Lista);
+  
   if (user) {
     
-  console.log('aqui');
+  
   const [username, setUsername] = useState(user.user_name);
   const [names, setNames] = useState(user.user_nombre);
   const [surname, setSurname] = useState(user.user_apellido);
@@ -432,7 +433,7 @@ const User = ({ userId, Lista }) => {
       if (Lista == "Lista1") {
         contenido = (
           <>
-            <tr key={userId} onClick={console.log("")}>
+            <tr key={userId}>
               <td>{userName}</td>
               <td id="username">{username}</td>
               <td>{llave}</td>
@@ -442,7 +443,7 @@ const User = ({ userId, Lista }) => {
                   checked={status}
                   onChange={onActiveChanged}
                 />
-              </td>
+              </td>{(isAdmin) &&
               <td>
                 {" "}
                 <img
@@ -451,9 +452,9 @@ const User = ({ userId, Lista }) => {
                   src={RemoveImg}
                   alt="Remove"
                 />
-              </td>
-              <td onClick={() => setIsOpen(true)}>Editar</td>
-              {actuUser}
+              </td>}
+              {(isAdmin) && <td onClick={() => setIsOpen(true)}>Editar</td>}
+              {(isAdmin) && <>{actuUser}</>}
             </tr>
           </>
         );

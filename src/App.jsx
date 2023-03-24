@@ -51,7 +51,15 @@ function App() {
                   <Route index element={<NavCultivos />} />
                   <Route path="nuevo-cultivo" element={<NuevoCultivo />} />
                   <Route path="info-cultivo/:id" element={<InfoCultivo />} />
+                  <Route
+                    element={
+                      <RequireAuth
+                        allowedRoles={[ROLES.Administrador, ROLES.Supervisor]}
+                      />
+                    }
+                  >
                   <Route path="info-app/:id" element={<InfoAppCult />} />
+                  </Route>
                   <Route
                     path="registrar-plantilla"
                     element={<RegistrarPlantilla />}

@@ -8,8 +8,10 @@ import Swal from "sweetalert2";
 import Act from "../../components/Act";
 import { useGetActsQuery, useAddNewActMutation } from "./redux/actApiSlice";
 import { useState, useEffect } from "react";
+import useAuth from "../../hooks/useAuth";
 
 const registrarActividad = () => {
+  const { username, isManager, isAdmin } = useAuth();
   const {
     data: acts,
     isLoading,
@@ -66,15 +68,15 @@ const registrarActividad = () => {
               <th className="align-middle" scope="col">
                 Descripción
               </th>
-              <th className="align-middle" scope="col">
+              {(isManager || isAdmin) && <th className="align-middle" scope="col">
                 Habilitar
-              </th>
-              <th className="align-middle" scope="col">
+              </th>}
+              {(isAdmin) && <th className="align-middle" scope="col">
                 Eliminar
-              </th>
-              <th className="align-middle" scope="col">
+              </th>}
+              {(isAdmin) && <th className="align-middle" scope="col">
                 Editar
-              </th>
+              </th>}
             </thead>
             <tbody>{tableContent}</tbody>
           </table>
@@ -100,7 +102,7 @@ const registrarActividad = () => {
         </i>
       </p>
 
-      <form className="container myform col-6 needs-validation" novalidate>
+      {(isAdmin) && <form className="container myform col-6 needs-validation" novalidate>
         <div className="form-row bg-light">
           <div className="col-12 col-md-6 mb-2">
             <label for="nombre_actividad">Nombre de actividad</label>
@@ -136,7 +138,7 @@ const registrarActividad = () => {
             Limpiar
           </button>
         </div>
-      </form>
+      </form>}
 
       <div className="seccion_campos_checkbox-div">
         <div>

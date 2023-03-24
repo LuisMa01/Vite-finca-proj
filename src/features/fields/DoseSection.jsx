@@ -7,9 +7,11 @@ import { useGetDosesQuery, useAddNewDoseMutation } from "./redux/doseApiSlice";
 
 import { useState, useEffect } from "react";
 import Dose from "../../components/Dose";
+import useAuth from "../../hooks/useAuth";
 
 
 const DoseSection = () => {
+  const { username, isManager, isAdmin } = useAuth();
   const {
     data: doses,
     isLoading,
@@ -28,7 +30,7 @@ const DoseSection = () => {
     { isSuccess: addissuccess, isError: addiserror, error: adderror },
   ] = useAddNewDoseMutation();
 
-  const [doseName, seDoseName] = useState("");
+  const [doseName, setDoseName] = useState("");
   const [desc, setDesc] = useState("");
   const [doseUnit, setDoseUnit] = useState("");
   
@@ -42,18 +44,18 @@ const DoseSection = () => {
     await addNewDose({ doseName, desc, doseUnit });
   };
 
-  const onDoseNameChanged = (e) => seDoseName(e.target.value);
+  const onDoseNameChanged = (e) => setDoseName(e.target.value);
   const onItemDescChanged = (e) => setDesc(e.target.value);
   const onDoseUnitChanged = (e) => setDoseUnit(e.target.value);
   const handleClearClick = (e) => {
     e.preventDefault()
-    seDoseName("");
+    setDoseName("");
       setDesc("");
       setDoseUnit("");
   };
   useEffect(() => {
     if (addissuccess) {
-      seDoseName("");
+      setDoseName("");
       setDesc("");
       setDoseUnit("");
     }
@@ -70,7 +72,9 @@ const DoseSection = () => {
     const { ids } = doses;
 
     let tableContent =
-      ids?.length && ids.map((Id) => <Dose key={Id} doseId={Id} />);
+      ids?.length && ids.map((Id) => {
+        return <Dose key={Id} doseId={Id} />
+      });
 
     content = (
       <div className="ventana_plantillas">
@@ -85,11 +89,17 @@ const DoseSection = () => {
                 Unidad
               </th>
               <th className="align-middle" scope="col">
+                Descripción
+              </th>
+              {(isManager || isAdmin) && <th className="align-middle" scope="col">
                 Estatus
-              </th>
-              <th className="align-middle" scope="col">
+              </th>}
+              {(isAdmin) && <th className="align-middle" scope="col">
                 Eliminar
-              </th>
+              </th>}
+              {(isAdmin) && <th className="align-middle" scope="col">
+                Editar
+              </th>}
             </thead>
             <tbody>{tableContent}</tbody>
           </table>
@@ -102,6 +112,7 @@ const DoseSection = () => {
     <>
       <h1 className="item-section_titulo">Dosis y Unidad</h1>
       <div className="container centered-form">
+      {(isAdmin) && 
         <form className="col-12 col-lg-9  justify-content-center needs-validation">
          <p className="font-weight-bold subheader">Agregar dosis</p>
           <div className="form-row bg-light">
@@ -147,7 +158,7 @@ const DoseSection = () => {
               <button className="btn btn-danger" onClick={handleClearClick}>Limpiar</button>
             
           </div>
-        </form>
+        </form>}
       </div>
       <hr />
       {content}

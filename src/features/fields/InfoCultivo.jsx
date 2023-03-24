@@ -19,8 +19,10 @@ import AppDate from "../../components/AppDate";
 import Crop from "../../components/Crop";
 import Cost from "../../components/Cost";
 import Comt from "../../components/Comt";
+import useAuth from "../../hooks/useAuth";
 
 const Costo = ({ crpId }) => {
+  const { username, isManager, isAdmin } = useAuth();
   const {
     data: costs,
     isError: costIsError,
@@ -86,9 +88,9 @@ const Costo = ({ crpId }) => {
                   <th className="align-middle" scope="col">
                     Costo Total
                   </th>
-                  <th className="align-middle" scope="col">
+                  {(isAdmin) && <th className="align-middle" scope="col">
                     Eliminar
-                  </th>
+                  </th>}
                 </tr>
               </thead>
               <tbody>{costList}</tbody>
@@ -109,6 +111,7 @@ const Costo = ({ crpId }) => {
 };
 
 const Comentario = ({ cropId }) => {
+  const { username, isManager, isAdmin } = useAuth();
   const {
     data: comts,
     isError,
@@ -151,12 +154,12 @@ const Comentario = ({ cropId }) => {
               <th className="align-middle" scope="col">
                 Comentario
               </th>
-              <th className="align-middle" scope="col">
+              {(isAdmin) && <th className="align-middle" scope="col">
                 Eliminar
-              </th>
-              <th className="align-middle" scope="col">
+              </th>}
+              {(isManager || isAdmin) && <th className="align-middle" scope="col">
                 Editar
-              </th>
+              </th>}
             </thead>
             <tbody>{comtList}</tbody>
           </table>
@@ -169,6 +172,7 @@ const Comentario = ({ cropId }) => {
 };
 
 const infoCultivo = () => {
+  const { username, isManager, isAdmin } = useAuth();
   const { id } = useParams();
   const [actKey, setActKey] = useState("");
   const [dateInit, setDateInit] = useState("");
@@ -537,12 +541,12 @@ const infoCultivo = () => {
               <th className="align-middle" scope="col">
                 Responsable
               </th>
-              <th className="align-middle" scope="col">
+              {(isAdmin) && <th className="align-middle" scope="col">
                 Eliminar
-              </th>
-              <th className="align-middle" scope="col">
+              </th>}
+              {(isManager || isAdmin) && <th className="align-middle" scope="col">
                 Editar
-              </th>
+              </th>}
             </thead>
             <tbody>
               <>{dateList}</>

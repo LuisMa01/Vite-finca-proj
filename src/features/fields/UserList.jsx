@@ -4,10 +4,12 @@ import ReImage from "../../images/return.svg";
 import AddImage from "../../images/add.svg";
 import { Link } from "react-router-dom";
 import User from "../../components/User";
+import useAuth from "../../hooks/useAuth";
 
 import { useGetUsersQuery } from "./redux/usersApiSlice";
 
 const userList = () => {
+  const { username, isManager, isAdmin } = useAuth();
   const {
     data: users,
     isLoading,

@@ -12,10 +12,12 @@ import RemoveImg from "../images/remove.svg";
 import Swal from "sweetalert2";
 import { ROLES } from "../config/roles";
 import Modal from "react-modal";
+import useAuth from '../hooks/useAuth'
 
 Modal.setAppElement("#root");
 
 const Act = ({ actId }) => {
+  const { username, isManager, isAdmin } = useAuth()
   const { act } = useGetActsQuery("actsList", {
     selectFromResult: ({ data }) => ({
       act: data?.entities[actId],
@@ -168,9 +170,11 @@ const Act = ({ actId }) => {
       <tr key={actId}>
         <td>{actname}</td>
         <td>{desc ? desc : ""}</td>
+        {(isManager || isAdmin) &&
         <td>
           <input type="checkbox" checked={active} onChange={onActiveChanged} />
-        </td>
+        </td>}
+        {(isAdmin) &&
         <td>
           <img
             onClick={onDeleteActClicked}
@@ -178,9 +182,10 @@ const Act = ({ actId }) => {
             src={RemoveImg}
             alt="Remove"
           />
-        </td>
-        <td onClick={() => setIsOpen(true)}>Editar</td>
-          {updAct}
+        </td>}
+        {isAdmin &&
+        <td onClick={() => setIsOpen(true)}>Editar</td>}
+         {isAdmin && <>{updAct}</> }
       </tr>
     );
 

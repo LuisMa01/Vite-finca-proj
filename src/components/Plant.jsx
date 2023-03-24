@@ -12,10 +12,12 @@ import RemoveImg from "../images/remove.svg";
 import Swal from "sweetalert2";
 import { ROLES } from "../config/roles";
 import Modal from "react-modal";
+import useAuth from "../hooks/useAuth";
 
 Modal.setAppElement("#root");
 
 const Plant = ({ plantId }) => {
+  const { username, isManager, isAdmin } = useAuth();
   const { plant } = useGetPlantsQuery("plantsList", {
     selectFromResult: ({ data }) => ({
       plant: data?.entities[plantId],
@@ -55,7 +57,7 @@ const Plant = ({ plantId }) => {
       });
     };
     const onPlantChanged = async (e) => {
-      e.preventDefault()
+      e.preventDefault();
       await updatePlant({
         id: plant.plant_id,
         plantName,
@@ -86,11 +88,11 @@ const Plant = ({ plantId }) => {
     };
     const handleClearClick = (e) => {
       e.preventDefault();
-        setPlantName(plant.plant_name);
-        setDesc(plant.plant_desc);
-        setVariety(plant.plant_variety);
-        setPlantFrame(plant.plant_frame);
-        setActive(plant.plant_status)
+      setPlantName(plant.plant_name);
+      setDesc(plant.plant_desc);
+      setVariety(plant.plant_variety);
+      setPlantFrame(plant.plant_frame);
+      setActive(plant.plant_status);
     };
 
     useEffect(() => {
@@ -100,7 +102,7 @@ const Plant = ({ plantId }) => {
         setDesc(plant.plant_desc);
         setVariety(plant.plant_variety);
         setPlantFrame(plant.plant_frame);
-        setActive(plant.plant_status)
+        setActive(plant.plant_status);
       }
     }, [plant]);
     const updPlant = (
@@ -109,66 +111,76 @@ const Plant = ({ plantId }) => {
           Cerrar
         </button>
         <div className="cultivos_button-section">
-        <form>
-          <div className="form-row justify-content-center">
-            <div className="col-md-4 mb-3">
-              <label for="nombre_cultivo" className="text-center">
-                Nombre de planta
-              </label>
-              <input
-                type="text"
-                className="form-control"
-                id="nombre_cultivo"
-                placeholder="Fruta X"
-                value={plantName}
-                onChange={onPlantNameChanged}
-                required
-              />
+          <form>
+            <div className="form-row justify-content-center">
+              <div className="col-md-4 mb-3">
+                <label for="nombre_cultivo" className="text-center">
+                  Nombre de planta
+                </label>
+                <input
+                  type="text"
+                  className="form-control"
+                  id="nombre_cultivo"
+                  placeholder="Fruta X"
+                  value={plantName}
+                  onChange={onPlantNameChanged}
+                  required
+                />
+              </div>
+              <div className="col-md-4 mb-3">
+                <label for="nombre_cultivo" className="text-center">
+                  Variedad
+                </label>
+                <input
+                  type="text"
+                  className="form-control"
+                  id="nombre_cultivo"
+                  value={variety}
+                  onChange={onPlantVaryChanged}
+                />
+              </div>
+              <div className="col-md-4 mb-3">
+                <label for="nombre_cultivo" className="text-center">
+                  Marco de Plantación
+                </label>
+                <input
+                  type="text"
+                  className="form-control"
+                  id="nombre_cultivo"
+                  value={plantFrame}
+                  onChange={onPlantFrameChanged}
+                />
+              </div>
             </div>
-            <div className="col-md-4 mb-3">
-              <label for="nombre_cultivo" className="text-center">
-                Variedad
-              </label>
-              <input
-                type="text"
-                className="form-control"
-                id="nombre_cultivo"
-                value={variety}
-                onChange={onPlantVaryChanged}
-              />
-            </div>
-            <div className="col-md-4 mb-3">
-              <label for="nombre_cultivo" className="text-center">
-                Marco de Plantación
-              </label>
-              <input
-                type="text"
-                className="form-control"
-                id="nombre_cultivo"
-                value={plantFrame}
-                onChange={onPlantFrameChanged}
-              />
-            </div>
-          </div>
 
-          <div className="form-row">
-            <div className="col-md-12 mb-3">
-              <label for="responsable">Descripción</label>
-              <input type="text" className="form-control" id="responsable" value={desc} onChange={onPlantDescChanged} />
+            <div className="form-row">
+              <div className="col-md-12 mb-3">
+                <label for="responsable">Descripción</label>
+                <input
+                  type="text"
+                  className="form-control"
+                  id="responsable"
+                  value={desc}
+                  onChange={onPlantDescChanged}
+                />
+              </div>
             </div>
-          </div>
-          <div className="cultivos_button-section">
-            <button class="btn btn-sm btn-success" onClick={onPlantChanged} type="submit">
-              Guardar Cambios
-            </button>
-            <button
+            <div className="cultivos_button-section">
+              <button
+                class="btn btn-sm btn-success"
+                onClick={onPlantChanged}
+                type="submit"
+              >
+                Guardar Cambios
+              </button>
+              <button
                 onClick={handleClearClick}
                 className="btn btn-outline-danger limpiar"
               >
                 Limpiar
               </button>
-          </div>
-        </form>
+            </div>
+          </form>
         </div>
       </Modal>
     );
@@ -190,23 +202,27 @@ const Plant = ({ plantId }) => {
         <td>{variety}</td>
         <td>{plantFrame}</td>
         <td>{desc}</td>
-        <td>
-          <input
-            type="checkbox"
-            checked={active}
-            onChange={onActiveChanged}
-          />
-        </td>
-        <td>
-          <img
-            onClick={onDeletePlantClicked}
-            className="remove-img"
-            src={RemoveImg}
-            alt="Remove"
-          />
-        </td>
-        <td onClick={() => setIsOpen(true)}>Editar</td>
-          {updPlant}
+        {(isManager || isAdmin) && (
+          <td>
+            <input
+              type="checkbox"
+              checked={active}
+              onChange={onActiveChanged}
+            />
+          </td>
+        )}
+        {isAdmin && (
+          <td>
+            <img
+              onClick={onDeletePlantClicked}
+              className="remove-img"
+              src={RemoveImg}
+              alt="Remove"
+            />
+          </td>
+        )}
+        {isAdmin && <td onClick={() => setIsOpen(true)}>Editar</td>}
+        {isAdmin && <>{ updPlant }</>}
       </tr>
     );
 

@@ -10,8 +10,10 @@ import { useGetPlantsQuery } from "./redux/plantApiSlice";
 import { useGetUsersQuery } from "./redux/usersApiSlice";
 import { useEffect, useState } from "react";
 import Crop from "../../components/Crop";
+import useAuth from "../../hooks/useAuth";
 
 const nuevoCultivo = () => {
+  const { username, isManager, isAdmin } = useAuth();
   const {
     data: crops,
     isLoading,
@@ -232,13 +234,13 @@ const nuevoCultivo = () => {
           </div>
         </Link>
       </div>
-      <p className="nuevo-cultivo-header font-weight-bold">Añadir cultivo</p>
-      <p className="nuevo-descripcion text-muted">
+      {(isAdmin) && <p className="nuevo-cultivo-header font-weight-bold">Añadir cultivo</p>}
+      {(isAdmin) && <p className="nuevo-descripcion text-muted">
         A continuación describa el cultivo que desea implementar, ubicación y
         características generales que lo identifican.
-      </p>
+      </p>}
 
-      <form className="container needs-validation nuevo-cultivo-form">
+      {(isAdmin) && <form className="container needs-validation nuevo-cultivo-form">
         <div className="form-row bg-light">
           <div className="col-md-6 mb-3">
             <label htmlFor="nombre_cultivo">Nombre del cultivo</label>
@@ -365,7 +367,7 @@ const nuevoCultivo = () => {
             <button className="btn btn-danger">Descartar</button>
           </Link>
         </div>
-      </form>
+      </form>}
       <hr />
 
       <div className="ventana_plantillas">
@@ -382,15 +384,15 @@ const nuevoCultivo = () => {
               <th className="align-middle" scope="col">
                 Campo
               </th>
-              <th className="align-middle" scope="col">
+              {(isManager || isAdmin) && <th className="align-middle" scope="col">
                 Estatus
-              </th>
-              <th className="align-middle" scope="col">
+              </th>}
+              {(isAdmin) && <th className="align-middle" scope="col">
                 Eliminar
-              </th>
-              <th className="align-middle" scope="col">
+              </th>}
+              {(isAdmin) && <th className="align-middle" scope="col">
                 Editar
-              </th>
+              </th>}
             </thead>
             <tbody>{tableContent}</tbody>
           </table>

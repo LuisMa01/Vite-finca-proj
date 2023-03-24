@@ -6,8 +6,10 @@ import { useGetCropsQuery, useAddNewCropMutation } from "./redux/cropApiSlice";
 import LasActividades from "../jsons/plantilla-maiz.json";
 import MisActividades from "../jsons/tipos-actividades.json";
 import Crop from "../../components/Crop";
+import useAuth from "../../hooks/useAuth";
 
 const RegistrarPlantilla = () => {
+  const { username, isManager, isAdmin } = useAuth();
   const {
     data: crops,
     isLoading,
@@ -65,25 +67,20 @@ const RegistrarPlantilla = () => {
               <th className="align-middle" scope="col">
                 Campo
               </th>
-              <th className="align-middle" scope="col">
+              {(isManager || isAdmin) && <th className="align-middle" scope="col">
                 Estatus
-              </th>
-              <th className="align-middle" scope="col">
+              </th>}
+              {(isAdmin) && <th className="align-middle" scope="col">
                 Eliminar
-              </th>
-              <th className="align-middle" scope="col">
+              </th>}
+              {(isAdmin) && <th className="align-middle" scope="col">
                 Editar
-              </th>
+              </th>}
             </thead>
             <tbody>{tableContent}</tbody>
           </table>
         </div>
-        <div className="cultivos_button-section">
-          <button class="btn btn-success">Guardar plantilla</button>
-          <Link to={"/dash/cultivos"} className="Link">
-            <button className="btn btn-danger">Descartar</button>
-          </Link>
-        </div>
+        
       </div>
     </>
   );

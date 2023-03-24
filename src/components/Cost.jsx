@@ -16,8 +16,10 @@ import { Link } from "react-router-dom";
 import RemoveImg from "../images/remove.svg";
 import Swal from "sweetalert2";
 import { ROLES } from "../config/roles";
+import useAuth from "../hooks/useAuth";
 
 const Act = ({ actId }) => {
+  
   const { act } = useGetActsQuery("actsList", {
     selectFromResult: ({ data }) => ({
       act: data?.entities[actId],
@@ -30,6 +32,7 @@ const Act = ({ actId }) => {
 };
 
 const Cost = ({ costId, Lista }) => {
+  const { username, isManager, isAdmin } = useAuth();
   const { cost } = useGetCostsQuery("costsList", {
     selectFromResult: ({ data }) => ({
       cost: data?.entities[costId],
@@ -142,14 +145,14 @@ const Cost = ({ costId, Lista }) => {
             <td>{dose.dose_unit}</td>
             <td>{precioItem}</td>
             <td>{precio}</td>
-            <td>
+            {(isAdmin) && <td>
               <img
                 onClick={onDeleteDateClicked}
                 className="remove-img"
                 src={RemoveImg}
                 alt="Remove"
               />
-            </td>
+            </td>}
           </tr>
         );        
       }
@@ -159,20 +162,20 @@ const Cost = ({ costId, Lista }) => {
             <td>
               <div type="button">{itemname}</div>
             </td>
-            <td><Act key={cost.date_act_key} actId={cost.date_act_key} /></td>
+            <td><Link to={`/dash/cultivos/info-app/${costDateKey}`}><Act key={cost.date_act_key} actId={cost.date_act_key} /></Link></td>
             <td>{dose.dose_name}</td>            
             <td>{costQuantity}</td>
             <td>{dose.dose_unit}</td>
             <td>{precioItem}</td>
             <td>{precio}</td>
-            <td>
+            {(isAdmin) && <td>
               <img
                 onClick={onDeleteDateClicked}
                 className="remove-img"
                 src={RemoveImg}
                 alt="Remove"
               />
-            </td>
+            </td>}
           </tr>
         ); 
       }

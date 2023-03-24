@@ -8,8 +8,10 @@ import Swal from "sweetalert2"
 import { useGetCampsQuery, useAddNewCampMutation } from "../fields/redux/campApiSlice";
 import Camp from "../../components/Camp";
 import { useState, useEffect } from "react";
+import useAuth from "../../hooks/useAuth";
 
 const EditarCampos = () => { 
+  const { username, isManager, isAdmin } = useAuth();
     const {
         data: camps,
         isLoading,
@@ -63,7 +65,7 @@ const EditarCampos = () => {
             </div></Link></div>
             <p className="editar_campos_description"> 
             Editar lista de campos existentes </p>
-            <form className="container myform col-6 needs-validation" novalidate>
+            {(isAdmin) && <form className="container myform col-6 needs-validation" novalidate>
                 <div className="form-row bg-light">
                     <div className="col-12 col-md-6 mb-2">
                         <label for="nombre_cultivo">Nombre del campo</label>
@@ -78,7 +80,7 @@ const EditarCampos = () => {
                     <button type="submit" className="btn btn-outline-primary limpiar" onClick={onSaveCampClicked}>Añadir campo</button>
                     <button type="reset" className="btn btn-outline-danger limpiar">Limpiar</button>
                 </div>
-            </form> 
+            </form>}
             
             <div className='seccion_campos_checkbox-div'>
                 <div><input type="checkBox" defaultChecked /><span>Campos habilitados</span></div>
@@ -88,9 +90,9 @@ const EditarCampos = () => {
                 <thead className="thead-loyola">
                     <th className="align-middle" scope="col">Campo</th>
                     <th className="align-middle" scope="col">area</th>
-                    <th className="align-middle" scope="col">Habilitar</th>
-                    <th className="align-middle" scope="col">Eliminar</th>
-                    <th className="align-middle" scope="col">Editar</th>
+                    {(isManager || isAdmin) && <th className="align-middle" scope="col">Habilitar</th>}
+                    {(isAdmin) && <th className="align-middle" scope="col">Eliminar</th>}
+                    {(isAdmin) && <th className="align-middle" scope="col">Editar</th>}
                 </thead>
                 <tbody>
                     {tableContent}

@@ -2,11 +2,12 @@ import { Link, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useSendLogoutMutation } from "../features/auth/authApiSlice";
 import "../styles/header.css";
-//import useAuth from "../hooks/useAuth";
+import useAuth from "../hooks/useAuth";
 
 import React from "react";
 
 const DashHeader = () => {
+  const { username, isManager, isAdmin } = useAuth();
   const [uno, setUno] = useState("");
   const [dos, setDos] = useState("");
   const [tres, setTres] = useState("");
@@ -128,10 +129,10 @@ const DashHeader = () => {
                   onClick={focusClick}
                   id="e"
                 >
-                  Mi perfil
+                 {"  "}Mi perfil{"  "}
                 </li>
               </Link>
-              <Link to={"/dash/usuario/lista-usuarios"}>
+              {(isAdmin) && <Link to={"/dash/usuario/lista-usuarios"}>
                 <li
                   className={`menu-inicio`}
                   onClick={focusClick}
@@ -139,7 +140,7 @@ const DashHeader = () => {
                 >
                   Lista de usuarios
                 </li>
-              </Link>
+              </Link>}
               <hr className="line" />
               <li className={`menu-inicio`}>{buttonContent}</li>
             </ul>

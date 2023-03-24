@@ -13,6 +13,7 @@ import Swal from "sweetalert2";
 import { ROLES } from "../config/roles";
 import { useEffect, useState } from "react";
 import Modal from "react-modal";
+import useAuth from "../hooks/useAuth";
 
 Modal.setAppElement("#root");
 
@@ -53,6 +54,7 @@ const Crop = ({ campId }) => {
 };
 
 const Camp = ({ campId, Lista }) => {
+  const { username, isManager, isAdmin } = useAuth();
   const { camp } = useGetCampsQuery("campsList", {
     selectFromResult: ({ data }) => ({
       camp: data?.entities[campId],
@@ -204,16 +206,16 @@ const Camp = ({ campId, Lista }) => {
               onChange={onActiveChanged}
             />
           </td>
-          <td>
+          {(isAdmin) && <td>
             <img
               onClick={onDeleteCampClicked}
               className="remove-img"
               src={RemoveImg}
               alt="Remove"
             />
-          </td>
-          <td onClick={() => setIsOpen(true)}>Editar</td>
-          {actuCamp}
+          </td>}
+          {(isAdmin) &&  <td onClick={() => setIsOpen(true)}>Editar</td>}
+          {(isAdmin) && <>{actuCamp}</>}
         </tr>
       );
     }
