@@ -34,7 +34,7 @@ const DashHeader = () => {
       }
     }
     valor = true;
-    console.log({ nume, ruta, valor });
+    
   }, [location.pathname]);
 
   const goBack = (e) => {
@@ -50,7 +50,7 @@ const DashHeader = () => {
 
   function focusClick(a) {
     //a.preventDefault();
-    console.log(a.target.id);
+    
     if (a.target.id === "a") {
       setUno("menu-bar_focus");
       setDos("");

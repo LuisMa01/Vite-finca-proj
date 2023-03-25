@@ -182,12 +182,12 @@ const nuevoCultivo = () => {
   };
   useEffect(() => {
     setCropName(`${plantilla}${cropNames}`);
-    console.log(cropName);
+    
   }, [plantilla, cropNames]);
 
   useEffect(() => {
     if (addissuccess) {
-      console.log(data);
+      
       setCropNames("");
       setRepUser("");
       setCropPlant();

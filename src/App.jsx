@@ -16,13 +16,10 @@ import NavProximas from "./features/fields/NavProximas";
 import MiPerfil from "./features/fields/MiPerfil";
 import UserList from "./features/fields/UserList";
 import NuevoUsuario from "./features/fields/NuevoUsuario";
-import InfoUser from "./features/fields/InfoUser";
 import NuevoCultivo from "./features/fields/NuevoCultivo";
 import EditarCampos from "./features/fields/EditarCampos";
-import ActInformacion from "./features/fields/ActInformacion";
 import NavCultivos from "./features/fields/NavCultivos";
 import NavCampos from "./features/fields/NavCampos";
-import EditUsuario from "./features/fields/EditUsuario";
 import RegistrarPlantilla from "./features/fields/RegistrarPlantilla";
 import RegistrarActividad from "./features/fields/RegistrarActvidad";
 import ItemSection from "./features/fields/ItemSection";
@@ -90,7 +87,6 @@ function App() {
                 <Route path="usuario">
                   <Route path="mi-perfil">
                     <Route index element={<MiPerfil />} />
-                    <Route path="act-info/:id" element={<ActInformacion />} />
                   </Route>
 
                   <Route
@@ -101,8 +97,6 @@ function App() {
                     <Route path="lista-usuarios">
                       <Route index element={<UserList />} />
                       <Route path="nuevo-usuario" element={<NuevoUsuario />} />
-                      <Route path="editar-usuario" element={<EditUsuario />} />
-                      <Route path="info-user" element={<InfoUser />} />
                     </Route>
                   </Route>
                 </Route>
