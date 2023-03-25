@@ -23,28 +23,30 @@ import useAuth from "../../hooks/useAuth";
 
 const Costo = ({ crpId }) => {
   const { username, isManager, isAdmin } = useAuth();
-  const {
-    data: costs,
-    isError: costIsError,
-    error: costError,
-  } = useGetCostsQuery("costsList", {
-    pollingInterval: 60000,
-    refetchOnFocus: true,
-    refetchOnMountOrArgChange: true,
+
+  const { cost } = useGetCostsQuery("costsList", {
+    selectFromResult: ({ data }) => ({
+      cost: data?.ids?.map((id) => {
+        if (data?.entities[id].date_crop_key == crpId) {
+          return data?.entities[id];
+        }
+      }),
+    }),
   });
+
   let costList;
   let costTotal = [];
-  let listSum = 0
-  if (costs) {
-    const { ids, entities } = costs;
-
+  let listSum = 0;
+  if (cost) {
     costList =
-      ids?.length &&
-      ids.map((Id) => {
-        if (entities[Id].date_crop_key == crpId) {
-          listSum = listSum + 1
-          let list = <Cost key={Id} costId={Id} Lista={"Lista2"} />;
-          costTotal.push(parseFloat(entities[Id].cost_price));
+      cost?.length &&
+      cost.map((Id) => {
+        if (Id?.date_crop_key == crpId) {
+          listSum = listSum + 1;
+          let list = (
+            <Cost key={Id?.cost_id} costId={Id?.cost_id} Lista={"Lista2"} />
+          );
+          costTotal.push(parseFloat(Id?.cost_price));
           return list;
         }
       });
@@ -56,7 +58,7 @@ const Costo = ({ crpId }) => {
       currency: "DOP",
     }).format(parseFloat(TT));
 
-    let contenido = (<></>)
+    let contenido = <></>;
     if (listSum > 0) {
       contenido = (
         <>
@@ -88,9 +90,11 @@ const Costo = ({ crpId }) => {
                   <th className="align-middle" scope="col">
                     Costo Total
                   </th>
-                  {(isAdmin) && <th className="align-middle" scope="col">
-                    Eliminar
-                  </th>}
+                  {isAdmin && (
+                    <th className="align-middle" scope="col">
+                      Eliminar
+                    </th>
+                  )}
                 </tr>
               </thead>
               <tbody>{costList}</tbody>
@@ -105,37 +109,40 @@ const Costo = ({ crpId }) => {
         </>
       );
     }
-    
+
     return contenido;
   }
 };
 
 const Comentario = ({ cropId }) => {
   const { username, isManager, isAdmin } = useAuth();
-  const {
-    data: comts,
-    isError,
-    error,
-  } = useGetComtsQuery("comtsList", {
-    pollingInterval: 60000,
-    refetchOnFocus: true,
-    refetchOnMountOrArgChange: true,
+  
+
+  const { comt } = useGetComtsQuery("comtsList", {
+    selectFromResult: ({ data }) => ({
+      comt: data?.ids?.map((id) => {
+        if (data?.entities[id].date_crop_key == cropId) {
+          return data?.entities[id];
+        }
+      }),
+    }),
   });
+
   let comtList;
-  let listSum = 0
-  if (comts) {
-    const { ids, entities } = comts;
+  let listSum = 0;
+  if (comt) {
+    
     comtList =
-      ids?.length &&
-      ids.map((Id) => {
-        if (entities[Id].date_crop_key == cropId) {
-          listSum = listSum+1
-          return <Comt key={Id} comtId={Id} Lista={"Lista2"} />;
+    comt?.length &&
+    comt.map((Id) => {
+        if (Id?.date_crop_key == cropId) {
+          listSum = listSum + 1;
+          return <Comt key={Id?.comt_id} comtId={Id?.comt_id} Lista={"Lista2"} />;
         }
       });
   }
 
-  let contenido = (<></>)
+  let contenido = <></>;
   if (listSum > 0) {
     contenido = (
       <>
@@ -154,12 +161,16 @@ const Comentario = ({ cropId }) => {
               <th className="align-middle" scope="col">
                 Comentario
               </th>
-              {(isAdmin) && <th className="align-middle" scope="col">
-                Eliminar
-              </th>}
-              {(isManager || isAdmin) && <th className="align-middle" scope="col">
-                Editar
-              </th>}
+              {isAdmin && (
+                <th className="align-middle" scope="col">
+                  Eliminar
+                </th>
+              )}
+              {(isManager || isAdmin) && (
+                <th className="align-middle" scope="col">
+                  Editar
+                </th>
+              )}
             </thead>
             <tbody>{comtList}</tbody>
           </table>
@@ -167,7 +178,7 @@ const Comentario = ({ cropId }) => {
       </>
     );
   }
-  
+
   return <>{contenido}</>;
 };
 
@@ -181,7 +192,7 @@ const infoCultivo = () => {
   const [plantillaKey, setPlantillaKey] = useState("");
   const [isPlantilla, setIsPlantilla] = useState(false);
   let actArr = [];
-  let plntCrop
+  let plntCrop;
   const { crop } = useGetCropsQuery("cropsList", {
     selectFromResult: ({ data }) => ({
       crop: data?.entities[id],
@@ -212,6 +223,7 @@ const infoCultivo = () => {
     refetchOnFocus: true,
     refetchOnMountOrArgChange: true,
   });
+  
 
   const { data: activ } = useGetActsQuery("actsList", {
     pollingInterval: 60000,
@@ -236,7 +248,7 @@ const infoCultivo = () => {
         cropKey: crop.crop_id,
         plantId: crop.crop_plant_key,
       });
-    } 
+    }
     if (plntCrop !== "Plantilla") {
       await addNewDate({
         actKey,
@@ -285,7 +297,6 @@ const infoCultivo = () => {
     e.preventDefault();
     setPlantillaKey(e.target.value);
   };
-  
 
   const handleClearClick = (e) => {
     e.preventDefault();
@@ -306,7 +317,7 @@ const infoCultivo = () => {
   }, [addDateSuc]);
 
   let opciones;
-  
+
   let contenido;
   let userOption;
   let actOption;
@@ -318,8 +329,6 @@ const infoCultivo = () => {
   let cropUsado = 0;
   if (crop) {
     //para asegurar que obtenga los datos del cultivo
-    
-    
 
     cropDato = (
       <Crop key={crop.crop_id} cropId={crop.crop_id} Lista={"Lista3"} />
@@ -376,7 +385,6 @@ const infoCultivo = () => {
       });
     }
 
-    
     if (dateIsError) {
       dateList = <p className="errmsg">{dateError?.data?.message}</p>;
     }
@@ -402,8 +410,6 @@ const infoCultivo = () => {
             return <></>;
           }
         });
-
-      
 
       ids?.length &&
         ids.map((Id) => {
@@ -541,12 +547,16 @@ const infoCultivo = () => {
               <th className="align-middle" scope="col">
                 Responsable
               </th>
-              {(isAdmin) && <th className="align-middle" scope="col">
-                Eliminar
-              </th>}
-              {(isManager || isAdmin) && <th className="align-middle" scope="col">
-                Editar
-              </th>}
+              {isAdmin && (
+                <th className="align-middle" scope="col">
+                  Eliminar
+                </th>
+              )}
+              {(isManager || isAdmin) && (
+                <th className="align-middle" scope="col">
+                  Editar
+                </th>
+              )}
             </thead>
             <tbody>
               <>{dateList}</>

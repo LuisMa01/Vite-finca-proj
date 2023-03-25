@@ -5,10 +5,12 @@ import { Link } from "react-router-dom";
 import focusClick from "../../components/DashHeader";
 import actividades from "../jsons/proximas.json";
 import { useGetDatesQuery } from "./redux/appApiSlice";
+import useAuth from "../../hooks/useAuth";
 
 import AppDate from "../../components/AppDate";
 
 const navProximas = () => {
+  const { username, isManager, isAdmin } = useAuth();
   const {
     data: dates,
     isLoading,
@@ -29,6 +31,7 @@ const navProximas = () => {
     dateList =
       ids?.length &&
       ids.map((Id) => {
+
         if (entities[Id].date_end == null) {
           let plnt = `${entities[Id].crop_name}`.split("-")[0];
           if (plnt !== "Plantilla") {

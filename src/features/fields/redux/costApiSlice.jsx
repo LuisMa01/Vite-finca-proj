@@ -11,18 +11,22 @@ const initialState = costsAdapter.getInitialState();
 export const costApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getCosts: builder.query({
-      query: () => "/cost",
-      validateStatus: (response, result) => {
-        return response.status === 200 && !result.isError;
-      },
-      
+      query: () => ({
+        url: "/cost",
+        validateStatus: (response, result) => {
+          return response.status === 200 && !result.isError;
+        },
+      }),
+
       transformResponse: (responseData) => {
-       const loadedCosts = responseData.map((cost) => {
+        const loadedCosts = responseData.map((cost) => {
           cost.id = cost.cost_id;
           return cost;
-          
         });
-        return costsAdapter.setAll(initialState, loadedCosts.sort((a, b) => b.id - a.id));
+        return costsAdapter.setAll(
+          initialState,
+          loadedCosts.sort((a, b) => b.id - a.id)
+        );
       },
       providesTags: (result, error, arg) => {
         if (result?.ids) {
@@ -74,15 +78,11 @@ export const {
 // returns the query result object
 export const selectCostsResult = costApiSlice.endpoints.getCosts.select();
 
-
-
 // creates memoized selector
 const selectCostsData = createSelector(
   selectCostsResult,
   (costResult) => costResult.data // normalized state object with ids & entities
 );
-
-
 
 //getSelectors creates these selectors and we rename them with aliases using destructuring
 export const {
@@ -93,4 +93,3 @@ export const {
 } = costsAdapter.getSelectors(
   (state) => selectCostsData(state) ?? initialState
 );
-

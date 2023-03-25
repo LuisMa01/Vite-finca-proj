@@ -11,22 +11,26 @@ const initialState = usersAdapter.getInitialState();
 export const usersApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getUsers: builder.query({
-      query: () => "/users",
-      validateStatus: (response, result) => {
-        return response.status === 200 && !result.isError;
-      },
+      query: () => ({
+        url: "/users",
+        validateStatus: (response, result) => {
+          return response.status === 200 && !result.isError;
+        },
+      }),
       /*
       transformResponse(response) {
         return usersAdapter.setAll(usersAdapter.getInitialState(), response)
       }
       */
       transformResponse: (responseData) => {
-       const loadedUsers = responseData.map((user) => {
+        const loadedUsers = responseData.map((user) => {
           user.id = user.user_id;
           return user;
-          
         });
-        return usersAdapter.setAll(initialState, loadedUsers.sort((a, b) => b.id - a.id));
+        return usersAdapter.setAll(
+          initialState,
+          loadedUsers.sort((a, b) => b.id - a.id)
+        );
       },
       providesTags: (result, error, arg) => {
         if (result?.ids) {
@@ -78,15 +82,11 @@ export const {
 // returns the query result object
 export const selectUsersResult = usersApiSlice.endpoints.getUsers.select();
 
-
-
 // creates memoized selector
 const selectUsersData = createSelector(
   selectUsersResult,
   (usersResult) => usersResult.data // normalized state object with ids & entities
 );
-
-
 
 //getSelectors creates these selectors and we rename them with aliases using destructuring
 export const {
@@ -97,4 +97,3 @@ export const {
 } = usersAdapter.getSelectors(
   (state) => selectUsersData(state) ?? initialState
 );
-

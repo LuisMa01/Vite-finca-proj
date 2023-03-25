@@ -11,18 +11,22 @@ const initialState = datesAdapter.getInitialState();
 export const dateApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getDates: builder.query({
-      query: () => "/app",
-      validateStatus: (response, result) => {
-        return response.status === 200 && !result.isError;
-      },
-      
+      query: () => ({
+        url: "/app",
+        validateStatus: (response, result) => {
+          return response.status === 200 && !result.isError;
+        },
+      }),
+
       transformResponse: (responseData) => {
-       const loadedDates = responseData.map((date) => {
+        const loadedDates = responseData.map((date) => {
           date.id = date.date_id;
           return date;
-          
         });
-        return datesAdapter.setAll(initialState, loadedDates.sort((a, b) => b.id - a.id));
+        return datesAdapter.setAll(
+          initialState,
+          loadedDates.sort((a, b) => b.id - a.id)
+        );
       },
       providesTags: (result, error, arg) => {
         if (result?.ids) {
@@ -74,15 +78,11 @@ export const {
 // returns the query result object
 export const selectDatesResult = dateApiSlice.endpoints.getDates.select();
 
-
-
 // creates memoized selector
 const selectDatesData = createSelector(
   selectDatesResult,
   (dateResult) => dateResult.data // normalized state object with ids & entities
 );
-
-
 
 //getSelectors creates these selectors and we rename them with aliases using destructuring
 export const {
@@ -93,4 +93,3 @@ export const {
 } = datesAdapter.getSelectors(
   (state) => selectDatesData(state) ?? initialState
 );
-

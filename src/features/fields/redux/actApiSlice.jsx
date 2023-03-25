@@ -11,18 +11,22 @@ const initialState = actsAdapter.getInitialState();
 export const actApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getActs: builder.query({
-      query: () => "/act",
-      validateStatus: (response, result) => {
-        return response.status === 200 && !result.isError;
-      },
-      
+      query: () => ({
+        url: "/act",
+        validateStatus: (response, result) => {
+          return response.status === 200 && !result.isError;
+        },
+      }),
+
       transformResponse: (responseData) => {
-       const loadedActs = responseData.map((act) => {
+        const loadedActs = responseData.map((act) => {
           act.id = act.act_id;
           return act;
-          
         });
-        return actsAdapter.setAll(initialState, loadedActs.sort((a, b) => b.id - a.id));
+        return actsAdapter.setAll(
+          initialState,
+          loadedActs.sort((a, b) => b.id - a.id)
+        );
       },
       providesTags: (result, error, arg) => {
         if (result?.ids) {
@@ -74,15 +78,11 @@ export const {
 // returns the query result object
 export const selectActsResult = actApiSlice.endpoints.getActs.select();
 
-
-
 // creates memoized selector
 const selectActsData = createSelector(
   selectActsResult,
   (actResult) => actResult.data // normalized state object with ids & entities
 );
-
-
 
 //getSelectors creates these selectors and we rename them with aliases using destructuring
 export const {
@@ -90,7 +90,4 @@ export const {
   selectById: selectActById,
   selectIds: selectActIds,
   // Pass in a selector that returns the users slice of state
-} = actsAdapter.getSelectors(
-  (state) => selectActsData(state) ?? initialState
-);
-
+} = actsAdapter.getSelectors((state) => selectActsData(state) ?? initialState);

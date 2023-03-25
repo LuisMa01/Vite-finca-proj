@@ -11,18 +11,22 @@ const initialState = dosesAdapter.getInitialState();
 export const doseApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getDoses: builder.query({
-      query: () => "/dose",
-      validateStatus: (response, result) => {
-        return response.status === 200 && !result.isError;
-      },
-      
+      query: () => ({
+        url: "/dose",
+        validateStatus: (response, result) => {
+          return response.status === 200 && !result.isError;
+        },
+      }),
+
       transformResponse: (responseData) => {
-       const loadedDoses = responseData.map((dose) => {
+        const loadedDoses = responseData.map((dose) => {
           dose.id = dose.dose_id;
           return dose;
-          
         });
-        return dosesAdapter.setAll(initialState, loadedDoses.sort((a, b) => b.id - a.id));
+        return dosesAdapter.setAll(
+          initialState,
+          loadedDoses.sort((a, b) => b.id - a.id)
+        );
       },
       providesTags: (result, error, arg) => {
         if (result?.ids) {
@@ -74,15 +78,11 @@ export const {
 // returns the query result object
 export const selectDosesResult = doseApiSlice.endpoints.getDoses.select();
 
-
-
 // creates memoized selector
 const selectDosesData = createSelector(
   selectDosesResult,
   (doseResult) => doseResult.data // normalized state object with ids & entities
 );
-
-
 
 //getSelectors creates these selectors and we rename them with aliases using destructuring
 export const {
@@ -93,4 +93,3 @@ export const {
 } = dosesAdapter.getSelectors(
   (state) => selectDosesData(state) ?? initialState
 );
-
