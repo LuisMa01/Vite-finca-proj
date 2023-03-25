@@ -76,11 +76,7 @@ const NuevoUsuario = () => {
       email ? validEmail : true,
       phone ? validUserphone : true,
     ].every(Boolean) && !isLoading;
-  console.log(
-    `${validUsername} ${validPassword} ${email ? validEmail : true} ${
-      phone ? validUserphone : true
-    }`
-  );
+ 
   const onSaveUserClicked = async (e) => {
     e.preventDefault();
     if (canSave) {
