@@ -17,9 +17,6 @@ const ActInformacion = () => {
     console.log(user);
     return(
         <>
-            <div className="return-div"><Link to={'/dash/usuario/mi-perfil'}><div className="return-button">
-                <img className="return-button-img" src={ReImage} alt="Atrás"/>
-            </div></Link></div>
         </>
     )
 }

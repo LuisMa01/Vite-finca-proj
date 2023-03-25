@@ -2,7 +2,7 @@ import React from "react";
 import ReImage from "../../images/return.svg";
 import { Link } from "react-router-dom";
 import "../../styles/registrar-actividad.css";
-import actividades from "../jsons/tipos-actividades.json";
+
 import RemoveImg from "../../images/remove.svg";
 import Swal from "sweetalert2";
 import Act from "../../components/Act";
@@ -62,6 +62,7 @@ const registrarActividad = () => {
         <div className=" container col-12 col-md-9 col-lg-6 edit_table-container">
           <table className="table table-hover table-sm table-striped table-bordered">
             <thead className="thead-loyola">
+              <tr>
               <th className="align-middle" scope="col">
                 Actividad
               </th>
@@ -77,6 +78,7 @@ const registrarActividad = () => {
               {(isAdmin) && <th className="align-middle" scope="col">
                 Editar
               </th>}
+              </tr>
             </thead>
             <tbody>{tableContent}</tbody>
           </table>
@@ -86,13 +88,7 @@ const registrarActividad = () => {
   }
   const cabeza = (
     <>
-      <div className="return-div">
-        <Link to={"/dash/cultivos"}>
-          <div className="return-button">
-            <img className="return-button-img" src={ReImage} alt="Atrás" />
-          </div>
-        </Link>
-      </div>
+      
       <p className="titulo_tipos-de-actividades font-weight-bold">Actividades de cultivo</p>
       <p className="tipos_description">
         <i>
@@ -102,10 +98,10 @@ const registrarActividad = () => {
         </i>
       </p>
 
-      {(isAdmin) && <form className="container myform col-6 needs-validation" novalidate>
+      {(isAdmin) && <form className="container myform col-6 needs-validation">
         <div className="form-row bg-light">
           <div className="col-12 col-md-6 mb-2">
-            <label for="nombre_actividad">Nombre de actividad</label>
+            <label htmlFor="nombre_actividad">Nombre de actividad</label>
             <input
               type="text"
               className="form-control"
@@ -116,7 +112,7 @@ const registrarActividad = () => {
             />
           </div>
           <div className="col-12 col-md-6 mb-2">
-            <label for="descripcion_actividad">Descripción (opcional)</label>
+            <label htmlFor="descripcion_actividad">Descripción (opcional)</label>
             <textarea
               className="form-control rounded-1"
               rows="1"

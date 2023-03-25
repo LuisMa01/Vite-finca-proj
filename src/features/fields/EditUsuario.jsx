@@ -33,15 +33,7 @@ const EditUsuario = () => {
   }, [password]);
 */
   return (
-    <>
-      <div className="return-div">
-        <Link to={"/dash/usuario/lista-usuarios"}>
-          <div className="return-button">
-            <img className="return-button-img" src={ReImage} alt="Atrás" />
-          </div>
-        </Link>
-      </div>
-      
+    <>      
       <h1 className="crear_titulo">Crear usuario</h1>
       <div className="nuevo-usuario-card">
         <form className="nuevo-usuario-card_form" action="#">

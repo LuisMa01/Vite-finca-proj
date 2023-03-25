@@ -166,7 +166,7 @@ const Dose = ({ doseId }) => {
             <Collapse isOpened={isOpen}>
               <input
                 type="text"
-                class="form-control"
+                className="form-control"
                 placeholder="Descripción"
                 value={desc}
                 onChange={onItemDescChanged}

@@ -31,6 +31,7 @@ import InfoCultivo from "./features/fields/InfoCultivo";
 import InfoAppCult from "./features/fields/InfoAppCult";
 import useAuth from "./hooks/useAuth";
 
+
 function App() {
   const { isManager, isAdmin } = useAuth();
   return (

@@ -167,7 +167,7 @@ const Plant = ({ plantId }) => {
             </div>
             <div className="cultivos_button-section">
               <button
-                class="btn btn-sm btn-success"
+                className="btn btn-sm btn-success"
                 onClick={onPlantChanged}
                 type="submit"
               >

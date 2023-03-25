@@ -204,7 +204,7 @@ const Item = ({ itemId }) => {
                 <label for="producto_final">Descripción del Artículo</label>
                 <input
                   type="text"
-                  class="form-control"
+                  className="form-control"
                   value={desc}
                   onChange={onItemDescChanged}
                 />

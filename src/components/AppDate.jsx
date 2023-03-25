@@ -337,7 +337,7 @@ const AppDate = ({ dateId, Lista }) => {
               <p className="general-info_subh">
                 <b>Información general:</b>
               </p>
-              <div class="row">
+              <div className="row">
                 <p>
                   <b>Cultivo: </b>
                   <Crop
@@ -361,7 +361,7 @@ const AppDate = ({ dateId, Lista }) => {
                 </p>
               </div>
               {(isManager || isAdmin) &&
-              <div class="row">
+              <div className="row">
                 <p>
                   <button
                     className="btn btn-success"

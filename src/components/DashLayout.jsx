@@ -1,19 +1,26 @@
 import { Outlet } from "react-router-dom";
 import DashHeader from "./DashHeader";
-import DashNav from "./DashNav"
-import BranchImg from "../images/branch.svg"
+import DashNav from "./DashNav";
+import BranchImg from "../images/branch.svg";
+
+
 
 
 const DashLayout = () => {
-  return (<>
-    <DashHeader />
-    <DashNav />
+  
 
-    <div className="main">
-        <img src={BranchImg} alt="" className="background-img"/>
+  return (
+    <>
+      <DashHeader />
+      <DashNav />
+      
+
+      <div className="main">
+        <img src={BranchImg} alt="" className="background-img" />
         <Outlet />
-    </div>
-  </>)
-}
+      </div>
+    </>
+  );
+};
 
-export default DashLayout
+export default DashLayout;

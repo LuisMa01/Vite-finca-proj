@@ -10,7 +10,7 @@ import { useNavigate } from "react-router-dom";
 const USER_REGEX = /^[A-z]{3,20}$/;
 const PWD_REGEX = /^[A-z0-9!@#$%]{4,12}$/;
 const EMAIL_REGEX = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
-const PHONE_REGEX = /^[1-9]\d{2}-\d{3}-\d{4}/; 
+const PHONE_REGEX = /^[1-9]\d{2}-\d{3}-\d{4}/;
 
 const NuevoUsuario = () => {
   const [addNewUser, { isLoading, isSuccess, isError, error }] =
@@ -43,7 +43,6 @@ const NuevoUsuario = () => {
     setValidUserphone(PHONE_REGEX.test(phone));
   }, [phone]);
 
-  
   useEffect(() => {
     if (isSuccess) {
       setUsername("");
@@ -51,33 +50,49 @@ const NuevoUsuario = () => {
       setSurname("");
       setPassword("");
       setRoles(3);
-      setEmail("")
-      setPhone("")
+      setEmail("");
+      setPhone("");
       navigate("/dash/usuario/lista-usuarios");
     }
   }, [isSuccess, navigate]);
 
   const onUsernameChanged = (e) => {
     setUsername(e.target.value);
-    
   };
   const onPasswordChanged = (e) => setPassword(e.target.value);
   const onEmailChanged = (e) => setEmail(e.target.value);
   const onNamesChanged = (e) => setNames(e.target.value);
   const onSurnameChanged = (e) => setSurname(e.target.value);
   const onPhoneChanged = (e) => setPhone(e.target.value);
-  
 
   const onRolesChanged = (e) => {
-        setRoles(e.target.value);
+    setRoles(e.target.value);
   };
 
-  const canSave = [validUsername, validPassword, email?validEmail:true, phone?validUserphone:true].every(Boolean) && !isLoading;
-console.log(`${validUsername} ${validPassword} ${email?validEmail:true} ${phone?validUserphone:true}`);
+  const canSave =
+    [
+      validUsername,
+      validPassword,
+      email ? validEmail : true,
+      phone ? validUserphone : true,
+    ].every(Boolean) && !isLoading;
+  console.log(
+    `${validUsername} ${validPassword} ${email ? validEmail : true} ${
+      phone ? validUserphone : true
+    }`
+  );
   const onSaveUserClicked = async (e) => {
     e.preventDefault();
     if (canSave) {
-      await addNewUser({ username, password, roles, names, surname, email, phone });
+      await addNewUser({
+        username,
+        password,
+        roles,
+        names,
+        surname,
+        email,
+        phone,
+      });
     }
   };
 
@@ -92,23 +107,21 @@ console.log(`${validUsername} ${validPassword} ${email?validEmail:true} ${phone?
 
   const content = (
     <>
-      <div className="return-div">
-        <Link to={"/dash/usuario/lista-usuarios"}>
-          <div className="return-button">
-            <img className="return-button-img" src={ReImage} alt="Atrás" />
-          </div>
-        </Link>
-      </div>
       <h1 className="crear_titulo">Crear usuario</h1>
 
       {/* A partir de aqui son las modificaciones, esperando no poner otro huevo] */}
 
-      <form className="container col-12 col-sm-11 col-lg-9 bg-light" onSubmit={onSaveUserClicked}>
+      <form
+        className="container col-12 col-sm-11 col-lg-9 bg-light"
+        onSubmit={onSaveUserClicked}
+      >
         <p className="error-text">{error?.data?.message}</p>
-        <div class="form-row">
-          <div class="col-md-4 mb-3">
-            <label id="username_label" htmlFor="username">Nombre de usuario</label>
-            <input 
+        <div className="form-row">
+          <div className="col-md-4 mb-3">
+            <label id="username_label" htmlFor="username">
+              Nombre de usuario
+            </label>
+            <input
               id="new-user-username"
               className="form-control"
               name="username"
@@ -117,13 +130,15 @@ console.log(`${validUsername} ${validPassword} ${email?validEmail:true} ${phone?
               autoFocus
               placeholder="Ej: minombre07"
               value={username}
-              onChange={onUsernameChanged}/>
+              onChange={onUsernameChanged}
+            />
           </div>
 
-          <div class="col-md-4 mb-3">
-            <label id="username_label" htmlFor="names">Nombres</label>
-            <input 
-              
+          <div className="col-md-4 mb-3">
+            <label id="username_label" htmlFor="names">
+              Nombres
+            </label>
+            <input
               className="form-control"
               name="names"
               type="text"
@@ -131,14 +146,15 @@ console.log(`${validUsername} ${validPassword} ${email?validEmail:true} ${phone?
               autoFocus
               placeholder="Ej: Juan Andres"
               value={names}
-              onChange={onNamesChanged}/>
+              onChange={onNamesChanged}
+            />
           </div>
 
-
-          <div class="col-md-4 mb-3">
-            <label id="username_label" htmlFor="surname">Apellidos</label>
-            <input 
-              
+          <div className="col-md-4 mb-3">
+            <label id="username_label" htmlFor="surname">
+              Apellidos
+            </label>
+            <input
               className="form-control"
               name="surname"
               type="text"
@@ -146,28 +162,31 @@ console.log(`${validUsername} ${validPassword} ${email?validEmail:true} ${phone?
               autoFocus
               placeholder="Ej: Gómez Almanzar"
               value={surname}
-              onChange={onSurnameChanged}/>
+              onChange={onSurnameChanged}
+            />
           </div>
-          <div class="col-md-4 mb-3">
-            <label id="username_label" htmlFor="phone">Telefono</label>
-            <input    
+          <div className="col-md-4 mb-3">
+            <label id="username_label" htmlFor="phone">
+              Telefono
+            </label>
+            <input
               type="tel"
-              pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"           
+              pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
               className="form-control"
-              name="surname"              
+              name="surname"
               autoComplete="off"
               autoFocus
               placeholder="Ej: 1-809-000-0000"
               value={phone}
-              onChange={onPhoneChanged}/>
+              onChange={onPhoneChanged}
+            />
           </div>
 
-
-
-          <div class="col-md-4 mb-3">
-            <label id="username_label" htmlFor="email">Correo electrónico</label>
-            <input 
-              
+          <div className="col-md-4 mb-3">
+            <label id="username_label" htmlFor="email">
+              Correo electrónico
+            </label>
+            <input
               className="form-control"
               name="email"
               type="text"
@@ -175,10 +194,13 @@ console.log(`${validUsername} ${validPassword} ${email?validEmail:true} ${phone?
               autoFocus
               placeholder="Ej: nombre@ejemplo.com"
               value={email}
-              onChange={onEmailChanged}/>
+              onChange={onEmailChanged}
+            />
           </div>
           <div className="col-md-4 mb-3">
-            <label id="pswd_label" htmlFor="password">Contraseña</label>
+            <label id="pswd_label" htmlFor="password">
+              Contraseña
+            </label>
             <input
               id="new-user-pswd"
               className="form-control"
@@ -186,28 +208,35 @@ console.log(`${validUsername} ${validPassword} ${email?validEmail:true} ${phone?
               type="password"
               placeholder="******"
               value={password}
-              onChange={onPasswordChanged}/>
+              onChange={onPasswordChanged}
+            />
           </div>
-          <div className="col-md-4 mb-3">    
+          <div className="col-md-4 mb-3">
             <label htmlFor="role">Cargo</label>
-            <select 
-            id="cargo"
-            name="role"
-            className="dropdown form-control"
-            value={roles}
-            onChange={onRolesChanged}>
+            <select
+              id="cargo"
+              name="role"
+              className="dropdown form-control"
+              value={roles}
+              onChange={onRolesChanged}
+            >
               {options}
             </select>
           </div>
         </div>
 
         <div className="cultivos_button-section">
-          <button className="btn btn-success" id="user-save" disabled={!canSave}>Guardar usuario</button>
-          <Link to={'/dash/usuario/lista-usuarios'} className="Link">
+          <button
+            className="btn btn-success"
+            id="user-save"
+            disabled={!canSave}
+          >
+            Guardar usuario
+          </button>
+          <Link to={"/dash/usuario/lista-usuarios"} className="Link">
             <button className="btn btn-danger">Cancelar</button>
           </Link>
         </div>
-        
       </form>
     </>
   );

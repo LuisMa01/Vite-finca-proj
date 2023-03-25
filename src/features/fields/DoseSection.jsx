@@ -9,7 +9,6 @@ import { useState, useEffect } from "react";
 import Dose from "../../components/Dose";
 import useAuth from "../../hooks/useAuth";
 
-
 const DoseSection = () => {
   const { username, isManager, isAdmin } = useAuth();
   const {
@@ -23,7 +22,6 @@ const DoseSection = () => {
     refetchOnFocus: true,
     refetchOnMountOrArgChange: true,
   });
- 
 
   const [
     addNewDose,
@@ -33,8 +31,6 @@ const DoseSection = () => {
   const [doseName, setDoseName] = useState("");
   const [desc, setDesc] = useState("");
   const [doseUnit, setDoseUnit] = useState("");
-  
-  
 
   //doseName, desc, doseUnit
 
@@ -48,10 +44,10 @@ const DoseSection = () => {
   const onItemDescChanged = (e) => setDesc(e.target.value);
   const onDoseUnitChanged = (e) => setDoseUnit(e.target.value);
   const handleClearClick = (e) => {
-    e.preventDefault()
+    e.preventDefault();
     setDoseName("");
-      setDesc("");
-      setDoseUnit("");
+    setDesc("");
+    setDoseUnit("");
   };
   useEffect(() => {
     if (addissuccess) {
@@ -61,7 +57,6 @@ const DoseSection = () => {
     }
   }, [addissuccess]);
 
-  
   let content;
   if (isError) {
     content = <p className="errmsg">{error?.data?.message}</p>;
@@ -72,8 +67,9 @@ const DoseSection = () => {
     const { ids } = doses;
 
     let tableContent =
-      ids?.length && ids.map((Id) => {
-        return <Dose key={Id} doseId={Id} />
+      ids?.length &&
+      ids.map((Id) => {
+        return <Dose key={Id} doseId={Id} />;
       });
 
     content = (
@@ -82,24 +78,32 @@ const DoseSection = () => {
         <div className="table-container-1">
           <table className="table table-hover table-sm table-striped table-responsive-sm table-bordered">
             <thead className="thead-loyola">
-              <th className="align-middle" scope="col">
-                Dosis
-              </th>
-              <th className="align-middle" scope="col">
-                Unidad
-              </th>
-              <th className="align-middle" scope="col">
-                Descripción
-              </th>
-              {(isManager || isAdmin) && <th className="align-middle" scope="col">
-                Estatus
-              </th>}
-              {(isAdmin) && <th className="align-middle" scope="col">
-                Eliminar
-              </th>}
-              {(isAdmin) && <th className="align-middle" scope="col">
-                Editar
-              </th>}
+              <tr>
+                <th className="align-middle" scope="col">
+                  Dosis
+                </th>
+                <th className="align-middle" scope="col">
+                  Unidad
+                </th>
+                <th className="align-middle" scope="col">
+                  Descripción
+                </th>
+                {(isManager || isAdmin) && (
+                  <th className="align-middle" scope="col">
+                    Estatus
+                  </th>
+                )}
+                {isAdmin && (
+                  <th className="align-middle" scope="col">
+                    Eliminar
+                  </th>
+                )}
+                {isAdmin && (
+                  <th className="align-middle" scope="col">
+                    Editar
+                  </th>
+                )}
+              </tr>
             </thead>
             <tbody>{tableContent}</tbody>
           </table>
@@ -112,53 +116,55 @@ const DoseSection = () => {
     <>
       <h1 className="item-section_titulo">Dosis y Unidad</h1>
       <div className="container centered-form">
-      {(isAdmin) && 
-        <form className="col-12 col-lg-9  justify-content-center needs-validation">
-         <p className="font-weight-bold subheader">Agregar dosis</p>
-          <div className="form-row bg-light">
-            <div className="col-md-3 mb-3">
-              <input
-                type="text"
-                className="form-control"
-                placeholder="Ej: hora/hombre"
-                value={doseName}
-                onChange={onDoseNameChanged}
-                required
-              />
+        {isAdmin && (
+          <form className="col-12 col-lg-9  justify-content-center needs-validation">
+            <p className="font-weight-bold subheader">Agregar dosis</p>
+            <div className="form-row bg-light">
+              <div className="col-md-3 mb-3">
+                <input
+                  type="text"
+                  className="form-control"
+                  placeholder="Ej: hora/hombre"
+                  value={doseName}
+                  onChange={onDoseNameChanged}
+                  required
+                />
+              </div>
+              <div className="col-12 col-md-3 mb-2">
+                <input
+                  type="text"
+                  className="form-control"
+                  placeholder="Unidad"
+                  value={doseUnit}
+                  onChange={onDoseUnitChanged}
+                />
+              </div>
+              <div className="col-12 col-md-6 mb-3">
+                <input
+                  type="text"
+                  className="form-control"
+                  placeholder="Descripción"
+                  value={desc}
+                  onChange={onItemDescChanged}
+                />
+              </div>
             </div>
-            <div className="col-12 col-md-3 mb-2">
-              <input
-                type="text"
-                className="form-control"
-                placeholder="Unidad"
-                value={doseUnit}
-                onChange={onDoseUnitChanged}
-              />
+
+            <div className="form-row cultivos_button-section">
+              <button
+                className="btn btn-success"
+                onClick={onSaveDoseClicked}
+                type="submit"
+              >
+                Guardar
+              </button>
+
+              <button className="btn btn-danger" onClick={handleClearClick}>
+                Limpiar
+              </button>
             </div>
-            <div className="col-12 col-md-6 mb-3">
-              <input
-                type="text"
-                class="form-control"
-                placeholder="Descripción"
-                value={desc}
-                onChange={onItemDescChanged}
-              />
-            </div>
-          </div>  
-        
-          <div className="form-row cultivos_button-section">
-            <button
-              className="btn btn-success"
-              onClick={onSaveDoseClicked}
-              type="submit"
-            >
-              Guardar
-            </button>
-            
-              <button className="btn btn-danger" onClick={handleClearClick}>Limpiar</button>
-            
-          </div>
-        </form>}
+          </form>
+        )}
       </div>
       <hr />
       {content}

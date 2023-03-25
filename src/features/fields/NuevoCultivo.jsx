@@ -177,15 +177,12 @@ const nuevoCultivo = () => {
       save();
     }
     if (plantilla == "Plantilla") {
-      savePlantilla()
+      savePlantilla();
     }
-    
   };
   useEffect(() => {
-    
-      setCropName(`${plantilla}${cropNames}`);
+    setCropName(`${plantilla}${cropNames}`);
     console.log(cropName);
-    
   }, [plantilla, cropNames]);
 
   useEffect(() => {
@@ -202,7 +199,7 @@ const nuevoCultivo = () => {
       setPlantilla("");
       setCropName("");
       if (plantilla) {
-        navigate("/dash/cultivos/registrar-plantilla")
+        navigate("/dash/cultivos/registrar-plantilla");
       }
     }
   }, [addissuccess]);
@@ -227,147 +224,146 @@ const nuevoCultivo = () => {
 
   return (
     <>
-      <div className="return-div">
-        <Link to={"/dash/cultivos"}>
-          <div className="return-button">
-            <img className="return-button-img" src={ReImage} alt="Atrás" />
-          </div>
-        </Link>
-      </div>
-      {(isAdmin) && <p className="nuevo-cultivo-header font-weight-bold">Añadir cultivo</p>}
-      {(isAdmin) && <p className="nuevo-descripcion text-muted">
-        A continuación describa el cultivo que desea implementar, ubicación y
-        características generales que lo identifican.
-      </p>}
+      {isAdmin && (
+        <p className="nuevo-cultivo-header font-weight-bold">Añadir cultivo</p>
+      )}
+      {isAdmin && (
+        <p className="nuevo-descripcion text-muted">
+          A continuación describa el cultivo que desea implementar, ubicación y
+          características generales que lo identifican.
+        </p>
+      )}
 
-      {(isAdmin) && <form className="container needs-validation nuevo-cultivo-form">
-        <div className="form-row bg-light">
-          <div className="col-md-6 mb-3">
-            <label htmlFor="nombre_cultivo">Nombre del cultivo</label>
-            <div className="form-row">
-              <div className="col-7">
-                <input
-                  type="text"
-                  className="form-control"
-                  placeholder="Fruta ##"
-                  value={cropNames}
-                  onChange={onCropNamesChanged}
-                  required
-                />
+      {isAdmin && (
+        <form className="container needs-validation nuevo-cultivo-form">
+          <div className="form-row bg-light">
+            <div className="col-md-6 mb-3">
+              <label htmlFor="nombre_cultivo">Nombre del cultivo</label>
+              <div className="form-row">
+                <div className="col-7">
+                  <input
+                    type="text"
+                    className="form-control"
+                    placeholder="Fruta ##"
+                    value={cropNames}
+                    onChange={onCropNamesChanged}
+                    required
+                  />
+                </div>
+                <div className="col-5">
+                  <select
+                    className="form-control"
+                    value={plantilla}
+                    onChange={onPlantillaChanged}
+                  >
+                    <option value={""}>Cultivo</option>
+                    <option value={"Plantilla-"}>Plantilla</option>
+                  </select>
+                </div>
               </div>
-              <div className="col-5">
-                <select
-                  className="form-control"
-                  value={plantilla}
-                  onChange={onPlantillaChanged}
-                >
-                  <option value={""}>Cultivo</option>
-                  <option value={"Plantilla-"}>Plantilla</option>
-                </select>
-              </div>
+            </div>
+
+            <div className="col-12 col-md-3 mb-2">
+              <label htmlFor="variedad_cultivo">Área de Cultivo (tareas)</label>
+              <input
+                type="number"
+                step="any"
+                min={0}
+                className="form-control"
+                id="variedad_cultivo"
+                value={cropArea}
+                onChange={onCropAreaChanged}
+              />
+            </div>
+            <div className="col-md-3 mb-3">
+              <label htmlFor="siembra_cultivo">Fecha de siembra</label>
+              <input
+                type="date"
+                className="form-control"
+                value={datePlant}
+                onChange={onCropPlantChanged}
+                required
+              />
             </div>
           </div>
 
-          <div className="col-12 col-md-3 mb-2">
-            <label htmlFor="variedad_cultivo">Área de Cultivo (tareas)</label>
-            <input
-              type="number"
-              step="any"
-              min={0}
-              className="form-control"
-              id="variedad_cultivo"
-              value={cropArea}
-              onChange={onCropAreaChanged}
-            />
-          </div>
-          <div className="col-md-3 mb-3">
-            <label htmlFor="siembra_cultivo">Fecha de siembra</label>
-            <input
-              type="date"
-              className="form-control"
-              value={datePlant}
-              onChange={onCropPlantChanged}
-              required
-            />
-          </div>
-        </div>
+          <div className="form-row">
+            <div className="col-md-3 mb-3">
+              <label htmlFor="campo_cultivo">Plantas</label>
+              <select
+                className="form-control"
+                value={cropPlantKey}
+                onChange={onCropPlantKeyChanged}
+              >
+                <option disabled value={""}>
+                  Elegir Planta
+                </option>
+                {plantOption}
+              </select>
+            </div>
+            <div className="col-md-3 mb-3">
+              <label htmlFor="campo_cultivo">Responsable</label>
+              <select
+                className="form-control"
+                value={repUser}
+                onChange={onRepUserChanged}
+              >
+                <option disabled value={""}>
+                  Elegir Responsable
+                </option>
+                {userOption}
+              </select>
+            </div>
 
-        <div className="form-row">
-        <div className="col-md-3 mb-3">
-            <label htmlFor="campo_cultivo">Plantas</label>
-            <select
-              className="form-control"
-              value={cropPlantKey}
-              onChange={onCropPlantKeyChanged}
-            >
-              <option disabled value={""}>
-                Elegir Planta
-              </option>
-              {plantOption}
-            </select>
+            <div className="col-md-3 mb-3">
+              <label htmlFor="campo_cultivo">Campos</label>
+              <select
+                className="form-control"
+                value={cropCampKey}
+                onChange={onCropCampChanged}
+              >
+                <option disabled value={""}>
+                  Elegir Campo
+                </option>
+                {campOption}
+              </select>
+            </div>
+            <div className="col-md-3 mb-3">
+              <label htmlFor="cosecha_cultivo">Fecha de cosecha</label>
+              <input
+                type="date"
+                className="form-control"
+                value={dateHarvest}
+                onChange={onCropHarvestChanged}
+              />
+            </div>
           </div>
-          <div className="col-md-3 mb-3">
-            <label htmlFor="campo_cultivo">Responsable</label>
-            <select
-              className="form-control"
-              value={repUser}
-              onChange={onRepUserChanged}
-            >
-              <option disabled value={""}>
-                Elegir Responsable
-              </option>
-              {userOption}
-            </select>
+          <div className="form-row bg-light">
+            <div className="col-12 mb-3">
+              <label htmlFor="producto_final">Producto final</label>
+              <input
+                type="text"
+                className="form-control"
+                value={finalProd}
+                onChange={onCropFinalProdChanged}
+              />
+            </div>
           </div>
-          
-          <div className="col-md-3 mb-3">
-            <label htmlFor="campo_cultivo">Campos</label>
-            <select
-              className="form-control"
-              value={cropCampKey}
-              onChange={onCropCampChanged}
-            >
-              <option disabled value={""}>
-                Elegir Campo
-              </option>
-              {campOption}
-            </select>
-          </div>
-          <div className="col-md-3 mb-3">
-            <label htmlFor="cosecha_cultivo">Fecha de cosecha</label>
-            <input
-              type="date"
-              className="form-control"
-              value={dateHarvest}
-              onChange={onCropHarvestChanged}
-            />
-          </div>
-        </div>
-        <div className="form-row bg-light">
-          <div className="col-12 mb-3">
-            <label htmlFor="producto_final">Producto final</label>
-            <input
-              type="text"
-              class="form-control"
-              value={finalProd}
-              onChange={onCropFinalProdChanged}
-            />
-          </div>
-        </div>
 
-        <div className="cultivos_button-section">
-          <button
-            className="btn btn-success"
-            onClick={onSaveCropClicked}
-            type="submit"
-          >
-            Guardar cultivo
-          </button>
-          <Link to={"/dash/cultivos"} className="Link">
-            <button className="btn btn-danger">Descartar</button>
-          </Link>
-        </div>
-      </form>}
+          <div className="cultivos_button-section">
+            <button
+              className="btn btn-success"
+              onClick={onSaveCropClicked}
+              type="submit"
+            >
+              Guardar cultivo
+            </button>
+            <Link to={"/dash/cultivos"} className="Link">
+              <button className="btn btn-danger">Descartar</button>
+            </Link>
+          </div>
+        </form>
+      )}
       <hr />
 
       <div className="ventana_plantillas">
@@ -375,24 +371,32 @@ const nuevoCultivo = () => {
         <div className="table-container col-12 col-md-10 col-lg-8">
           <table className="table table-hover table-sm table-striped table-responsive-sm table-bordered">
             <thead className="thead-loyola">
-              <th className="align-middle" scope="col">
-                Cultivos
-              </th>
-              <th className="align-middle" scope="col">
-                Planta
-              </th>
-              <th className="align-middle" scope="col">
-                Campo
-              </th>
-              {(isManager || isAdmin) && <th className="align-middle" scope="col">
-                Estatus
-              </th>}
-              {(isAdmin) && <th className="align-middle" scope="col">
-                Eliminar
-              </th>}
-              {(isAdmin) && <th className="align-middle" scope="col">
-                Editar
-              </th>}
+              <tr>
+                <th className="align-middle" scope="col">
+                  Cultivos
+                </th>
+                <th className="align-middle" scope="col">
+                  Planta
+                </th>
+                <th className="align-middle" scope="col">
+                  Campo
+                </th>
+                {(isManager || isAdmin) && (
+                  <th className="align-middle" scope="col">
+                    Estatus
+                  </th>
+                )}
+                {isAdmin && (
+                  <th className="align-middle" scope="col">
+                    Eliminar
+                  </th>
+                )}
+                {isAdmin && (
+                  <th className="align-middle" scope="col">
+                    Editar
+                  </th>
+                )}
+              </tr>
             </thead>
             <tbody>{tableContent}</tbody>
           </table>

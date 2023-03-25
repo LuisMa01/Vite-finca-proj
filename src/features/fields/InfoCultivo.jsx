@@ -116,7 +116,6 @@ const Costo = ({ crpId }) => {
 
 const Comentario = ({ cropId }) => {
   const { username, isManager, isAdmin } = useAuth();
-  
 
   const { comt } = useGetComtsQuery("comtsList", {
     selectFromResult: ({ data }) => ({
@@ -131,13 +130,14 @@ const Comentario = ({ cropId }) => {
   let comtList;
   let listSum = 0;
   if (comt) {
-    
     comtList =
-    comt?.length &&
-    comt.map((Id) => {
+      comt?.length &&
+      comt.map((Id) => {
         if (Id?.date_crop_key == cropId) {
           listSum = listSum + 1;
-          return <Comt key={Id?.comt_id} comtId={Id?.comt_id} Lista={"Lista2"} />;
+          return (
+            <Comt key={Id?.comt_id} comtId={Id?.comt_id} Lista={"Lista2"} />
+          );
         }
       });
   }
@@ -152,25 +152,27 @@ const Comentario = ({ cropId }) => {
         <div className="table-container col-12 col-md-9 col-xl-6">
           <table className="table table-hover table-sm table-striped table-responsive-sm table-bordered">
             <thead className="thead-loyola">
-              <th className="align-middle" scope="col">
-                Fecha
-              </th>
-              <th className="align-middle" scope="col">
-                Actividad
-              </th>
-              <th className="align-middle" scope="col">
-                Comentario
-              </th>
-              {isAdmin && (
+              <tr>
                 <th className="align-middle" scope="col">
-                  Eliminar
+                  Fecha
                 </th>
-              )}
-              {(isManager || isAdmin) && (
                 <th className="align-middle" scope="col">
-                  Editar
+                  Actividad
                 </th>
-              )}
+                <th className="align-middle" scope="col">
+                  Comentario
+                </th>
+                {isAdmin && (
+                  <th className="align-middle" scope="col">
+                    Eliminar
+                  </th>
+                )}
+                {(isManager || isAdmin) && (
+                  <th className="align-middle" scope="col">
+                    Editar
+                  </th>
+                )}
+              </tr>
             </thead>
             <tbody>{comtList}</tbody>
           </table>
@@ -223,7 +225,6 @@ const infoCultivo = () => {
     refetchOnFocus: true,
     refetchOnMountOrArgChange: true,
   });
-  
 
   const { data: activ } = useGetActsQuery("actsList", {
     pollingInterval: 60000,
@@ -452,14 +453,6 @@ const infoCultivo = () => {
 
     contenido = (
       <>
-        <div className="return-div">
-          <Link to={"/dash/cultivos"}>
-            <div className="return-button">
-              <img className="return-button-img" src={ReImage} alt="Atrás" />
-            </div>
-          </Link>
-        </div>
-
         <div>{cropDato}</div>
 
         <p className="add-new-activities">
@@ -535,28 +528,30 @@ const infoCultivo = () => {
         <div className="table-container col-12 col-lg-9">
           <table className="table table-hover table-sm table-striped table-responsive-sm table-bordered">
             <thead className="thead-loyola">
-              <th className="align-middle" scope="col">
-                Actividad
-              </th>
-              <th className="align-middle" scope="col">
-                Fecha Programada
-              </th>
-              <th className="align-middle" scope="col">
-                Fecha Ejecutada
-              </th>
-              <th className="align-middle" scope="col">
-                Responsable
-              </th>
-              {isAdmin && (
+              <tr>
                 <th className="align-middle" scope="col">
-                  Eliminar
+                  Actividad
                 </th>
-              )}
-              {(isManager || isAdmin) && (
                 <th className="align-middle" scope="col">
-                  Editar
+                  Fecha Programada
                 </th>
-              )}
+                <th className="align-middle" scope="col">
+                  Fecha Ejecutada
+                </th>
+                <th className="align-middle" scope="col">
+                  Responsable
+                </th>
+                {isAdmin && (
+                  <th className="align-middle" scope="col">
+                    Eliminar
+                  </th>
+                )}
+                {(isManager || isAdmin) && (
+                  <th className="align-middle" scope="col">
+                    Editar
+                  </th>
+                )}
+              </tr>
             </thead>
             <tbody>
               <>{dateList}</>

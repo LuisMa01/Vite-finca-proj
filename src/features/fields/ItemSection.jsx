@@ -99,33 +99,35 @@ const ItemSection = () => {
         <div className="table-container-1">
           <table className="table table-hover table-sm table-striped table-responsive-sm table-bordered">
             <thead className="thead-loyola">
-              <th className="align-middle" scope="col">
-                Artículos
-              </th>
-              <th className="align-middle" scope="col">
-                Dosis
-              </th>
-              <th className="align-middle" scope="col">
-                Unidad
-              </th>
-              <th className="align-middle" scope="col">
-                Precio
-              </th>
-              {(isManager || isAdmin) && (
+              <tr>
                 <th className="align-middle" scope="col">
-                  Estatus
+                  Artículos
                 </th>
-              )}
-              {isAdmin && (
                 <th className="align-middle" scope="col">
-                  Eliminar
+                  Dosis
                 </th>
-              )}
-              {isAdmin && (
                 <th className="align-middle" scope="col">
-                  Editar
+                  Unidad
                 </th>
-              )}
+                <th className="align-middle" scope="col">
+                  Precio
+                </th>
+                {(isManager || isAdmin) && (
+                  <th className="align-middle" scope="col">
+                    Estatus
+                  </th>
+                )}
+                {isAdmin && (
+                  <th className="align-middle" scope="col">
+                    Eliminar
+                  </th>
+                )}
+                {isAdmin && (
+                  <th className="align-middle" scope="col">
+                    Editar
+                  </th>
+                )}
+              </tr>
             </thead>
             <tbody>{tableContent}</tbody>
           </table>
@@ -136,13 +138,6 @@ const ItemSection = () => {
 
   return (
     <>
-      <div className="return-div">
-        <Link to={"/dash/cultivos"}>
-          <div className="return-button">
-            <img className="return-button-img" src={ReImage} alt="Atrás" />
-          </div>
-        </Link>
-      </div>
       <h1 className="item-section_titulo">Materiales y mano de obra</h1>
       <p className="subheader font-weight-bold">Crear Artículo</p>
       <div className=" container col-md-3 mb-3 item-button">
@@ -159,71 +154,72 @@ const ItemSection = () => {
         </button>
         <DoseSection />
       </Modal>
-      {(isAdmin) && 
-      <form className="container col-12 col-sm-11 col-lg-9 bg-light needs-validation nuevo-cultivo-form">
-        <div className="form-row bg-light">
-          <div className="col-md-4 mb-3">
-            <label htmlFor="nombre_cultivo">Nombre del Artículo</label>
-            <input
-              type="text"
-              className="form-control"
-              placeholder="Articulo X"
-              value={itemName}
-              onChange={onItemNameChanged}
-              required
-            />
+      {isAdmin && (
+        <form className="container col-12 col-sm-11 col-lg-9 bg-light needs-validation nuevo-cultivo-form">
+          <div className="form-row bg-light">
+            <div className="col-md-4 mb-3">
+              <label htmlFor="nombre_cultivo">Nombre del Artículo</label>
+              <input
+                type="text"
+                className="form-control"
+                placeholder="Articulo X"
+                value={itemName}
+                onChange={onItemNameChanged}
+                required
+              />
+            </div>
+            <div className="col-md-4 mb-3">
+              <label htmlFor="campo_cultivo">Dosis y Unidad</label>
+              <select
+                className="form-control"
+                value={itemDose}
+                onChange={onItemDoseChanged}
+              >
+                <option disabled value={""}>
+                  Elegir dosis
+                </option>
+                {doseOption}
+              </select>
+            </div>
+            <div className="col-12 col-md-4 mb-2">
+              <label htmlFor="variedad_cultivo">Precio del Artículo</label>
+              <input
+                type="number"
+                step="any"
+                min={0}
+                className="form-control"
+                id="variedad_cultivo"
+                value={itemPrice}
+                onChange={onItemPriceChanged}
+              />
+            </div>
           </div>
-          <div className="col-md-4 mb-3">
-            <label htmlFor="campo_cultivo">Dosis y Unidad</label>
-            <select
-              className="form-control"
-              value={itemDose}
-              onChange={onItemDoseChanged}
-            >
-              <option disabled value={""}>
-                Elegir dosis
-              </option>
-              {doseOption}
-            </select>
-          </div>
-          <div className="col-12 col-md-4 mb-2">
-            <label htmlFor="variedad_cultivo">Precio del Artículo</label>
-            <input
-              type="number"
-              step="any"
-              min={0}
-              className="form-control"
-              id="variedad_cultivo"
-              value={itemPrice}
-              onChange={onItemPriceChanged}
-            />
-          </div>
-        </div>
 
-        <div className="form-row bg-light">
-          <div className="col-12 mb-3">
-            <label htmlFor="producto_final">Descripción del Artículo</label>
-            <input
-              type="text"
-              class="form-control"
-              value={desc}
-              onChange={onItemDescChanged}
-            />
+          <div className="form-row bg-light">
+            <div className="col-12 mb-3">
+              <label htmlFor="producto_final">Descripción del Artículo</label>
+              <input
+                type="text"
+                className="form-control"
+                value={desc}
+                onChange={onItemDescChanged}
+              />
+            </div>
           </div>
-        </div>
-        <div className="cultivos_button-section">
-          <button
-            className="btn btn-success"
-            onClick={onSaveItemClicked}
-            type="submit"
-          >
-            Guardar Item
-          </button>
-          <Link to={"/dash/cultivos"} className="Link">
-            <button className="btn btn-danger">Descartar</button>
-          </Link>
-        </div>
-      </form>}
+          <div className="cultivos_button-section">
+            <button
+              className="btn btn-success"
+              onClick={onSaveItemClicked}
+              type="submit"
+            >
+              Guardar Item
+            </button>
+            <Link to={"/dash/cultivos"} className="Link">
+              <button className="btn btn-danger">Descartar</button>
+            </Link>
+          </div>
+        </form>
+      )}
       <hr />
       {content}
     </>
