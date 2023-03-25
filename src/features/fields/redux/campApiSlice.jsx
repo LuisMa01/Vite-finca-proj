@@ -11,18 +11,22 @@ const initialState = campsAdapter.getInitialState();
 export const campApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getCamps: builder.query({
-      query: () => "/camp",
-      validateStatus: (response, result) => {
-        return response.status === 200 && !result.isError;
-      },
-      
+      query: () => ({
+        url: "/camp",
+        validateStatus: (response, result) => {
+          return response.status === 200 && !result.isError;
+        },
+      }),
+
       transformResponse: (responseData) => {
-       const loadedCamps = responseData.map((camp) => {
+        const loadedCamps = responseData.map((camp) => {
           camp.id = camp.camp_id;
           return camp;
-          
         });
-        return campsAdapter.setAll(initialState, loadedCamps.sort((a, b) => b.id - a.id));
+        return campsAdapter.setAll(
+          initialState,
+          loadedCamps.sort((a, b) => b.id - a.id)
+        );
       },
       providesTags: (result, error, arg) => {
         if (result?.ids) {
@@ -74,15 +78,11 @@ export const {
 // returns the query result object
 export const selectCampsResult = campApiSlice.endpoints.getCamps.select();
 
-
-
 // creates memoized selector
 const selectCampsData = createSelector(
   selectCampsResult,
   (campResult) => campResult.data // normalized state object with ids & entities
 );
-
-
 
 //getSelectors creates these selectors and we rename them with aliases using destructuring
 export const {
@@ -93,4 +93,3 @@ export const {
 } = campsAdapter.getSelectors(
   (state) => selectCampsData(state) ?? initialState
 );
-

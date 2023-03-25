@@ -2,11 +2,9 @@ import React from "react";
 import "../../styles/nav_cultivos.css";
 import ReImage from "../../images/return.svg";
 import { Link } from "react-router-dom";
-import cultivos from "../jsons/cultivos.json";
+
 import { useGetCropsQuery } from "./redux/cropApiSlice";
 import Crop from "../../components/Crop";
-
-
 
 const NavCultivos = () => {
   const {
@@ -23,22 +21,20 @@ const NavCultivos = () => {
 
   let tableContent;
   if (cropSuc) {
-    const { ids } = crops;
+    const { ids, entities } = crops;
 
     tableContent =
       ids?.length &&
-      ids.map((Id) => <Crop key={Id} cropId={Id} Lista={"Lista2"} />);
+      ids.map((Id) => {
+        let plnt = `${entities[Id].crop_name}`.split("-")[0];
+        if (plnt !== "Plantilla") {
+          return <Crop key={Id} cropId={Id} Lista={"Lista2"} />;
+        }
+      });
   }
 
   return (
     <>
-      <div className="return-div">
-        <Link to={"/dash"}>
-          <div className="return-button">
-            <img className="return-button-img" src={ReImage} alt="Atrás" />
-          </div>
-        </Link>
-      </div>
       <div className="seccion_cultivos">
         <div>
           <div className="button-section_parent ">

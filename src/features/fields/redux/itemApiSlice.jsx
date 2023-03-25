@@ -11,18 +11,22 @@ const initialState = itemsAdapter.getInitialState();
 export const itemApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getItems: builder.query({
-      query: () => "/item",
-      validateStatus: (response, result) => {
-        return response.status === 200 && !result.isError;
-      },
-      
+      query: () => ({
+        url: "/item",
+        validateStatus: (response, result) => {
+          return response.status === 200 && !result.isError;
+        },
+      }),
+
       transformResponse: (responseData) => {
-       const loadedItems = responseData.map((item) => {
+        const loadedItems = responseData.map((item) => {
           item.id = item.item_id;
           return item;
-          
         });
-        return itemsAdapter.setAll(initialState, loadedItems.sort((a, b) => b.id - a.id));
+        return itemsAdapter.setAll(
+          initialState,
+          loadedItems.sort((a, b) => b.id - a.id)
+        );
       },
       providesTags: (result, error, arg) => {
         if (result?.ids) {
@@ -74,15 +78,11 @@ export const {
 // returns the query result object
 export const selectItemsResult = itemApiSlice.endpoints.getItems.select();
 
-
-
 // creates memoized selector
 const selectItemsData = createSelector(
   selectItemsResult,
   (itemResult) => itemResult.data // normalized state object with ids & entities
 );
-
-
 
 //getSelectors creates these selectors and we rename them with aliases using destructuring
 export const {
@@ -93,4 +93,3 @@ export const {
 } = itemsAdapter.getSelectors(
   (state) => selectItemsData(state) ?? initialState
 );
-

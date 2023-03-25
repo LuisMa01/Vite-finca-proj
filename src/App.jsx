@@ -15,7 +15,6 @@ import NavInicio from "./features/fields/NavInicio";
 import NavProximas from "./features/fields/NavProximas";
 import MiPerfil from "./features/fields/MiPerfil";
 import UserList from "./features/fields/UserList";
-import PswdChange from "./features/fields/PswdChange";
 import NuevoUsuario from "./features/fields/NuevoUsuario";
 import InfoUser from "./features/fields/InfoUser";
 import NuevoCultivo from "./features/fields/NuevoCultivo";
@@ -30,8 +29,11 @@ import ItemSection from "./features/fields/ItemSection";
 import RegistrarPlanta from "./features/fields/RegistrarPlanta";
 import InfoCultivo from "./features/fields/InfoCultivo";
 import InfoAppCult from "./features/fields/InfoAppCult";
+import useAuth from "./hooks/useAuth";
+
 
 function App() {
+  const { isManager, isAdmin } = useAuth();
   return (
     <Routes>
       <Route path="/" element={<Layouts />}>
@@ -50,7 +52,15 @@ function App() {
                   <Route index element={<NavCultivos />} />
                   <Route path="nuevo-cultivo" element={<NuevoCultivo />} />
                   <Route path="info-cultivo/:id" element={<InfoCultivo />} />
+                  <Route
+                    element={
+                      <RequireAuth
+                        allowedRoles={[ROLES.Administrador, ROLES.Supervisor]}
+                      />
+                    }
+                  >
                   <Route path="info-app/:id" element={<InfoAppCult />} />
+                  </Route>
                   <Route
                     path="registrar-plantilla"
                     element={<RegistrarPlantilla />}
@@ -67,19 +77,33 @@ function App() {
                 </Route>
                 <Route path="campos">
                   <Route index element={<NavCampos />} />
-                  <Route path="editar-campos" element={<EditarCampos />} />
+                  <Route
+                    element={
+                      <RequireAuth
+                        allowedRoles={[ROLES.Administrador, ROLES.Supervisor]}
+                      />
+                    }
+                  >
+                    <Route path="editar-campos" element={<EditarCampos />} />
+                  </Route>
                 </Route>
                 <Route path="usuario">
                   <Route path="mi-perfil">
                     <Route index element={<MiPerfil />} />
                     <Route path="act-info/:id" element={<ActInformacion />} />
-                    <Route path="pswd-change" element={<PswdChange />} />
                   </Route>
-                  <Route path="lista-usuarios">
-                    <Route index element={<UserList />} />
-                    <Route path="nuevo-usuario" element={<NuevoUsuario />} />
-                    <Route path="editar-usuario" element={<EditUsuario />} />
-                    <Route path="info-user" element={<InfoUser />} />
+
+                  <Route
+                    element={
+                      <RequireAuth allowedRoles={[ROLES.Administrador]} />
+                    }
+                  >
+                    <Route path="lista-usuarios">
+                      <Route index element={<UserList />} />
+                      <Route path="nuevo-usuario" element={<NuevoUsuario />} />
+                      <Route path="editar-usuario" element={<EditUsuario />} />
+                      <Route path="info-user" element={<InfoUser />} />
+                    </Route>
                   </Route>
                 </Route>
                 {/*lo agregado aqui en adelante es de fran*/}

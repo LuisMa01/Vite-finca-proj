@@ -10,12 +10,14 @@ import { useGetActsQuery } from "../features/fields/redux/actApiSlice";
 import { useGetUsersQuery } from "../features/fields/redux/usersApiSlice";
 import { useGetCropsQuery } from "../features/fields/redux/cropApiSlice";
 import { useGetCampsQuery } from "../features/fields/redux/campApiSlice";
+import { useNavigate } from "react-router-dom";
 import { memo } from "react";
 import { Link } from "react-router-dom";
 import RemoveImg from "../images/remove.svg";
 import Swal from "sweetalert2";
 import { ROLES } from "../config/roles";
 import Modal from "react-modal";
+import useAuth from "../hooks/useAuth";
 
 Modal.setAppElement("#root");
 
@@ -65,12 +67,13 @@ const User = ({ userId }) => {
 };
 
 const AppDate = ({ dateId, Lista }) => {
+  const { username, isManager, isAdmin } = useAuth();
   const { date } = useGetDatesQuery("datesList", {
     selectFromResult: ({ data }) => ({
       date: data?.entities[dateId],
     }),
   });
-//console.log(dateId);
+  //console.log(dateId);
   const { data: rpuser } = useGetUsersQuery("usersList", {
     pollingInterval: 60000,
     refetchOnFocus: true,
@@ -84,7 +87,8 @@ const AppDate = ({ dateId, Lista }) => {
     const [plantId, setPlantKey] = useState(date.crop_plant_key);
     const [userRep, setUserRep] = useState(date.date_user_key);
     const [isOpen, setIsOpen] = useState(false);
-
+    const navigate = useNavigate();
+    let plntCrop = `${date.crop_name}`.split("-")[0];
     const [updateDate, { isLoading, isSuccess, isError, error }] =
       useUpdateDateMutation();
 
@@ -125,6 +129,12 @@ const AppDate = ({ dateId, Lista }) => {
       e.preventDefault();
       setDateInit(e.target.value);
     };
+    const enlace = (e) => {
+      e.preventDefault();
+      if (plntCrop !== "Plantilla") {
+        navigate(`/dash/cultivos/info-app/${dateId}`);
+      }
+    };
     const onDateEndChanged = (e) => {
       e.preventDefault();
       setDateEnd(e.target.value);
@@ -161,6 +171,7 @@ const AppDate = ({ dateId, Lista }) => {
         setUserRep(date.date_user_key);
         setPlantKey(date.crop_plant_key);
         setCropKey(date.date_crop_key);
+        plntCrop = `${date.crop_name}`.split("-")[0];
       }
     }, [date]);
 
@@ -256,11 +267,9 @@ const AppDate = ({ dateId, Lista }) => {
       contenido = (
         <tr key={dateId}>
           <td>
-            <Link to={`/dash/cultivos/info-app/${dateId}`}>
-              <div type="button">
-                <Act key={actKey} actId={actKey} />
-              </div>
-            </Link>
+            <div type="button" onClick={enlace}>
+              <Act key={actKey} actId={actKey} />
+            </div>
           </td>
           <td>{fechaIni == "null" ? "no fecha asignada" : fechaIni}</td>
 
@@ -268,6 +277,7 @@ const AppDate = ({ dateId, Lista }) => {
           <td>
             <User key={userRep} userId={userRep} />
           </td>
+          {(isAdmin) &&
           <td>
             <img
               onClick={onDeleteDateClicked}
@@ -275,9 +285,18 @@ const AppDate = ({ dateId, Lista }) => {
               src={RemoveImg}
               alt="Remove"
             />
-          </td>
-          <td onClick={() => setIsOpen(true)}>Editar</td>
-          {updateApp}
+          </td>}
+          {(isManager || isAdmin) &&
+          <td
+            onClick={() => {
+              if (plntCrop !== "Plantilla") {
+                setIsOpen(true);
+              }
+            }}
+          >
+            Editar
+          </td>}
+          {(isManager || isAdmin) && <>{updateApp}</>}
         </tr>
       );
     }
@@ -285,11 +304,9 @@ const AppDate = ({ dateId, Lista }) => {
       contenido = (
         <tr key={dateId}>
           <td>
-            <Link to={`/dash/cultivos/info-app/${dateId}`}>
-              <div type="button">
-                <Act key={actKey} actId={actKey} />
-              </div>
-            </Link>
+            <div type="button" onClick={enlace}>
+              <Act key={actKey} actId={actKey} />
+            </div>
           </td>
           <td>
             <Link to={`/dash/cultivos/info-cultivo/${date.date_crop_key}`}>
@@ -301,7 +318,7 @@ const AppDate = ({ dateId, Lista }) => {
               <Camp key={date.crop_camp_key} campId={date.crop_camp_key} />
             </Link>
           </td>
-          
+
           <td>{fechaIni == "null" ? "no fecha asignada" : fechaIni}</td>
           <td>
             <User key={userRep} userId={userRep} />
@@ -317,40 +334,46 @@ const AppDate = ({ dateId, Lista }) => {
               <Act key={actKey} actId={actKey} />{" "}
             </h2>
             <div className="first-section">
-            <p className="general-info_subh"><b>Información general:</b></p>
-            <div class="row">
-            <p>
-                <b>Cultivo: </b>
-                <Crop key={date.date_crop_key} cropId={date.date_crop_key} />{" "}
+              <p className="general-info_subh">
+                <b>Información general:</b>
               </p>
-              <p>
-                <b>Responsable de la actividad: </b>
-                <User key={userRep} userId={userRep} />{" "}
-              </p>
-              
+              <div className="row">
+                <p>
+                  <b>Cultivo: </b>
+                  <Crop
+                    key={date.date_crop_key}
+                    cropId={date.date_crop_key}
+                  />{" "}
+                </p>
+                <p>
+                  <b>Responsable de la actividad: </b>
+                  <User key={userRep} userId={userRep} />{" "}
+                </p>
+              </div>
+              <div className="row">
+                <p>
+                  <b>Fecha programada: </b>
+                  {fechaIni == "null" ? "no fecha asignada" : fechaIni}
+                </p>
+                <p>
+                  <b>Fecha de ejecución: </b>
+                  {fechaFin == "null" ? "no fecha asignada" : fechaFin}
+                </p>
+              </div>
+              {(isManager || isAdmin) &&
+              <div className="row">
+                <p>
+                  <button
+                    className="btn btn-success"
+                    onClick={() => setIsOpen(true)}
+                  >
+                    Editar Fecha
+                  </button>
+                </p>
+              </div>}
             </div>
-            <div className="row">
-              <p>
-                <b>Fecha programada: </b>
-                {fechaIni == "null" ? "no fecha asignada" : fechaIni}
-              </p>
-              <p>
-                <b>Fecha de ejecución: </b>
-                {fechaFin == "null" ? "no fecha asignada" : fechaFin}
-              </p>
-              
-            </div>
-            <div class="row">
-              <p>
-                <button className="btn btn-success" onClick={() => setIsOpen(true)}>Editar Fecha</button>
-              </p>             
-              
-            </div>
-          </div>
-            
-            
-            
-            {updateApp}
+
+            {(isManager || isAdmin) && <>{updateApp}</>}
           </div>
         </>
       );

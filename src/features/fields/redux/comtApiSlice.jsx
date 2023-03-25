@@ -11,18 +11,22 @@ const initialState = comtsAdapter.getInitialState();
 export const comtApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getComts: builder.query({
-      query: () => "/comt",
-      validateStatus: (response, result) => {
-        return response.status === 200 && !result.isError;
-      },
-      
+      query: () => ({
+        url: "/comt",
+        validateStatus: (response, result) => {
+          return response.status === 200 && !result.isError;
+        },
+      }),
+
       transformResponse: (responseData) => {
-       const loadedComts = responseData.map((comt) => {
+        const loadedComts = responseData.map((comt) => {
           comt.id = comt.comt_id;
           return comt;
-          
         });
-        return comtsAdapter.setAll(initialState, loadedComts.sort((a, b) => b.id - a.id));
+        return comtsAdapter.setAll(
+          initialState,
+          loadedComts.sort((a, b) => b.id - a.id)
+        );
       },
       providesTags: (result, error, arg) => {
         if (result?.ids) {
@@ -74,15 +78,11 @@ export const {
 // returns the query result object
 export const selectComtsResult = comtApiSlice.endpoints.getComts.select();
 
-
-
 // creates memoized selector
 const selectComtsData = createSelector(
   selectComtsResult,
   (comtResult) => comtResult.data // normalized state object with ids & entities
 );
-
-
 
 //getSelectors creates these selectors and we rename them with aliases using destructuring
 export const {
@@ -93,4 +93,3 @@ export const {
 } = comtsAdapter.getSelectors(
   (state) => selectComtsData(state) ?? initialState
 );
-

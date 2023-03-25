@@ -11,18 +11,22 @@ const initialState = cropsAdapter.getInitialState();
 export const cropApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getCrops: builder.query({
-      query: () => "/crop",
-      validateStatus: (response, result) => {
-        return response.status === 200 && !result.isError;
-      },
-      
+      query: () => ({
+        url: "/crop",
+        validateStatus: (response, result) => {
+          return response.status === 200 && !result.isError;
+        },
+      }),
+
       transformResponse: (responseData) => {
-       const loadedCrops = responseData.map((crop) => {
+        const loadedCrops = responseData.map((crop) => {
           crop.id = crop.crop_id;
           return crop;
-          
         });
-        return cropsAdapter.setAll(initialState, loadedCrops.sort((a, b) => b.id - a.id));
+        return cropsAdapter.setAll(
+          initialState,
+          loadedCrops.sort((a, b) => b.id - a.id)
+        );
       },
       providesTags: (result, error, arg) => {
         if (result?.ids) {
@@ -74,15 +78,11 @@ export const {
 // returns the query result object
 export const selectCropsResult = cropApiSlice.endpoints.getCrops.select();
 
-
-
 // creates memoized selector
 const selectCropsData = createSelector(
   selectCropsResult,
   (cropResult) => cropResult.data // normalized state object with ids & entities
 );
-
-
 
 //getSelectors creates these selectors and we rename them with aliases using destructuring
 export const {
@@ -93,4 +93,3 @@ export const {
 } = cropsAdapter.getSelectors(
   (state) => selectCropsData(state) ?? initialState
 );
-

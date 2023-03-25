@@ -11,18 +11,22 @@ const initialState = plantsAdapter.getInitialState();
 export const plantApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getPlants: builder.query({
-      query: () => "/plant",
-      validateStatus: (response, result) => {
-        return response.status === 200 && !result.isError;
-      },
-      
+      query: () => ({
+        url: "/plant",
+        validateStatus: (response, result) => {
+          return response.status === 200 && !result.isError;
+        },
+      }),
+
       transformResponse: (responseData) => {
-       const loadedPlants = responseData.map((plant) => {
+        const loadedPlants = responseData.map((plant) => {
           plant.id = plant.plant_id;
           return plant;
-          
         });
-        return plantsAdapter.setAll(initialState, loadedPlants.sort((a, b) => b.id - a.id));
+        return plantsAdapter.setAll(
+          initialState,
+          loadedPlants.sort((a, b) => b.id - a.id)
+        );
       },
       providesTags: (result, error, arg) => {
         if (result?.ids) {
@@ -68,21 +72,17 @@ export const {
   useGetPlantsQuery,
   useAddNewPlantMutation,
   useUpdatePlantMutation,
-  useDeletePlantMutation
+  useDeletePlantMutation,
 } = plantApiSlice;
 
 // returns the query result object
 export const selectPlantsResult = plantApiSlice.endpoints.getPlants.select();
-
-
 
 // creates memoized selector
 const selectPlantsData = createSelector(
   selectPlantsResult,
   (plantResult) => plantResult.data // normalized state object with ids & entities
 );
-
-
 
 //getSelectors creates these selectors and we rename them with aliases using destructuring
 export const {
@@ -93,4 +93,3 @@ export const {
 } = plantsAdapter.getSelectors(
   (state) => selectPlantsData(state) ?? initialState
 );
-

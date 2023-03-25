@@ -11,8 +11,10 @@ import ReImage from "../../images/return.svg";
 import Cost from "../../components/Cost";
 import AppDate from "../../components/AppDate";
 import Comt from "../../components/Comt";
+import useAuth from "../../hooks/useAuth";
 
 const Comentario = ({ dateId }) => {
+  const { username, isManager, isAdmin } = useAuth();
   const {
     data: comts,
     isError,
@@ -66,7 +68,7 @@ const Comentario = ({ dateId }) => {
                 value={desc}
                 onChange={onComtDescChange}
                 rows={"5"}
-                cols={"25"}                               
+                cols={"25"}
               />
             </div>
           </div>
@@ -111,18 +113,22 @@ const Comentario = ({ dateId }) => {
         <div className="table-container col-12 col-md-9 col-xl-6">
           <table className="table table-hover table-sm table-striped table-responsive-sm table-bordered">
             <thead className="thead-loyola">
-              <th className="align-middle" scope="col">
-                Fecha
-              </th>
-              <th className="align-middle" scope="col">
-                Comentario
-              </th>
-              <th className="align-middle" scope="col">
-                Eliminar
-              </th>
-              <th className="align-middle" scope="col">
-                Editar
-              </th>
+              <tr>
+                <th className="align-middle" scope="col">
+                  Fecha
+                </th>
+                <th className="align-middle" scope="col">
+                  Comentario
+                </th>
+                {isAdmin && (
+                  <th className="align-middle" scope="col">
+                    Eliminar
+                  </th>
+                )}
+                <th className="align-middle" scope="col">
+                  Editar
+                </th>
+              </tr>
             </thead>
             <tbody>{comtList}</tbody>
           </table>
@@ -139,6 +145,7 @@ const Comentario = ({ dateId }) => {
 };
 
 const InfoAppCult = () => {
+  const { username, isManager, isAdmin } = useAuth();
   const { id } = useParams();
 
   const [costItemKey, setItemCostKey] = useState("");
@@ -268,13 +275,6 @@ const InfoAppCult = () => {
 
     return (
       <>
-        <div className="return-div">
-          <Link to={"/dash/cultivos"}>
-            <div className="return-button">
-              <img className="return-button-img" src={ReImage} alt="Atrás" />
-            </div>
-          </Link>
-        </div>
         <div className="nuevo-cultivo-header">
           MATERIALES, INSUMOS Y MANO DE OBRA
         </div>
@@ -313,9 +313,8 @@ const InfoAppCult = () => {
                 onChange={onCostQuantityChanged}
               />
             </div>
-            
 
-            <p className="col-12">
+            <div className="col-12">
               <div className="cultivos_button-section">
                 <button
                   className="btn btn-success"
@@ -328,7 +327,7 @@ const InfoAppCult = () => {
                   Limpiar
                 </button>
               </div>
-            </p>
+            </div>
           </div>
         </form>
 
@@ -336,34 +335,36 @@ const InfoAppCult = () => {
           <table className="table table-hover table-sm table-striped table-responsive-sm table-bordered">
             <thead className="thead-loyola">
               <tr>
-              <th className="align-middle" scope="col">
-                Articulo
-              </th>
-              <th className="align-middle" scope="col">
-                Dosis
-              </th>
-              <th className="align-middle" scope="col">
-                Cantidad
-              </th>
-              <th className="align-middle" scope="col">
-                Unidad
-              </th>
-              <th className="align-middle" scope="col">
-                Costo Unitario
-              </th>
-              <th className="align-middle" scope="col">
-                Costo Total
-              </th>
-              <th className="align-middle" scope="col">
-                Eliminar
-              </th>
+                <th className="align-middle" scope="col">
+                  Articulo
+                </th>
+                <th className="align-middle" scope="col">
+                  Dosis
+                </th>
+                <th className="align-middle" scope="col">
+                  Cantidad
+                </th>
+                <th className="align-middle" scope="col">
+                  Unidad
+                </th>
+                <th className="align-middle" scope="col">
+                  Costo Unitario
+                </th>
+                <th className="align-middle" scope="col">
+                  Costo Total
+                </th>
+                {isAdmin && (
+                  <th className="align-middle" scope="col">
+                    Eliminar
+                  </th>
+                )}
               </tr>
             </thead>
             <tbody>{costList}</tbody>
             <tfoot>
               <tr>
-              <td colSpan={"5"}>Total:</td>
-              <td>{precioTT}</td>
+                <td colSpan={"5"}>Total:</td>
+                <td>{precioTT}</td>
               </tr>
             </tfoot>
           </table>

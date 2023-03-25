@@ -17,6 +17,7 @@ import Swal from "sweetalert2";
 import { ROLES } from "../config/roles";
 import React, { useEffect, useState } from "react";
 import Modal from "react-modal";
+import useAuth from "../hooks/useAuth";
 
 Modal.setAppElement("#root");
 
@@ -81,6 +82,7 @@ const Plant = ({ plantId, Opt }) => {
 };
 
 const Crop = ({ cropId, Lista }) => {
+  const { username, isManager, isAdmin } = useAuth();
   const { crop } = useGetCropsQuery("cropsList", {
     selectFromResult: ({ data }) => ({
       crop: data?.entities[cropId],
@@ -215,7 +217,7 @@ const Crop = ({ cropId, Lista }) => {
 
       userOption = ids.map((Id) => {
         if (entities[Id].user_status) {
-          console.log(`${entities[Id].user_id}   ${Id}`);
+          
           return (
             <option key={Id} value={entities[Id].user_id}>
               {entities[Id].user_nombre
@@ -411,23 +413,23 @@ const Crop = ({ cropId, Lista }) => {
           <td>
             <Camp key={cropCampKey} campId={cropCampKey} />
           </td>
-          <td>
+          {(isManager || isAdmin) && <td>
             <input
               type="checkbox"
               checked={crop.crop_status}
               onChange={onStatusChanged}
             />
-          </td>
-          <td>
+          </td>}
+          {(isAdmin) && <td>
             <img
               onClick={onDeleteCropClicked}
               className="remove-img"
               src={RemoveImg}
               alt="Remove"
             />
-          </td>
-          <td onClick={() => setIsOpen(true)}>Editar</td>
-          {actCrop}
+          </td>}
+          {(isAdmin) &&  <td onClick={() => setIsOpen(true)}>Editar</td>}
+          {(isAdmin) && <>{actCrop}</>}
         </tr>
       );
     }
