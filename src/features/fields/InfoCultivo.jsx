@@ -1,6 +1,6 @@
 import React from "react";
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { useGetCropsQuery, useUpdateCropMutation } from "./redux/cropApiSlice";
 import ReImage from "../../images/return.svg";
 import "../../styles/nuevo-cultivo.css";
@@ -15,6 +15,8 @@ import { useGetComtsQuery } from "./redux/comtApiSlice";
 import { useGetCostsQuery } from "./redux/costApiSlice";
 import { useGetActsQuery } from "./redux/actApiSlice";
 import { useGetUsersQuery } from "./redux/usersApiSlice";
+import ReactPDF, { PDFViewer, PDFDownloadLink } from "@react-pdf/renderer";
+import InfoCultivoPdf from "./InfoCultivoPdf";
 import AppDate from "../../components/AppDate";
 import Crop from "../../components/Crop";
 import Cost from "../../components/Cost";
@@ -185,6 +187,7 @@ const Comentario = ({ cropId }) => {
 };
 
 const infoCultivo = () => {
+  const navigate = useNavigate()
   const { username, isManager, isAdmin } = useAuth();
   const { id } = useParams();
   const [actKey, setActKey] = useState("");
@@ -192,7 +195,7 @@ const infoCultivo = () => {
   const [dateEnd, setDateEnd] = useState("");
   const [userRep, setUserRep] = useState("");
   const [plantillaKey, setPlantillaKey] = useState("");
-  const [isPlantilla, setIsPlantilla] = useState(false);
+  //const [isPlantilla, setIsPlantilla] = useState(false);
   let actArr = [];
   let plntCrop;
   const { crop } = useGetCropsQuery("cropsList", {
@@ -453,8 +456,12 @@ const infoCultivo = () => {
 
     contenido = (
       <>
+        
         <div>{cropDato}</div>
 
+        <div><button onClick={(e)=>navigate(`/dash/cultivos/info-cultivo-pdf/${id}`)}>Vista en PDF</button></div>
+        
+    
         <p className="add-new-activities">
           <b>Agregar actividad:</b>
         </p>

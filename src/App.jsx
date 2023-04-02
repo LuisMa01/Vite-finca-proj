@@ -25,6 +25,7 @@ import RegistrarActividad from "./features/fields/RegistrarActvidad";
 import ItemSection from "./features/fields/ItemSection";
 import RegistrarPlanta from "./features/fields/RegistrarPlanta";
 import InfoCultivo from "./features/fields/InfoCultivo";
+import InfoCultivoPdf from "./features/fields/InfoCultivoPdf";
 import InfoAppCult from "./features/fields/InfoAppCult";
 import useAuth from "./hooks/useAuth";
 
@@ -49,6 +50,7 @@ function App() {
                   <Route index element={<NavCultivos />} />
                   <Route path="nuevo-cultivo" element={<NuevoCultivo />} />
                   <Route path="info-cultivo/:id" element={<InfoCultivo />} />
+                  <Route path="info-cultivo-pdf/:id" element={<InfoCultivoPdf />} />
                   <Route
                     element={
                       <RequireAuth

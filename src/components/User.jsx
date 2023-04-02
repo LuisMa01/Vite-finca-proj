@@ -5,7 +5,7 @@ import {
   useUpdateUserMutation,
   useDeleteUserMutation,
 } from "../features/fields/redux/usersApiSlice";
-import { memo, useEffect, useState } from "react";
+import { memo, useEffect, useState, useReducer } from "react";
 import { Link } from "react-router-dom";
 import RemoveImg from "../images/remove.svg";
 import Swal from "sweetalert2";
@@ -31,9 +31,45 @@ const PWD_REGEX = /^[A-z0-9!@#$%]{4,12}$/;
 const EMAIL_REGEX = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
 const PHONE_REGEX = /^[1-9]\d{2}-\d{3}-\d{4}/;
 
-//^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]*$/;
+const ACTION = {
+  PASSWORD: "password",
+  NEW_PASSWORD: "newPassword",
+  DUPLICATE_PASSWORD: "dupPassword",
+  VALIDATE_PASSWORD: "valPassword",
+};
+const reducer = (state, action) => {
+  switch (action.type) {
+    case ACTION.PASSWORD:
+      return { ...state, pass: action.payload };
+    case ACTION.NEW_PASSWORD:
+      return { ...state, newPass: action.payload };
+    case ACTION.DUPLICATE_PASSWORD:
+      return { ...state, dupPass: action.payload };
+    case ACTION.VALIDATE_PASSWORD:
+      return { ...state, validPass: PWD_REGEX.test(newPass) };
+    case ACTION.VALIDATE_DUP_PASSWORD:
+      return { ...state, validDupPass: PWD_REGEX.test(dupPass) };
+    case ACTION.CLEAR:
+      return {
+        pass: "",
+        newPass: "",
+        dupPass: "",
+        validPass: false,
+        validDupPass: false,
+      };
+    default:
+      throw new Error();
+  }
+};
 
 const User = ({ userId, Lista }) => {
+  const [state, dispatch] = useReducer(reducer, {
+    pass: "",
+    newPass: "",
+    dupPass: "",
+    validPass: false,
+    validDupPass: false,
+  });
   const { username, isManager, isAdmin } = useAuth();
   const {
     user,
@@ -254,7 +290,7 @@ const User = ({ userId, Lista }) => {
                   autoComplete="off"
                   autoFocus
                   placeholder="Ej: Juan Andres"
-                  value={names?names:""}
+                  value={names ? names : ""}
                   onChange={onNamesChanged}
                 />
               </div>
@@ -270,7 +306,7 @@ const User = ({ userId, Lista }) => {
                   autoComplete="off"
                   autoFocus
                   placeholder="Ej: Gómez Almanzar"
-                  value={surname?surname:""}
+                  value={surname ? surname : ""}
                   onChange={onSurnameChanged}
                 />
               </div>
@@ -286,7 +322,7 @@ const User = ({ userId, Lista }) => {
                   autoComplete="off"
                   autoFocus
                   placeholder="Ej: 1-809-000-0000"
-                  value={phone?phone:""}
+                  value={phone ? phone : ""}
                   onChange={onPhoneChanged}
                 />
               </div>
@@ -302,7 +338,7 @@ const User = ({ userId, Lista }) => {
                   autoComplete="off"
                   autoFocus
                   placeholder="Ej: nombre@ejemplo.com"
-                  value={email?email:""}
+                  value={email ? email : ""}
                   onChange={onEmailChanged}
                 />
               </div>
