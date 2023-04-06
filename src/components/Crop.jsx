@@ -8,7 +8,7 @@ import {
 import { useGetPlantsQuery } from "../features/fields/redux/plantApiSlice";
 import { useGetCampsQuery } from "../features/fields/redux/campApiSlice";
 import { useGetUsersQuery } from "../features/fields/redux/usersApiSlice";
-import { useGetActsQuery } from "../features/fields/redux/actApiSlice";
+
 import { useGetCostsQuery } from "../features/fields/redux/costApiSlice";
 import { memo } from "react";
 import { Link } from "react-router-dom";
@@ -50,36 +50,7 @@ const Cost = ({ cropId }) => {
   return precioTT;
 };
 
-const Camp = ({ campId }) => {
-  const { camp } = useGetCampsQuery("campsList", {
-    selectFromResult: ({ data }) => ({
-      camp: data?.entities[campId],
-    }),
-  });
 
-  if (camp) {
-    return <>{camp.camp_name}</>;
-  }
-};
-const Plant = ({ plantId, Opt }) => {
-  const { plant } = useGetPlantsQuery("plantsList", {
-    selectFromResult: ({ data }) => ({
-      plant: data?.entities[plantId],
-    }),
-  });
-
-  if (plant) {
-    if (Opt == "name") {
-      return <>{plant.plant_name}</>;
-    }
-    if (Opt == "vary") {
-      return <>{plant.plant_variety}</>;
-    }
-    if (Opt == "marco") {
-      return <>{plant.plant_frame}</>;
-    }
-  }
-};
 
 const Crop = ({ cropId, Lista }) => {
   const { username, isManager, isAdmin } = useAuth();
@@ -219,7 +190,7 @@ const Crop = ({ cropId, Lista }) => {
         if (entities[Id].user_status) {
           
           return (
-            <option key={Id} value={entities[Id].user_id}>
+            <option value={entities[Id].user_id}>
               {entities[Id].user_nombre
                 ? entities[Id].user_nombre
                 : entities[Id].user_name}
@@ -236,7 +207,7 @@ const Crop = ({ cropId, Lista }) => {
       plantOption = ids.map((Id) => {
         if (entities[Id].plant_status) {
           return (
-            <option key={Id} value={Id}>
+            <option value={Id}>
               {entities[Id].plant_name}
             </option>
           );
@@ -251,7 +222,7 @@ const Crop = ({ cropId, Lista }) => {
       campOption = ids.map((Id) => {
         if (entities[Id].camp_status) {
           return (
-            <option key={Id} value={Id}>
+            <option value={Id}>
               {entities[Id].camp_name}
             </option>
           );
@@ -400,7 +371,7 @@ const Crop = ({ cropId, Lista }) => {
     let contenido;
     if (Lista == "Lista1") {
       contenido = (
-        <tr key={cropId}>
+        <tr>
           <td>
             <Link to={`/dash/cultivos/info-cultivo/${cropId}`}>
               <div type="button">{cropname}</div>
@@ -408,10 +379,12 @@ const Crop = ({ cropId, Lista }) => {
           </td>
 
           <td>
-            <Plant key={cropPlantKey} plantId={cropPlantKey} Opt={"name"} />
+            {crop?.plant_name}
+            
           </td>
           <td>
-            <Camp key={cropCampKey} campId={cropCampKey} />
+            {crop?.camp_name}
+            
           </td>
           {(isManager || isAdmin) && <td>
             <input
@@ -436,18 +409,13 @@ const Crop = ({ cropId, Lista }) => {
     if (Lista == "Lista2") {
       contenido = (
         <div
-          key={cropId}
           className="big-cont col-12 col-sm-6 col-md-4 col-xl-3"
         >
           <div className="card">
             <Link to={`/dash/cultivos/info-cultivo/${cropId}`}>
               <div className="card-header rounded">
                 <h5>
-                  <Plant
-                    key={cropPlantKey}
-                    plantId={cropPlantKey}
-                    Opt={"name"}
-                  />
+                {crop?.plant_name}
                 </h5>
               </div>
             
@@ -458,7 +426,7 @@ const Crop = ({ cropId, Lista }) => {
               </li>
               <li className="col-12">
                 <b>Variedad: </b>
-                <Plant key={cropPlantKey} plantId={cropPlantKey} Opt={"vary"} />
+                {crop?.plant_variety}
               </li>
               <li className="col-12">
                 <b>Área: </b>
@@ -466,15 +434,11 @@ const Crop = ({ cropId, Lista }) => {
               </li>
               <li className="col-12">
                 <b>Marco de plantacion: </b>
-                <Plant
-                  key={cropPlantKey}
-                  plantId={cropPlantKey}
-                  Opt={"marco"}
-                />
+                {crop?.plant_frame}
               </li>
               <li className="col-12">
                 <b>Campo#: </b>
-                <Camp key={cropCampKey} campId={cropCampKey} />
+                {crop?.camp_name}
               </li>
               <li className="col-12">
                 <b>Fecha de siembra: </b>
@@ -501,7 +465,6 @@ const Crop = ({ cropId, Lista }) => {
     if (Lista == "Lista3") {
       contenido = (
         <div
-          key={cropId}
           className="general-info col-12 col-lg-9"
         >
           <h1 className="the_crop_header">
@@ -512,11 +475,11 @@ const Crop = ({ cropId, Lista }) => {
             <div className="row">
             <p>
                 <b>Planta a cultivar: </b>
-                <Plant key={cropPlantKey} plantId={cropPlantKey} Opt={"name"} />
+                {crop?.plant_name}
               </p>
               <p>
                 <b>Variedad: </b>
-                <Plant key={cropPlantKey} plantId={cropPlantKey} Opt={"vary"} />
+                {crop?.plant_variety}
               </p>
               <p>
                 <b>Área: </b>
@@ -526,11 +489,11 @@ const Crop = ({ cropId, Lista }) => {
             <div className="row">
               <p>
                 <b>Marco de plantacion: </b>
-                <Plant key={cropPlantKey} plantId={cropPlantKey} Opt={"marco"} />
+                {crop?.plant_frame}
               </p>
               <p>
                 <b>Campo#: </b>
-                <Camp key={cropCampKey} campId={cropCampKey} />
+                {crop?.camp_name}
               </p>
               <p>
                 <b>Fecha de siembra: </b>

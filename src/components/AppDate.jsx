@@ -182,7 +182,7 @@ const AppDate = ({ dateId, Lista }) => {
       userOption = ids.map((Id) => {
         if (entities[Id].user_status) {
           return (
-            <option key={Id} value={entities[Id].user_id}>
+            <option value={entities[Id].user_id}>
               {entities[Id].user_nombre
                 ? entities[Id].user_nombre
                 : entities[Id].user_name}
@@ -200,8 +200,11 @@ const AppDate = ({ dateId, Lista }) => {
         <button className="btn btn-danger" onClick={() => setIsOpen(false)}>
           Cerrar
         </button>
+        <p className="titulo_campos font-weight-bold">
+        <b><Act key={actKey} actId={actKey} /></b>
+          
+        </p>
         <div className="cultivos_button-section">
-          <Act key={actKey} actId={actKey} />
           <form>
             <div className="new-activity-miniform d-flex justify-content-center col-12 col-md-10 col-xl-9 form-row bg-light">
               <div className="col-md-6 col-lg-3 mb-3">
@@ -277,25 +280,27 @@ const AppDate = ({ dateId, Lista }) => {
           <td>
             <User key={userRep} userId={userRep} />
           </td>
-          {(isAdmin) &&
-          <td>
-            <img
-              onClick={onDeleteDateClicked}
-              className="remove-img"
-              src={RemoveImg}
-              alt="Remove"
-            />
-          </td>}
-          {(isManager || isAdmin) &&
-          <td
-            onClick={() => {
-              if (plntCrop !== "Plantilla") {
-                setIsOpen(true);
-              }
-            }}
-          >
-            Editar
-          </td>}
+          {isAdmin && (
+            <td>
+              <img
+                onClick={onDeleteDateClicked}
+                className="remove-img"
+                src={RemoveImg}
+                alt="Remove"
+              />
+            </td>
+          )}
+          {(isManager || isAdmin) && (
+            <td
+              onClick={() => {
+                if (plntCrop !== "Plantilla") {
+                  setIsOpen(true);
+                }
+              }}
+            >
+              Editar
+            </td>
+          )}
           {(isManager || isAdmin) && <>{updateApp}</>}
         </tr>
       );
@@ -360,17 +365,18 @@ const AppDate = ({ dateId, Lista }) => {
                   {fechaFin == "null" ? "no fecha asignada" : fechaFin}
                 </p>
               </div>
-              {(isManager || isAdmin) &&
-              <div className="row">
-                <p>
-                  <button
-                    className="btn btn-success"
-                    onClick={() => setIsOpen(true)}
-                  >
-                    Editar Fecha
-                  </button>
-                </p>
-              </div>}
+              {(isManager || isAdmin) && (
+                <div className="row">
+                  <p>
+                    <button
+                      className="btn btn-success"
+                      onClick={() => setIsOpen(true)}
+                    >
+                      Editar Fecha
+                    </button>
+                  </p>
+                </div>
+              )}
             </div>
 
             {(isManager || isAdmin) && <>{updateApp}</>}

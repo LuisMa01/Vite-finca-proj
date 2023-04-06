@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import "../../styles/nav_cultivos.css";
 import ReImage from "../../images/return.svg";
 import { Link } from "react-router-dom";
@@ -7,6 +7,7 @@ import { useGetCropsQuery } from "./redux/cropApiSlice";
 import Crop from "../../components/Crop";
 
 const NavCultivos = () => {
+  const [stado, setStado] = useState("");
   const {
     data: crops,
     isLoading,
@@ -18,14 +19,21 @@ const NavCultivos = () => {
     refetchOnFocus: true,
     refetchOnMountOrArgChange: true,
   });
-
+  const searchEstado = (e) => {
+    e.preventDefault();
+    setStado(e.target.value);
+  };
   let tableContent;
   if (cropSuc) {
     const { ids, entities } = crops;
 
+    const results = !stado
+      ? ids
+      : ids.filter((dato) => `${entities[dato].crop_status}` == stado);
+
     tableContent =
-      ids?.length &&
-      ids.map((Id) => {
+      results?.length &&
+      results.map((Id) => {
         let plnt = `${entities[Id].crop_name}`.split("-")[0];
         if (plnt !== "Plantilla") {
           return <Crop key={Id} cropId={Id} Lista={"Lista2"} />;
@@ -79,16 +87,15 @@ const NavCultivos = () => {
         </div>
         <div className="seccion_cultivos_checkbox-div">
           <div>
-            <input type="checkBox" className="curso" defaultChecked={true} />
-            <span>Cultivos en curso</span>
-          </div>
-          <div>
-            <input
-              type="checkBox"
-              className="finalizados"
-              defaultChecked={false}
-            />
-            <span>Cultivos finalizados</span>
+            <select
+              className="form-control"
+              value={stado}
+              onChange={searchEstado}
+            >
+              <option value={""}>Todos</option>
+              <option value={true}>Activos</option>
+              <option value={false}>Inactivos</option>
+            </select>
           </div>
         </div>
         <div className="card-deck cultivos_big-card">{tableContent}</div>

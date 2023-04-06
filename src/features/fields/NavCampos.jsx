@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import "../../styles/nav_campos.css";
 import ReImage from "../../images/return.svg";
 import AddImage from "../../images/edit.svg";
@@ -7,8 +7,15 @@ import MaizImag from "../../images/maiz.jpg";
 
 import { useGetCampsQuery } from "../fields/redux/campApiSlice";
 import Camp from "../../components/Camp";
+import useAuth from "../../hooks/useAuth";
+
+
 
 const navCampos = () => {
+  
+
+  const [stado, setStado] = useState("")
+  const { username, isManager, isAdmin } = useAuth();
   const {
     data: camps,
     isLoading,
@@ -20,44 +27,57 @@ const navCampos = () => {
     refetchOnFocus: true,
     refetchOnMountOrArgChange: true,
   });
+
+  const searchEstado = (e) => {
+    e.preventDefault();
+    setStado(e.target.value);
+  };
   let tableContent;
   if (isError) {
     tableContent = <p className="errmsg">{error?.data?.message}</p>;
     console.log(error?.data?.message);
   }
   if (isSuccess) {
-    const { ids } = camps;
+    const { ids, entities } = camps;
 
+    
+
+    const results = !stado
+      ? ids
+      : ids.filter((dato) => `${entities[dato].camp_status}` == stado);
+        
     tableContent =
-      ids?.length &&
-      ids.map((Id) => <Camp key={Id} campId={Id} Lista={"Lista2"} />);
+      results?.length &&
+      results.map((Id) => <Camp key={Id} campId={Id} Lista={"Lista2"} />);
   }
 
   return (
     <>
       <div className="campos_top-section">
         <p className="titulo_campos font-weight-bold">Campos existentes</p>
-        <div className="button-section_edit">
-          <Link to={"/dash/campos/editar-campos"} className="Link">
-            <div className="seccion_campos_btn-agr">
-              <img className="img-edit" src={AddImage} alt="Add-Icon" />
-              <p>Editar campos</p>
-            </div>
-          </Link>
-        </div>
+        {(isManager || isAdmin) && (
+          <div className="button-section_edit">
+            <Link to={"/dash/campos/editar-campos"} className="Link">
+              <div className="seccion_campos_btn-agr">
+                <img className="img-edit" src={AddImage} alt="Add-Icon" />
+                <p>Editar campos</p>
+              </div>
+            </Link>
+          </div>
+        )}
       </div>
       <div className="seccion_cultivos_checkbox-div">
+        
         <div>
-          <input type="checkBox" className="curso" defaultChecked={true} />
-          <span>Campos activos</span>
-        </div>
-        <div>
-          <input
-            type="checkBox"
-            className="finalizados"
-            defaultChecked={false}
-          />
-          <span>Campos inactivos</span>
+        <select
+              className="form-control"
+              value={stado}
+              onChange={searchEstado}
+            >
+              <option value={""}>Todos</option>
+              <option value={true}>Activos</option>
+              <option value={false}>Inactivos</option>
+            </select>
         </div>
       </div>
       <div className="card-deck">{tableContent}</div>

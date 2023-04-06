@@ -15,12 +15,7 @@ let ruta = [];
 
 const DashHeader = () => {
   const { username, isManager, isAdmin } = useAuth();
-  const [uno, setUno] = useState("");
-  const [dos, setDos] = useState("");
-  const [tres, setTres] = useState("");
-  const [cuatro, setCuatro] = useState("");
-  const [cinco, setCinco] = useState("");
-  //const [back, setBack] = useState([])
+
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -34,7 +29,6 @@ const DashHeader = () => {
       }
     }
     valor = true;
-    
   }, [location.pathname]);
 
   const goBack = (e) => {
@@ -47,46 +41,6 @@ const DashHeader = () => {
   };
   const [sendLogout, { isLoading, isSuccess, isError, error }] =
     useSendLogoutMutation();
-
-  function focusClick(a) {
-    //a.preventDefault();
-    
-    if (a.target.id === "a") {
-      setUno("menu-bar_focus");
-      setDos("");
-      setTres("");
-      setCuatro("");
-      setCinco("");
-    }
-    if (a.target.id === "b") {
-      setUno("");
-      setDos("menu-bar_focus");
-      setTres("");
-      setCuatro("");
-      setCinco("");
-    }
-    if (a.target.id === "c") {
-      setUno("");
-      setDos("");
-      setTres("menu-bar_focus");
-      setCuatro("");
-      setCinco("");
-    }
-    if (a.target.id === "d") {
-      setUno("");
-      setDos("");
-      setTres("");
-      setCuatro("menu-bar_focus");
-      setCinco("");
-    }
-    if (a.target.id === "e") {
-      setUno("");
-      setDos("");
-      setTres("");
-      setCuatro("");
-      setCinco("menu-bar_focus");
-    }
-  }
 
   const logoutButton = (
     <div className="icon-button" title="Logout" onClick={sendLogout}>
@@ -110,7 +64,14 @@ const DashHeader = () => {
   const content = (
     <>
       <p className={errClass}>{error?.data?.message}</p>
-      <nav className="nav-bar navbar navbar-expand-lg navbar-light">
+      <nav className="nav-bar navbar navbar-expand-lg bg-body-tertiary navbar-light">
+        <a className="navbar-brand">
+          <div className="return-div">
+            <div onClick={goBack} className="return-button">
+              <img className="return-button-img" src={ReImage} alt="Atrás" />
+            </div>
+          </div>
+        </a>
         <button
           className="navbar-toggler"
           type="button"
@@ -123,42 +84,38 @@ const DashHeader = () => {
           <span className="navbar-toggler-icon"></span>
         </button>
         <div className="collapse navbar-collapse" id="navbarNav">
-          <ul>
-            <Link to={"/dash"}>
-              <li className={`menu-inicio ${uno}`} id="a" onClick={focusClick}>
+          <ul className="navbar-nav me-auto mb-2 mb-lg-0">
+            <Link className="nav-item" to={"/dash"}>
+              <li className={`menu-inicio`} id="a">
                 Inicio
               </li>
             </Link>
-            <Link to={"/dash/proximas"}>
-              <li className={`menu-inicio ${dos}`} id="b" onClick={focusClick}>
+            <Link className="nav-item" to={"/dash/proximas"}>
+              <li className={`menu-inicio`} id="b">
                 Próximas actividades
               </li>
             </Link>
-            <Link to={"/dash/cultivos"}>
-              <li className={`menu-inicio ${tres}`} onClick={focusClick} id="c">
+            <Link className="nav-item" to={"/dash/cultivos"}>
+              <li className={`menu-inicio`} id="c">
                 Cultivos
               </li>
             </Link>
-            <Link to={"/dash/campos"}>
-              <li
-                className={`menu-inicio ${cuatro}`}
-                id="d"
-                onClick={focusClick}
-              >
+            <Link className="nav-item" to={"/dash/campos"}>
+              <li className={`menu-inicio`} id="d">
                 Campos
               </li>
             </Link>
-            <li id="e" className={`menu-inicio ${cinco}`}>
+            <li id="e" className={`menu-inicio nav-item dropdown`}>
               Usuario
               <ul>
                 <Link to={"/dash/usuario/mi-perfil"}>
-                  <li className={`menu-inicio`} onClick={focusClick} id="e">
+                  <li className={`menu-inicio`} id="e">
                     {"  "}Mi perfil{"  "}
                   </li>
                 </Link>
                 {isAdmin && (
                   <Link to={"/dash/usuario/lista-usuarios"}>
-                    <li className={`menu-inicio`} onClick={focusClick} id="e">
+                    <li className={`menu-inicio`} id="e">
                       Lista de usuarios
                     </li>
                   </Link>
@@ -171,13 +128,13 @@ const DashHeader = () => {
         </div>
       </nav>
 
-      <nav>
+      {/*<nav>
         <div className="return-div">
           <div onClick={goBack} className="return-button">
             <img className="return-button-img" src={ReImage} alt="Atrás" />
           </div>
         </div>
-      </nav>
+                </nav>*/}
     </>
   );
 
