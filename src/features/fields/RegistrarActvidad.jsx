@@ -7,7 +7,7 @@ import RemoveImg from "../../images/remove.svg";
 import Swal from "sweetalert2";
 import Act from "../../components/Act";
 import { useGetActsQuery, useAddNewActMutation } from "./redux/actApiSlice";
-import { useEffect, useReducer } from "react";
+import { useEffect, useReducer, useState } from "react";
 import useAuth from "../../hooks/useAuth";
 
 const ACTION = {
@@ -30,6 +30,7 @@ const reducer = (state, action) => {
 const registrarActividad = () => {
   const { username, isManager, isAdmin } = useAuth();
   const [state, dispatch] = useReducer(reducer, { actName: "", desc: "" });
+  const [stado, setStado] = useState("")
   const {
     data: acts,
     isLoading,
@@ -51,6 +52,10 @@ const registrarActividad = () => {
 
     await addNewAct({ actName: state.actName, desc: state.desc });
   };
+  const searchEstado = (e) => {
+    e.preventDefault();
+    setStado(e.target.value);
+  };
   
   useEffect(() => {
     if (addissuccess) {
@@ -65,9 +70,13 @@ const registrarActividad = () => {
     console.log(error?.data?.message);
   }
   if (isSuccess) {
-    const { ids } = acts;
+    const { ids, entities } = acts;
 
-    tableContent = ids?.length && ids.map((Id) => <Act key={Id} actId={Id} />);
+    const results = !stado
+      ? ids
+      : ids.filter((dato) => `${entities[dato].act_status}` == stado);
+
+    tableContent = results?.length && results.map((Id) => <Act key={Id} actId={Id} />);
 
     content = (
       <>
@@ -161,13 +170,17 @@ const registrarActividad = () => {
 
       <div className="seccion_campos_checkbox-div">
         <div>
-          <input type="checkBox" defaultChecked />
-          <span>Actividades habilitadas</span>
+        <select
+              className="form-control"
+              value={stado}
+              onChange={searchEstado}
+            >
+              <option value={""}>Todos</option>
+              <option value={true}>Activos</option>
+              <option value={false}>Inactivos</option>
+            </select>
         </div>
-        <div>
-          <input type="checkBox" />
-          <span>Actividades inhabilitadas</span>
-        </div>
+        
       </div>
     </>
   );

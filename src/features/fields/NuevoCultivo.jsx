@@ -50,7 +50,7 @@ const nuevoCultivo = () => {
     userOption = ids.map((Id) => {
       if (entities[Id].user_status) {
         return (
-          <option key={Id} value={entities[Id].user_id}>
+          <option value={entities[Id].user_id}>
             {entities[Id].user_nombre
               ? entities[Id].user_nombre
               : entities[Id].user_name}
@@ -67,7 +67,7 @@ const nuevoCultivo = () => {
     plantOption = ids.map((Id) => {
       if (entities[Id].plant_status) {
         return (
-          <option key={Id} value={Id}>
+          <option value={Id}>
             {entities[Id].plant_name}
           </option>
         );
@@ -82,7 +82,7 @@ const nuevoCultivo = () => {
     campOption = ids.map((Id) => {
       if (entities[Id].camp_status) {
         return (
-          <option key={Id} value={Id}>
+          <option value={Id}>
             {entities[Id].camp_name}
           </option>
         );

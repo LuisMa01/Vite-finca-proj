@@ -10,15 +10,20 @@ import useAuth from "../../hooks/useAuth";
 const RegistrarPlantilla = () => {
   const { username, isManager, isAdmin } = useAuth();
   const {
-    data: crops,
+    crops,
     isLoading,
     isSuccess: cropSuc,
     isError,
     error,
   } = useGetCropsQuery("cropsList", {
-    pollingInterval: 60000,
-    refetchOnFocus: true,
-    refetchOnMountOrArgChange: true,
+    selectFromResult: ({ data }) => ({
+      crops: data?.ids.map((Id) => {
+        let plnt = `${data?.entities[Id].crop_name}`.split("-")[0];        
+        if (plnt == "Plantilla") {
+          return data?.entities[Id].crop_id;
+        }
+      }),
+    }),
   });
 
   let tableContent;
@@ -26,15 +31,16 @@ const RegistrarPlantilla = () => {
     tableContent = <p className="errmsg">{error?.data?.message}</p>;
     console.log(error?.data?.message);
   }
-  if (cropSuc) {
-    const { ids, entities } = crops;
-
+  console.log({crops});
+  if (crops) {
+   
     tableContent =
-      ids?.length &&
-      ids.map((Id) => {
-        let plnt = `${entities[Id].crop_name}`.split("-")[0];
-        if (plnt == "Plantilla") {
-          return <Crop key={Id} cropId={Id} Lista={"Lista1"} />;
+    crops?.length &&
+    crops?.map((info) => {        
+        if (info) {
+          
+
+          return <Crop key={info} cropId={info} Lista={"Lista1"} />;
         }
       });
   }

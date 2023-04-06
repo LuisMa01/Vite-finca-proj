@@ -73,7 +73,7 @@ const ItemSection = () => {
     doseOption = ids.map((Id) => {
       if (entities[Id].dose_status) {
         return (
-          <option key={Id} value={Id}>
+          <option value={Id}>
             {entities[Id].dose_name}
           </option>
         );

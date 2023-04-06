@@ -151,7 +151,7 @@ const InfoAppCult = () => {
   const [costItemKey, setItemCostKey] = useState("");
   const [costQuantity, setCostQuantityKey] = useState(1);
   const [itemPrecio, setItemPrecioKey] = useState(0);
-
+  const [itemDose, setItemDoseKey] = useState("");
   const [costDateKey, setCostDateKey] = useState(id);
   const [isOpen, setIsOpen] = useState(false);
 
@@ -178,6 +178,7 @@ const InfoAppCult = () => {
     if (items) {
       const { entities } = items;
       setItemPrecioKey(`${entities[e.target.value].item_price}`);
+      setItemDoseKey(`${entities[e.target.value].dose_name}`);
     }
   };
   const onCostQuantityChanged = (e) => {
@@ -206,6 +207,7 @@ const InfoAppCult = () => {
     setCostDateKey(id);
     setItemPrecioKey(0);
     setCostQuantityKey(1);
+    setItemDoseKey("")
   };
   useEffect(() => {
     if (date || costs) {
@@ -213,6 +215,7 @@ const InfoAppCult = () => {
       setItemPrecioKey(0);
       setCostDateKey(id);
       setCostQuantityKey(1);
+      setItemDoseKey("")
     }
   }, [date, costs]);
 
@@ -224,9 +227,7 @@ const InfoAppCult = () => {
     itemOption = ids.map((Id) => {
       if (entities[Id].item_status) {
         return (
-          <option key={Id} value={entities[Id].item_id}>
-            {entities[Id].item_name}
-          </option>
+          <option value={entities[Id].item_id}>{entities[Id].item_name}</option>
         );
       }
     });
@@ -300,6 +301,13 @@ const InfoAppCult = () => {
                 <label htmlFor="campo_cultivo">Precio</label>
               </div>
               <div>{precio ? precio : "precio del articulo elejido."}</div>
+            </div>
+            <div className="col-md-6 col-lg-3 mb-3">
+              <div>
+                {" "}
+                <label htmlFor="campo_cultivo">Dosis</label>
+              </div>
+              <div>{itemDose ? itemDose : "Dosis del articulo."}</div>
             </div>
             <div className="col-md-6 col-lg-3 mb-3">
               <div>

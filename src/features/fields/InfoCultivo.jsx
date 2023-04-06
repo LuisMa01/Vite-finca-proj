@@ -187,7 +187,7 @@ const Comentario = ({ cropId }) => {
 };
 
 const infoCultivo = () => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const { username, isManager, isAdmin } = useAuth();
   const { id } = useParams();
   const [actKey, setActKey] = useState("");
@@ -203,21 +203,26 @@ const infoCultivo = () => {
       crop: data?.entities[id],
     }),
   });
-  const {
-    data: crops,
-    isLoading,
-    isSuccess: cropSuc,
-    isError,
-    error,
-  } = useGetCropsQuery("cropsList", {
-    pollingInterval: 60000,
-    refetchOnFocus: true,
-    refetchOnMountOrArgChange: true,
+  const { crops } = useGetCropsQuery("cropsList", {
+    selectFromResult: ({ data }) => ({
+      crops: data?.ids?.map((Id) => {
+        if (data?.entities[Id].crop_status) {
+          let plnt = `${data?.entities[Id].crop_name}`.split("-")[0];
+          if (plnt == "Plantilla") {
+            return data?.entities[Id];
+          }
+        }
+      }),
+    }),
   });
-  const { data: rpuser } = useGetUsersQuery("usersList", {
-    pollingInterval: 60000,
-    refetchOnFocus: true,
-    refetchOnMountOrArgChange: true,
+  const { rpuser } = useGetUsersQuery("usersList", {
+    selectFromResult: ({ data }) => ({
+      rpuser: data?.ids?.map((Id) => {
+        if (data?.entities[Id].user_status) {
+          return data?.entities[Id];
+        }
+      }),
+    }),
   });
   const {
     data: dates,
@@ -229,10 +234,14 @@ const infoCultivo = () => {
     refetchOnMountOrArgChange: true,
   });
 
-  const { data: activ } = useGetActsQuery("actsList", {
-    pollingInterval: 60000,
-    refetchOnFocus: true,
-    refetchOnMountOrArgChange: true,
+  const { activ } = useGetActsQuery("actsList", {
+    selectFromResult: ({ data }) => ({
+      activ: data?.ids?.map((Id) => {
+        if (data?.entities[Id].act_status) {
+          return data?.entities[Id];
+        }
+      }),
+    }),
   });
 
   const [
@@ -337,56 +346,40 @@ const infoCultivo = () => {
     cropDato = (
       <Crop key={crop.crop_id} cropId={crop.crop_id} Lista={"Lista3"} />
     );
-    comtCrop = <Comentario key={crop.crop_id} cropId={crop.crop_id} />;
-    costCrop = <Costo key={crop.crop_id} crpId={crop.crop_id} />;
+    comtCrop = <Comentario cropId={crop.crop_id} />;
+    costCrop = <Costo crpId={crop.crop_id} />;
 
     if (rpuser) {
-      const { ids, entities } = rpuser;
-      userOption = ids.map((Id) => {
-        if (entities[Id].user_status) {
-          return (
-            <option key={Id} value={entities[Id].user_id}>
-              {entities[Id].user_nombre
-                ? entities[Id].user_nombre
-                : entities[Id].user_name}
-            </option>
-          );
-        }
-      });
+      userOption =
+        rpuser?.length &&
+        rpuser.map((info) => {
+          if (info) {
+            return (
+              <option value={info.user_id}>
+                {info.user_nombre ? info.user_nombre : info.user_name}
+              </option>
+            );
+          }
+        });
     }
-    if (cropSuc) {
-      const { ids, entities } = crops;
-
+    if (crops) {
       opciones =
-        ids?.length &&
-        ids.map((Id) => {
-          if (entities[Id].crop_status) {
-            let plnt = `${entities[Id].crop_name}`.split("-")[0];
-            let nomm = `${entities[Id].crop_name}`;
-
-            if (plnt == "Plantilla") {
-              return (
-                <option key={Id} value={Id}>
-                  {nomm}
-                </option>
-              );
-            }
+        crops?.length &&
+        crops.map((info) => {
+          if (info) {
+            return <option value={info?.crop_id}>{info?.crop_name}</option>;
           }
         });
     }
 
     if (activ) {
-      const { ids, entities } = activ;
-
-      actOption = ids.map((Id) => {
-        if (entities[Id].act_status) {
-          return (
-            <option key={Id} value={entities[Id].act_id}>
-              {entities[Id].act_name}
-            </option>
-          );
-        }
-      });
+      actOption =
+        activ?.length &&
+        activ.map((info) => {
+          if (info) {
+            return <option value={info?.act_id}>{info?.act_name}</option>;
+          }
+        });
     }
 
     if (dateIsError) {
@@ -412,13 +405,6 @@ const infoCultivo = () => {
             return <AppDate key={Id} dateId={Id} Lista={"Lista1"} />;
           } else {
             return <></>;
-          }
-        });
-
-      ids?.length &&
-        ids.map((Id) => {
-          if (entities[Id].date_crop_key == crop.crop_id) {
-            stop;
           }
         });
 
@@ -456,78 +442,88 @@ const infoCultivo = () => {
 
     contenido = (
       <>
-        
         <div>{cropDato}</div>
 
-        <div><button onClick={(e)=>navigate(`/dash/cultivos/info-cultivo-pdf/${id}`)}>Vista en PDF</button></div>
-        
-    
-        <p className="add-new-activities">
-          <b>Agregar actividad:</b>
-        </p>
-        <form>
-          <div className="new-activity-miniform d-flex justify-content-center col-12 col-md-10 col-lg-9 form-row bg-light">
-            <div className="col-12">{plnt}</div>
-            <div className="col-md-6 col-lg-3 mb-3">
-              <label htmlFor="campo_cultivo">Actividad</label>
-
-              <select
-                className="form-control"
-                value={actKey}
-                onChange={onActKeyChanged}
-              >
-                <option disabled value={""}>
-                  Elegir actividad
-                </option>
-                {actOption}
-              </select>
-            </div>
-            <div className="col-md-6 col-lg-3 mb-3">
-              <label htmlFor="campo_cultivo">Responsable</label>
-              <select
-                className="form-control"
-                value={userRep}
-                onChange={onUserRepChanged}
-              >
-                <option disabled value={""}>
-                  Elegir Responsable
-                </option>
-                {userOption}
-              </select>
-            </div>
-            <div className="col-md-6 col-lg-3 mb-3">
-              <label htmlFor="siembra_cultivo">Fecha Programada</label>
-              <input
-                type="date"
-                className="form-control"
-                value={dateInit}
-                onChange={onDateInitChanged}
-              />
-            </div>
-            <div className="col-md-6 col-lg-3 mb-3">
-              <label htmlFor="siembra_cultivo">Fecha Ejecutada</label>
-              <input
-                type="date"
-                className="form-control"
-                value={dateEnd}
-                onChange={onDateEndChanged}
-              />
-            </div>
-
-            <div className="cultivos_button-section">
-              <button
-                className="btn btn-success"
-                onClick={onAddActClicked}
-                type="submit"
-              >
-                Agregar Actividad
-              </button>
-              <button className="btn btn-danger" onClick={handleClearClick}>
-                Limpiar
-              </button>
-            </div>
+        {(isManager || isAdmin) && (
+          <div>
+            <button
+              onClick={(e) => navigate(`/dash/cultivos/info-cultivo-pdf/${id}`)}
+            >
+              Vista en PDF
+            </button>
           </div>
-        </form>
+        )}
+
+        {(isManager || isAdmin) && (
+          <p className="add-new-activities">
+            <b>Agregar actividad:</b>
+          </p>
+        )}
+        {(isManager || isAdmin) && (
+          <form>
+            <div className="new-activity-miniform d-flex justify-content-center col-12 col-md-10 col-lg-9 form-row bg-light">
+              <div className="col-12">{plnt}</div>
+              <div className="col-md-6 col-lg-3 mb-3">
+                <label htmlFor="campo_cultivo">Actividad</label>
+
+                <select
+                  className="form-control"
+                  value={actKey}
+                  onChange={onActKeyChanged}
+                >
+                  <option disabled value={""}>
+                    Elegir actividad
+                  </option>
+                  {actOption}
+                </select>
+              </div>
+              <div className="col-md-6 col-lg-3 mb-3">
+                <label htmlFor="campo_cultivo">Responsable</label>
+                <select
+                  className="form-control"
+                  value={userRep}
+                  onChange={onUserRepChanged}
+                >
+                  <option disabled value={""}>
+                    Elegir Responsable
+                  </option>
+                  {userOption}
+                </select>
+              </div>
+              <div className="col-md-6 col-lg-3 mb-3">
+                <label htmlFor="siembra_cultivo">Fecha Programada</label>
+                <input
+                  type="date"
+                  className="form-control"
+                  value={dateInit}
+                  onChange={onDateInitChanged}
+                />
+              </div>
+              <div className="col-md-6 col-lg-3 mb-3">
+                <label htmlFor="siembra_cultivo">Fecha Ejecutada</label>
+                <input
+                  type="date"
+                  className="form-control"
+                  value={dateEnd}
+                  onChange={onDateEndChanged}
+                />
+              </div>
+
+              <div className="cultivos_button-section">
+                <button
+                  className="btn btn-success"
+                  onClick={onAddActClicked}
+                  type="submit"
+                >
+                  Agregar Actividad
+                </button>
+                <button className="btn btn-danger" onClick={handleClearClick}>
+                  Limpiar
+                </button>
+              </div>
+            </div>
+          </form>
+        )}
 
         <p className="already-existing-activities">
           <b>Actividades agregadas:</b>

@@ -94,7 +94,7 @@ const NuevoUsuario = () => {
 
   const options = Object.keys(ROLES).map((role) => {
     return (
-      <option key={ROLES[role]} value={ROLES[role]}>
+      <option value={ROLES[role]}>
         {" "}
         {role}
       </option>
