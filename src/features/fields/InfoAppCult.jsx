@@ -13,7 +13,7 @@ import AppDate from "../../components/AppDate";
 import Comt from "../../components/Comt";
 import useAuth from "../../hooks/useAuth";
 
-const Comentario = ({ dateId }) => {
+const Comentario = ({ dateId, info }) => {
   const { username, isManager, isAdmin } = useAuth();
   const {
     data: comts,
@@ -57,7 +57,8 @@ const Comentario = ({ dateId }) => {
   const contenidoEdit = (
     <>
       <p className="titulo_tipos-de-actividades col-12">Comentario</p>
-      <form className="container myform col-6 needs-validation">
+
+     {(!info && (isAdmin || isManager)) && ( <form className="container myform col-6 needs-validation">
         <div className="form-row bg-light">
           <div className="col-12 col-md-6 mb-2">
             <label htmlFor="nombre_actividad">Ingresar</label>
@@ -88,7 +89,7 @@ const Comentario = ({ dateId }) => {
             Limpiar
           </button>
         </div>
-      </form>
+      </form>)}
     </>
   );
   let contenido;
@@ -96,6 +97,7 @@ const Comentario = ({ dateId }) => {
     contenido = <>{error?.data?.message}</>;
   }
   if (comts) {
+    
     let comtList;
     if (comts) {
       const { ids, entities } = comts;
@@ -120,14 +122,14 @@ const Comentario = ({ dateId }) => {
                 <th className="align-middle" scope="col">
                   Comentario
                 </th>
-                {isAdmin && (
+                {(!info && isAdmin)&& (
                   <th className="align-middle" scope="col">
                     Eliminar
                   </th>
                 )}
-                <th className="align-middle" scope="col">
+                {(!info && isAdmin)&& (<th className="align-middle" scope="col">
                   Editar
-                </th>
+                </th>)}
               </tr>
             </thead>
             <tbody>{comtList}</tbody>
@@ -262,6 +264,7 @@ const InfoAppCult = () => {
 
   if (date) {
     let contentApp;
+    const finalDate = (date?.crop_harvest !== null || !date.crop_status)? true:false
 
     if (date) {
       contentApp = date.date_id.length ?? (
@@ -280,7 +283,7 @@ const InfoAppCult = () => {
           MATERIALES, INSUMOS Y MANO DE OBRA
         </div>
         <div>{contentApp}</div>
-        <form>
+        {(!finalDate && isAdmin) && (<form>
           <div className="new-activity-miniform d-flex justify-content-center col-12 col-md-10 col-xl-9 form-row bg-light">
             <div className="col-md-6 col-lg-3 mb-3">
               <label htmlFor="campo_cultivo">Articulos</label>
@@ -337,7 +340,7 @@ const InfoAppCult = () => {
               </div>
             </div>
           </div>
-        </form>
+        </form>)}
 
         <div className="table-container col-12 col-md-9 col-xl-6">
           <table className="table table-hover table-sm table-striped table-responsive-sm table-bordered">
@@ -361,7 +364,7 @@ const InfoAppCult = () => {
                 <th className="align-middle" scope="col">
                   Costo Total
                 </th>
-                {isAdmin && (
+                {(!finalDate && isAdmin) && (
                   <th className="align-middle" scope="col">
                     Eliminar
                   </th>
@@ -386,7 +389,7 @@ const InfoAppCult = () => {
           </button>
           <Collapse isOpened={isOpen}>
             <>
-              <Comentario key={id} dateId={id} />
+              <Comentario key={id} dateId={id} info={finalDate} />
             </>
           </Collapse>
         </div>

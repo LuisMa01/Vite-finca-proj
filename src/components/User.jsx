@@ -108,6 +108,7 @@ const User = ({ userId, Lista }) => {
       deleteUser,
       { isSuccess: isDelSuccess, isError: isDelError, error: delerror },
     ] = useDeleteUserMutation();
+    
     useEffect(() => {
       if (user) {
         setUsername(user.user_name);
@@ -118,7 +119,11 @@ const User = ({ userId, Lista }) => {
         setPhone(user.user_phone);
         setStatus(user.user_status);
       }
-    }, [user]);
+      if (isSuccess) {
+        setIsOpen(false);
+        setIsisAbierto(false);      
+      }
+    }, [user, isSuccess]);
     const handleClearClick = (e) => {
       e.preventDefault();
       setUsername(user.user_name);
