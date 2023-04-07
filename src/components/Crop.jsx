@@ -11,7 +11,7 @@ import { useGetUsersQuery } from "../features/fields/redux/usersApiSlice";
 
 import { useGetCostsQuery } from "../features/fields/redux/costApiSlice";
 import { memo } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import RemoveImg from "../images/remove.svg";
 import Swal from "sweetalert2";
 import { ROLES } from "../config/roles";
@@ -50,9 +50,8 @@ const Cost = ({ cropId }) => {
   return precioTT;
 };
 
-
-
 const Crop = ({ cropId, Lista }) => {
+  const navigate = useNavigate()
   const { username, isManager, isAdmin } = useAuth();
   const { crop } = useGetCropsQuery("cropsList", {
     selectFromResult: ({ data }) => ({
@@ -75,19 +74,17 @@ const Crop = ({ cropId, Lista }) => {
     refetchOnFocus: true,
     refetchOnMountOrArgChange: true,
   });
-  if (crop) {
-    const [cropName, setCropName] = useState(crop.crop_name);
-    const [repUser, setRepUser] = useState(crop.crop_user_key);
-    const [datePlant, setDatePlant] = useState(crop.crop_plant);
-    const [dateHarvest, setDateHarvest] = useState(crop.crop_Harvest);
-    const [finalProd, setFinalProd] = useState(crop.crop_final_prod);
-    const [cropCampKey, setCropCampKey] = useState(crop.crop_camp_key);
-    const [cropPlantKey, setCropPlantKey] = useState(crop.crop_plant_key);
-    const [active, setActive] = useState(crop.crop_status);
-    const [cropArea, setCropArea] = useState(crop.crop_area);
-    const [isOpen, setIsOpen] = useState(false);
-
-    const [updateCrop, { isLoading, isSuccess, isError, error }] =
+  const [cropName, setCropName] = useState(crop.crop_name);
+  const [repUser, setRepUser] = useState(crop.crop_user_key);
+  const [datePlant, setDatePlant] = useState(crop.crop_plant);
+  const [dateHarvest, setDateHarvest] = useState(crop.crop_harvest);
+  const [finalProd, setFinalProd] = useState(crop.crop_final_prod);
+  const [cropCampKey, setCropCampKey] = useState(crop.crop_camp_key);
+  const [cropPlantKey, setCropPlantKey] = useState(crop.crop_plant_key);
+  const [active, setActive] = useState(crop.crop_status);
+  const [cropArea, setCropArea] = useState(crop.crop_area);
+  const [isOpen, setIsOpen] = useState(false);
+  const [updateCrop, { isLoading, isSuccess, isError, error }] =
       useUpdateCropMutation();
 
     const [
@@ -118,6 +115,7 @@ const Crop = ({ cropId, Lista }) => {
         active,
         cropArea,
       });
+      
     };
     const onStatusChanged = async (e) => {
       await updateCrop({
@@ -161,26 +159,30 @@ const Crop = ({ cropId, Lista }) => {
       setCropName(crop.crop_name);
       setRepUser(crop.crop_user_key);
       setDatePlant(crop.crop_plant);
-      setDateHarvest(crop.crop_Harvest);
+      setDateHarvest("");
       setFinalProd(crop.crop_final_prod);
       setCropCampKey(crop.crop_camp_key);
       setCropPlantKey(crop.crop_plant_key);
       setActive(crop.crop_status);
       setCropArea(crop.crop_area);
     };
-    useEffect(() => {
-      if (crop) {
-        setCropName(crop.crop_name);
-        setRepUser(crop.crop_user_key);
-        setDatePlant(crop.crop_plant);
-        setDateHarvest(crop.crop_Harvest);
-        setFinalProd(crop.crop_final_prod);
-        setCropCampKey(crop.crop_camp_key);
-        setCropPlantKey(crop.crop_plant_key);
-        setActive(crop.crop_status);
-        setCropArea(crop.crop_area);
-      }
-    }, [crop]);
+
+  useEffect(() => {
+    if (crop) {
+      setCropName(crop.crop_name);
+      setRepUser(crop.crop_user_key);
+      setDatePlant(crop.crop_plant);
+      setDateHarvest(crop.crop_harvest);
+      setFinalProd(crop.crop_final_prod);
+      setCropCampKey(crop.crop_camp_key);
+      setCropPlantKey(crop.crop_plant_key);
+      setActive(crop.crop_status);
+      setCropArea(crop.crop_area);
+      setIsOpen(false)
+    }
+  }, [crop]);
+  if (crop) {
+    
 
     let userOption;
     if (useSucc) {
@@ -188,7 +190,6 @@ const Crop = ({ cropId, Lista }) => {
 
       userOption = ids.map((Id) => {
         if (entities[Id].user_status) {
-          
           return (
             <option value={entities[Id].user_id}>
               {entities[Id].user_nombre
@@ -206,11 +207,7 @@ const Crop = ({ cropId, Lista }) => {
 
       plantOption = ids.map((Id) => {
         if (entities[Id].plant_status) {
-          return (
-            <option value={Id}>
-              {entities[Id].plant_name}
-            </option>
-          );
+          return <option value={Id}>{entities[Id].plant_name}</option>;
         }
       });
     }
@@ -221,11 +218,7 @@ const Crop = ({ cropId, Lista }) => {
 
       campOption = ids.map((Id) => {
         if (entities[Id].camp_status) {
-          return (
-            <option value={Id}>
-              {entities[Id].camp_name}
-            </option>
-          );
+          return <option value={Id}>{entities[Id].camp_name}</option>;
         }
       });
     }
@@ -378,85 +371,79 @@ const Crop = ({ cropId, Lista }) => {
             </Link>
           </td>
 
-          <td>
-            {crop?.plant_name}
-            
-          </td>
-          <td>
-            {crop?.camp_name}
-            
-          </td>
-          {(isManager || isAdmin) && <td>
-            <input
-              type="checkbox"
-              checked={crop.crop_status}
-              onChange={onStatusChanged}
-            />
-          </td>}
-          {(isAdmin) && <td>
-            <img
-              onClick={onDeleteCropClicked}
-              className="remove-img"
-              src={RemoveImg}
-              alt="Remove"
-            />
-          </td>}
-          {(isAdmin) &&  <td onClick={() => setIsOpen(true)}>Editar</td>}
-          {(isAdmin) && <>{actCrop}</>}
+          <td>{crop?.plant_name}</td>
+          <td>{crop?.camp_name}</td>
+          {(isManager || isAdmin) && (
+            <td>
+              <input
+                type="checkbox"
+                checked={crop.crop_status}
+                onChange={onStatusChanged}
+              />
+            </td>
+          )}
+          {isAdmin && (
+            <td>
+              <img
+                onClick={onDeleteCropClicked}
+                className="remove-img"
+                src={RemoveImg}
+                alt="Remove"
+              />
+            </td>
+          )}
+          {isAdmin && <td onClick={() => setIsOpen(true)}>Editar</td>}
+          {isAdmin && <>{actCrop}</>}
         </tr>
       );
     }
     if (Lista == "Lista2") {
       contenido = (
-        <div
-          className="big-cont col-12 col-sm-6 col-md-4 col-xl-3"
-        >
+        <div className="big-cont col-12 col-sm-6 col-md-4 col-xl-3">
           <div className="card">
             <Link to={`/dash/cultivos/info-cultivo/${cropId}`}>
               <div className="card-header rounded">
-                <h5>
-                {crop?.plant_name}
-                </h5>
+                <h5>{crop?.plant_name}</h5>
               </div>
-            
-            <ul className="cultivos_general">
-              <li className="col-12">
-                <b>Cultivo: </b>
-                {cropName}
-              </li>
-              <li className="col-12">
-                <b>Variedad: </b>
-                {crop?.plant_variety}
-              </li>
-              <li className="col-12">
-                <b>Área: </b>
-                {cropArea ? cropArea : 0} tareas
-              </li>
-              <li className="col-12">
-                <b>Marco de plantacion: </b>
-                {crop?.plant_frame}
-              </li>
-              <li className="col-12">
-                <b>Campo#: </b>
-                {crop?.camp_name}
-              </li>
-              <li className="col-12">
-                <b>Fecha de siembra: </b>
-                {fechaIni}
-              </li>
-              <li className="col-12">
-                <b>Fecha de cosecha: </b>
-                {fechaFin}
-              </li>
-              <li className="col-12">
-                <b>Producto final: </b>
-                {finalProd}
-              </li>
-              <li className="col-12">
-                <b>Costo acumulado: </b>
-                <Cost key={cropId} cropId={cropId} />
-              </li>
-            </ul>
+
+              <ul className="cultivos_general">
+                <li className="col-12">
+                  <b>Cultivo: </b>
+                  {cropName}
+                </li>
+                <li className="col-12">
+                  <b>Variedad: </b>
+                  {crop?.plant_variety}
+                </li>
+                <li className="col-12">
+                  <b>Área: </b>
+                  {cropArea ? cropArea : 0} tareas
+                </li>
+                <li className="col-12">
+                  <b>Marco de plantacion: </b>
+                  {crop?.plant_frame}
+                </li>
+                <li className="col-12">
+                  <b>Campo#: </b>
+                  {crop?.camp_name}
+                </li>
+                <li className="col-12">
+                  <b>Fecha de siembra: </b>
+                  {fechaIni}
+                </li>
+                <li className="col-12">
+                  <b>Fecha de cosecha: </b>
+                  {fechaFin}
+                </li>
+                <li className="col-12">
+                  <b>Producto final: </b>
+                  {finalProd}
+                </li>
+                <li className="col-12">
+                  <b>Costo acumulado: </b>
+                  <Cost key={cropId} cropId={cropId} />
+                </li>
+              </ul>
             </Link>
           </div>
         </div>
@@ -464,16 +451,16 @@ const Crop = ({ cropId, Lista }) => {
     }
     if (Lista == "Lista3") {
       contenido = (
-        <div
-          className="general-info col-12 col-lg-9"
-        >
+        <div className="general-info col-12 col-lg-9">
           <h1 className="the_crop_header">
             <b>{cropName} </b>
           </h1>
           <div className="first-section">
-            <p className="general-info_subh"><b>Información general:</b></p>
+            <p className="general-info_subh">
+              <b>Información general:</b>
+            </p>
             <div className="row">
-            <p>
+              <p>
                 <b>Planta a cultivar: </b>
                 {crop?.plant_name}
               </p>
@@ -515,6 +502,21 @@ const Crop = ({ cropId, Lista }) => {
               </p>
             </div>
           </div>
+          <div>
+          {isAdmin && <div type="button" className="btn btn-success" onClick={() => setIsOpen(true)}>Editar</div>}
+          {isAdmin && <>{actCrop}</>}
+          {(isManager || isAdmin) && (
+          
+            <button
+            className="btn btn-success"
+              onClick={(e) => navigate(`/dash/cultivos/info-cultivo-pdf/${cropId}`)}
+            >
+              Vista en PDF
+            </button>
+          
+        )}
+          </div>
+          
         </div>
       );
     }

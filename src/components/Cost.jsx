@@ -100,7 +100,7 @@ const Cost = ({ costId, Lista }) => {
 
   if (cost) {
     //const handleEdit = () => navigate(`/dash/users/${actId}`)
-    
+    const finalDate = (cost?.crop_harvest !== null || !cost.crop_status)? true:false
     const { item } = useGetItemsQuery("itemsList", {
       selectFromResult: ({ data }) => ({
         item: data?.entities[costItemKey],
@@ -145,7 +145,7 @@ const Cost = ({ costId, Lista }) => {
             <td>{dose.dose_unit}</td>
             <td>{precioItem}</td>
             <td>{precio}</td>
-            {(isAdmin) && <td>
+            {(!finalDate && isAdmin) && <td>
               <img
                 onClick={onDeleteDateClicked}
                 className="remove-img"
@@ -168,7 +168,7 @@ const Cost = ({ costId, Lista }) => {
             <td>{dose.dose_unit}</td>
             <td>{precioItem}</td>
             <td>{precio}</td>
-            {(isAdmin) && <td>
+            {(!finalDate && isAdmin) && <td>
               <img
                 onClick={onDeleteDateClicked}
                 className="remove-img"

@@ -80,6 +80,7 @@ const AppDate = ({ dateId, Lista }) => {
     refetchOnMountOrArgChange: true,
   });
   if (date) {
+    const finalDate = (date?.crop_harvest !== null || !date.crop_status)? true:false
     const [actKey, setActKey] = useState(date.date_act_key);
     const [dateInit, setDateInit] = useState(date.date_init);
     const [dateEnd, setDateEnd] = useState(date.date_end);
@@ -280,7 +281,7 @@ const AppDate = ({ dateId, Lista }) => {
           <td>
             <User key={userRep} userId={userRep} />
           </td>
-          {isAdmin && (
+          {!finalDate && (isAdmin) && (
             <td>
               <img
                 onClick={onDeleteDateClicked}
@@ -290,7 +291,7 @@ const AppDate = ({ dateId, Lista }) => {
               />
             </td>
           )}
-          {(isManager || isAdmin) && (
+          {(!finalDate && (isManager || isAdmin)) && (
             <td
               onClick={() => {
                 if (plntCrop !== "Plantilla") {
@@ -301,7 +302,7 @@ const AppDate = ({ dateId, Lista }) => {
               Editar
             </td>
           )}
-          {(isManager || isAdmin) && <>{updateApp}</>}
+          {(!finalDate && (isManager || isAdmin)) && <>{updateApp}</>}
         </tr>
       );
     }
@@ -365,7 +366,7 @@ const AppDate = ({ dateId, Lista }) => {
                   {fechaFin == "null" ? "no fecha asignada" : fechaFin}
                 </p>
               </div>
-              {(isManager || isAdmin) && (
+              {(!finalDate && (isManager || isAdmin)) && (
                 <div className="row">
                   <p>
                     <button
@@ -379,7 +380,7 @@ const AppDate = ({ dateId, Lista }) => {
               )}
             </div>
 
-            {(isManager || isAdmin) && <>{updateApp}</>}
+            {(!finalDate && (isManager || isAdmin)) && <>{updateApp}</>}
           </div>
         </>
       );

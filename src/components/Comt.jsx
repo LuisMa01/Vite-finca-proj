@@ -158,6 +158,7 @@ const Comt = ({ comtId, Lista }) => {
   );
 
   if (comt) {
+    const finalDate = (comt?.crop_harvest !== null || !comt.crop_status)? true:false
     //const handleEdit = () => navigate(`/dash/users/${actId}`)
     /*
     const { item } = useGetItemsQuery("itemsList", {
@@ -197,7 +198,7 @@ const Comt = ({ comtId, Lista }) => {
           <tr key={comtId}>
             <td>{fecha}</td>
             <td>{desc}</td>
-            {(isAdmin) && (
+            {(!finalDate && isAdmin) && (
               <td>
                 <img
                   onClick={onDeleteComtClicked}
@@ -207,10 +208,10 @@ const Comt = ({ comtId, Lista }) => {
                 />
               </td>
             )}
-            {(isManager || isAdmin) && (
+            {(!finalDate && (isManager || isAdmin)) && (
               <td onClick={() => setIsOpen(true)}>Editar</td>
             )}
-            {(isManager || isAdmin) && <>{ updComt }</>}
+            {(!finalDate && (isManager || isAdmin)) && <>{ updComt }</>}
           </tr>
         );
       }
@@ -224,7 +225,7 @@ const Comt = ({ comtId, Lista }) => {
               </Link>
             </td>
             <td>{desc}</td>
-            {(isAdmin) && (
+            {(!finalDate && (isAdmin) )&& (
               <td>
                 <img
                   onClick={onDeleteComtClicked}
@@ -234,10 +235,10 @@ const Comt = ({ comtId, Lista }) => {
                 />
               </td>
             )}
-            {(isManager || isAdmin) && (
+            {(!finalDate && (isManager || isAdmin)) && (
               <td onClick={() => setIsOpen(true)}>Editar</td>
             )}
-            {(isManager || isAdmin) && <>{ updComt }</>}
+            {(!finalDate && (isManager || isAdmin)) && <>{ updComt }</>}
           </tr>
         );
       }

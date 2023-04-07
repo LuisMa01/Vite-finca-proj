@@ -23,7 +23,7 @@ import Cost from "../../components/Cost";
 import Comt from "../../components/Comt";
 import useAuth from "../../hooks/useAuth";
 
-const Costo = ({ crpId }) => {
+const Costo = ({ crpId, info }) => {
   const { username, isManager, isAdmin } = useAuth();
 
   const { cost } = useGetCostsQuery("costsList", {
@@ -40,6 +40,7 @@ const Costo = ({ crpId }) => {
   let costTotal = [];
   let listSum = 0;
   if (cost) {
+    const finalDate = (cost?.crop_harvest !== null || !cost.crop_status)? true:false
     costList =
       cost?.length &&
       cost.map((Id) => {
@@ -92,7 +93,7 @@ const Costo = ({ crpId }) => {
                   <th className="align-middle" scope="col">
                     Costo Total
                   </th>
-                  {isAdmin && (
+                  {(!info && isAdmin) && (
                     <th className="align-middle" scope="col">
                       Eliminar
                     </th>
@@ -116,7 +117,7 @@ const Costo = ({ crpId }) => {
   }
 };
 
-const Comentario = ({ cropId }) => {
+const Comentario = ({ cropId, info }) => {
   const { username, isManager, isAdmin } = useAuth();
 
   const { comt } = useGetComtsQuery("comtsList", {
@@ -132,6 +133,8 @@ const Comentario = ({ cropId }) => {
   let comtList;
   let listSum = 0;
   if (comt) {
+
+    
     comtList =
       comt?.length &&
       comt.map((Id) => {
@@ -146,6 +149,7 @@ const Comentario = ({ cropId }) => {
 
   let contenido = <></>;
   if (listSum > 0) {
+    const finalDate = (comt?.crop_harvest !== null || !comt.crop_status)? true:false
     contenido = (
       <>
         <p className="already-existing-activities">
@@ -164,12 +168,12 @@ const Comentario = ({ cropId }) => {
                 <th className="align-middle" scope="col">
                   Comentario
                 </th>
-                {isAdmin && (
+                {(!info && isAdmin) && (
                   <th className="align-middle" scope="col">
                     Eliminar
                   </th>
                 )}
-                {(isManager || isAdmin) && (
+                {(!info && (isManager || isAdmin)) && (
                   <th className="align-middle" scope="col">
                     Editar
                   </th>
@@ -195,6 +199,7 @@ const infoCultivo = () => {
   const [dateEnd, setDateEnd] = useState("");
   const [userRep, setUserRep] = useState("");
   const [plantillaKey, setPlantillaKey] = useState("");
+  const [completo, setCompleto] = useState(false);
   //const [isPlantilla, setIsPlantilla] = useState(false);
   let actArr = [];
   let plntCrop;
@@ -342,13 +347,19 @@ const infoCultivo = () => {
   let cropUsado = 0;
   if (crop) {
     //para asegurar que obtenga los datos del cultivo
-
+    const finalDate = (crop?.crop_harvest !== null || !crop.crop_status)? true:false
     cropDato = (
       <Crop key={crop.crop_id} cropId={crop.crop_id} Lista={"Lista3"} />
     );
-    comtCrop = <Comentario cropId={crop.crop_id} />;
-    costCrop = <Costo crpId={crop.crop_id} />;
+    comtCrop = <Comentario cropId={crop.crop_id} info={finalDate} />;
+    costCrop = <Costo crpId={crop.crop_id} info={finalDate}/>;
 
+    
+
+    
+    
+      
+    
     if (rpuser) {
       userOption =
         rpuser?.length &&
@@ -439,27 +450,19 @@ const infoCultivo = () => {
         );
       }
     }
-
+   
     contenido = (
       <>
         <div>{cropDato}</div>
 
-        {(isManager || isAdmin) && (
-          <div>
-            <button
-              onClick={(e) => navigate(`/dash/cultivos/info-cultivo-pdf/${id}`)}
-            >
-              Vista en PDF
-            </button>
-          </div>
-        )}
+        
 
-        {(isManager || isAdmin) && (
+        {(!finalDate && (isManager || isAdmin)) && (
           <p className="add-new-activities">
             <b>Agregar actividad:</b>
           </p>
         )}
-        {(isManager || isAdmin) && (
+        {(!finalDate && (isManager || isAdmin)) && (
           <form>
             <div className="new-activity-miniform d-flex justify-content-center col-12 col-md-10 col-lg-9 form-row bg-light">
               <div className="col-12">{plnt}</div>
@@ -544,12 +547,12 @@ const infoCultivo = () => {
                 <th className="align-middle" scope="col">
                   Responsable
                 </th>
-                {isAdmin && (
+                {(!finalDate && isAdmin) && (
                   <th className="align-middle" scope="col">
                     Eliminar
                   </th>
                 )}
-                {(isManager || isAdmin) && (
+                {(!finalDate && (isManager || isAdmin)) && (
                   <th className="align-middle" scope="col">
                     Editar
                   </th>
