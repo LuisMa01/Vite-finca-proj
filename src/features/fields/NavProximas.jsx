@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import "../../styles/proximas.css";
 import ReImage from "../../images/return.svg";
 import { Link } from "react-router-dom";
@@ -27,81 +27,72 @@ const navProximas = () => {
       }),
     }),
   });
-
-  let dateList;
-  let dateTable;
-
-  if (dates) {
-    dateList =
-      dates?.length &&
+  const row = dates?.length &&
       dates.map((date) => {
-        if (date?.date_end == null) {
-          let plnt = `${date?.crop_name}`.split("-")[0];
-          if (plnt !== "Plantilla") {
-            return (
-              <AppDate
-                key={date?.date_id}
-                dateId={date?.date_id}
-                Lista={"Lista2"}
-              />
-            );
-          }
+        let plnt = `${date?.crop_name}`.split("-")[0];
+        let nomnb =
+          `${date?.date_user_key}` == "null"
+            ? "no"
+            : date?.user_nombre
+            ? date?.user_nombre
+            : date?.user_name;
+        let actNma =
+          date?.act_name == 0 || date?.act_name == undefined
+            ? "no"
+            : date?.act_name;
+        let cropNma =
+          date?.crop_name == 0 || date?.crop_name == undefined
+            ? "no"
+            : date?.crop_name;
+        let campNma =
+          date?.camp_name == 0 || date?.camp_name == undefined
+            ? "no"
+            : date?.camp_name;
+        let fecha =
+          `${date?.date_init}` == "null"
+            ? "no asignada"
+            : `${date?.date_init}`.split("T")[0];
+
+        if (plnt !== "Plantilla") {
+          return [actNma, cropNma, campNma, fecha, nomnb];
         }
       });
-
-    dateTable = (
-      <Grid
-        columns={[
-          {
-            name: "Actividad",
-            id: "acti",
-          },
-          { name: "Cultivo", id: "cult" },
-          { name: "Campo", id: "camp" },
-          {
-            name: "Fecha programada",
-            id: "fech",
-          },
-          {
-            name: "Responsable",
-            id: "rep",
-          },
-        ]}
-        data={
-          dates?.length &&
-          dates.map((date) => {
-            let plnt = `${date?.crop_name}`.split("-")[0];
-            let fecha =
-              `${date?.date_init}` == "null"
-                ? "no asignada"
-                : `${date?.date_init}`.split("T")[0];
-            if (plnt !== "Plantilla") {
-              return {
-                acti: date?.act_name,
-                cult: date?.crop_name,
-                camp: date?.camp_name,
-                fech: fecha,
-                rep: date?.user_nombre ? date?.user_nombre : date?.user_name,
-              };
-            }
-          })
-        }
-        search={true}
-        pagination={{
-          limit: 10,
-        }}
-        sort={true}
-        className={{
-          table:
-            "table table-hover table-sm table-striped table-responsive-sm table-bordered",
-          thead: "thead-loyola",
-          th: "align-middle",
-          search: "form-control",
-        }}
-        fixedHeader={true}
-      />
-    );
-  }
+  
+  
+  let dateTable;
+  
+  
+  dateTable = (
+    <Grid
+      columns={[
+        {
+          name: "Actividad",
+        },
+        { name: "Cultivo" },
+        { name: "Campo" },
+        {
+          name: "Fecha programada",
+        },
+        {
+          name: "Responsable",
+        },
+      ]}
+      data={row.filter((data)=>data!==undefined)}
+      search={true}
+      pagination={{
+        limit: 10,
+      }}
+      sort={true}
+      className={{
+        table:
+          "table table-hover table-sm table-striped table-responsive-sm table-bordered",
+        thead: "thead-loyola",
+        th: "align-middle",
+        search: "form-control",
+      }}
+      fixedHeader={true}
+    />
+  );
   return (
     <>
       {" "}
@@ -109,32 +100,7 @@ const navProximas = () => {
         Estas son las próximas actividades a realizar en la finca, de todos los
         campos y cultivos
       </p>
-      {/*
      
-      <div className="table-container col-12 col-md-10 col-lg-8">
-        <table className="table table-hover table-sm table-striped table-responsive-sm table-bordered">
-          <thead className="thead-loyola">
-            <tr>
-              <th className="align-middle" scope="col">
-                Actividad
-              </th>
-              <th className="align-middle" scope="col">
-                Cultivo
-              </th>
-              <th className="align-middle" scope="col">
-                Campo
-              </th>
-              <th className="align-middle" scope="col">
-                Fecha programada
-              </th>
-              <th className="align-middle" scope="col">
-                Responsable
-              </th>
-            </tr>
-          </thead>
-          <tbody>{dateList}</tbody>
-        </table>
-      </div>*/}
       <div className="table-container col-12 col-md-10 col-lg-8">
         {dateTable}
       </div>

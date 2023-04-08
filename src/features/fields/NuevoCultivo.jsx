@@ -217,6 +217,7 @@ const nuevoCultivo = () => {
       ids.map((Id) => {
         let plnt = `${entities[Id].crop_name}`.split("-")[0];
         if (plnt !== "Plantilla") {
+          console.log(entities[Id]);
           return <Crop key={Id} cropId={Id} Lista={"Lista1"} />;
         }
       });
