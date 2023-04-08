@@ -159,29 +159,7 @@ const Comt = ({ comtId, Lista }) => {
 
   if (comt) {
     const finalDate = (comt?.crop_harvest !== null || !comt.crop_status)? true:false
-    //const handleEdit = () => navigate(`/dash/users/${actId}`)
-    /*
-    const { item } = useGetItemsQuery("itemsList", {
-      selectFromResult: ({ data }) => ({
-        item: data?.entities[costItemKey],
-      }),
-    });
-    const { dose } = useGetDosesQuery("dosesList", {
-      selectFromResult: ({ data }) => ({
-        dose: data?.entities[cost.item_dose_key],
-      }),
-    });
     
-    let precioItem = new Intl.NumberFormat("es-do", {
-      style: "currency",
-      currency: "DOP",
-    }).format(parseFloat(costItemPrice));
-
-    let precio = new Intl.NumberFormat("es-do", {
-      style: "currency",
-      currency: "DOP",
-    }).format(parseFloat(costPrice));
-*/
     if (comt) {
       const fecha = `${comtDate}`.split("T")[0];
 

@@ -93,7 +93,7 @@ const Costo = ({ crpId, info }) => {
                   <th className="align-middle" scope="col">
                     Costo Total
                   </th>
-                  {(!info && isAdmin) && (
+                  {(!finalDate && isAdmin) && (
                     <th className="align-middle" scope="col">
                       Eliminar
                     </th>
@@ -168,12 +168,12 @@ const Comentario = ({ cropId, info }) => {
                 <th className="align-middle" scope="col">
                   Comentario
                 </th>
-                {(!info && isAdmin) && (
+                {(!finalDate && isAdmin) && (
                   <th className="align-middle" scope="col">
                     Eliminar
                   </th>
                 )}
-                {(!info && (isManager || isAdmin)) && (
+                {(!finalDate && (isManager || isAdmin)) && (
                   <th className="align-middle" scope="col">
                     Editar
                   </th>
@@ -199,7 +199,7 @@ const infoCultivo = () => {
   const [dateEnd, setDateEnd] = useState("");
   const [userRep, setUserRep] = useState("");
   const [plantillaKey, setPlantillaKey] = useState("");
-  const [completo, setCompleto] = useState(false);
+  
   //const [isPlantilla, setIsPlantilla] = useState(false);
   let actArr = [];
   let plntCrop;
@@ -398,12 +398,14 @@ const infoCultivo = () => {
     }
     if (dates) {
       const { ids, entities } = dates;
-
+      
       if (plantillaKey) {
+        
         ids?.length &&
           ids.map((Id) => {
             if (entities[Id].date_crop_key == plantillaKey) {
               actArr.push(entities[Id].date_act_key);
+              
             }
           });
       }
@@ -411,8 +413,10 @@ const infoCultivo = () => {
       dateList =
         ids?.length &&
         ids.map((Id) => {
+          
           if (entities[Id].date_crop_key == crop.crop_id) {
             cropUsado = cropUsado + 1;
+            
             return <AppDate key={Id} dateId={Id} Lista={"Lista1"} />;
           } else {
             return <></>;
