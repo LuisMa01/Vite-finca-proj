@@ -39,8 +39,10 @@ const Costo = ({ crpId, info }) => {
   let costList;
   let costTotal = [];
   let listSum = 0;
+
   if (cost) {
-    const finalDate = (cost?.crop_harvest !== null || !cost.crop_status)? true:false
+    const finalDate =
+      cost?.crop_harvest !== null || !cost.crop_status ? true : false;
     costList =
       cost?.length &&
       cost.map((Id) => {
@@ -53,6 +55,7 @@ const Costo = ({ crpId, info }) => {
           return list;
         }
       });
+
     let TT = costTotal.reduce((valorAnterior, valorActual) => {
       return valorAnterior + valorActual;
     }, 0);
@@ -93,7 +96,7 @@ const Costo = ({ crpId, info }) => {
                   <th className="align-middle" scope="col">
                     Costo Total
                   </th>
-                  {(!finalDate && isAdmin) && (
+                  {!info && isAdmin && (
                     <th className="align-middle" scope="col">
                       Eliminar
                     </th>
@@ -132,9 +135,8 @@ const Comentario = ({ cropId, info }) => {
 
   let comtList;
   let listSum = 0;
-  if (comt) {
 
-    
+  if (comt) {
     comtList =
       comt?.length &&
       comt.map((Id) => {
@@ -149,7 +151,8 @@ const Comentario = ({ cropId, info }) => {
 
   let contenido = <></>;
   if (listSum > 0) {
-    const finalDate = (comt?.crop_harvest !== null || !comt.crop_status)? true:false
+    const finalDate =
+      comt?.crop_harvest !== null || !comt.crop_status ? true : false;
     contenido = (
       <>
         <p className="already-existing-activities">
@@ -168,12 +171,12 @@ const Comentario = ({ cropId, info }) => {
                 <th className="align-middle" scope="col">
                   Comentario
                 </th>
-                {(!finalDate && isAdmin) && (
+                {!info && isAdmin && (
                   <th className="align-middle" scope="col">
                     Eliminar
                   </th>
                 )}
-                {(!finalDate && (isManager || isAdmin)) && (
+                {!info && (isManager || isAdmin) && (
                   <th className="align-middle" scope="col">
                     Editar
                   </th>
@@ -199,15 +202,23 @@ const infoCultivo = () => {
   const [dateEnd, setDateEnd] = useState("");
   const [userRep, setUserRep] = useState("");
   const [plantillaKey, setPlantillaKey] = useState("");
-  
+
   //const [isPlantilla, setIsPlantilla] = useState(false);
   let actArr = [];
   let plntCrop;
-  const { crop } = useGetCropsQuery("cropsList", {
-    selectFromResult: ({ data }) => ({
-      crop: data?.entities[id],
-    }),
-  });
+  const { crop } = useGetCropsQuery(
+    "cropsList",
+    {
+      selectFromResult: ({ data }) => ({
+        crop: data?.entities[id],
+      }),
+    },
+    {
+      pollingInterval: 60000,
+      refetchOnFocus: true,
+      refetchOnMountOrArgChange: true,
+    }
+  );
   const { crops } = useGetCropsQuery("cropsList", {
     selectFromResult: ({ data }) => ({
       crops: data?.ids?.map((Id) => {
@@ -347,19 +358,14 @@ const infoCultivo = () => {
   let cropUsado = 0;
   if (crop) {
     //para asegurar que obtenga los datos del cultivo
-    const finalDate = (crop?.crop_harvest !== null || !crop.crop_status)? true:false
+    const finalDate =
+      crop?.crop_harvest !== null || !crop.crop_status ? true : false;
     cropDato = (
       <Crop key={crop.crop_id} cropId={crop.crop_id} Lista={"Lista3"} />
     );
     comtCrop = <Comentario cropId={crop.crop_id} info={finalDate} />;
-    costCrop = <Costo crpId={crop.crop_id} info={finalDate}/>;
+    costCrop = <Costo crpId={crop.crop_id} info={finalDate} />;
 
-    
-
-    
-    
-      
-    
     if (rpuser) {
       userOption =
         rpuser?.length &&
@@ -398,14 +404,12 @@ const infoCultivo = () => {
     }
     if (dates) {
       const { ids, entities } = dates;
-      
+
       if (plantillaKey) {
-        
         ids?.length &&
           ids.map((Id) => {
             if (entities[Id].date_crop_key == plantillaKey) {
               actArr.push(entities[Id].date_act_key);
-              
             }
           });
       }
@@ -413,10 +417,9 @@ const infoCultivo = () => {
       dateList =
         ids?.length &&
         ids.map((Id) => {
-          
           if (entities[Id].date_crop_key == crop.crop_id) {
             cropUsado = cropUsado + 1;
-            
+
             return <AppDate key={Id} dateId={Id} Lista={"Lista1"} />;
           } else {
             return <></>;
@@ -454,19 +457,17 @@ const infoCultivo = () => {
         );
       }
     }
-   
+
     contenido = (
       <>
         <div>{cropDato}</div>
 
-        
-
-        {(!finalDate && (isManager || isAdmin)) && (
+        {!finalDate && (isManager || isAdmin) && (
           <p className="add-new-activities">
             <b>Agregar actividad:</b>
           </p>
         )}
-        {(!finalDate && (isManager || isAdmin)) && (
+        {!finalDate && (isManager || isAdmin) && (
           <form>
             <div className="new-activity-miniform d-flex justify-content-center col-12 col-md-10 col-lg-9 form-row bg-light">
               <div className="col-12">{plnt}</div>
@@ -551,12 +552,12 @@ const infoCultivo = () => {
                 <th className="align-middle" scope="col">
                   Responsable
                 </th>
-                {(!finalDate && isAdmin) && (
+                {!finalDate && isAdmin && (
                   <th className="align-middle" scope="col">
                     Eliminar
                   </th>
                 )}
-                {(!finalDate && (isManager || isAdmin)) && (
+                {!finalDate && (isManager || isAdmin) && (
                   <th className="align-middle" scope="col">
                     Editar
                   </th>
