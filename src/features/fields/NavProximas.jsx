@@ -27,41 +27,45 @@ const navProximas = () => {
       }),
     }),
   });
-  const row = dates?.length &&
-      dates.map((date) => {
-        let plnt = `${date?.crop_name}`.split("-")[0];
-        let nomnb =
-          `${date?.date_user_key}` == "null"
-            ? "no"
-            : date?.user_nombre
-            ? date?.user_nombre
-            : date?.user_name;
-        let actNma =
-          date?.act_name == 0 || date?.act_name == undefined
-            ? "no"
-            : date?.act_name;
-        let cropNma =
-          date?.crop_name == 0 || date?.crop_name == undefined
-            ? "no"
-            : date?.crop_name;
-        let campNma =
-          date?.camp_name == 0 || date?.camp_name == undefined
-            ? "no"
-            : date?.camp_name;
-        let fecha =
-          `${date?.date_init}` == "null"
-            ? "no asignada"
-            : `${date?.date_init}`.split("T")[0];
+  let dateTable=<></>;
+  if (dates) {
+    const row = dates?.length &&
+    dates.map((date) => {
+      let plnt = `${date?.crop_name}`.split("-")[0];
+      let nomnb =
+        `${date?.date_user_key}` == "null"
+          ? "no"
+          : date?.user_nombre
+          ? date?.user_nombre
+          : date?.user_name;
+      let actNma =
+        date?.act_name == 0 || date?.act_name == undefined
+          ? "no"
+          : date?.act_name;
+      let cropNma =
+        date?.crop_name == 0 || date?.crop_name == undefined
+          ? "no"
+          : date?.crop_name;
+      let campNma =
+        date?.camp_name == 0 || date?.camp_name == undefined
+          ? "no"
+          : date?.camp_name;
+      let fecha =
+        `${date?.date_init}` == "null"
+          ? "no asignada"
+          : `${date?.date_init}`.split("T")[0];
 
-        if (plnt !== "Plantilla") {
-          return [actNma, cropNma, campNma, fecha, nomnb];
-        }
-      });
-  
-  
-  let dateTable;
-  
-  
+      if (plnt !== "Plantilla") {
+        return [actNma, cropNma, campNma, fecha, nomnb];
+      }
+    });
+
+
+
+
+const rowF = row.filter((data)=>data!==undefined)
+
+if (rowF) {
   dateTable = (
     <Grid
       columns={[
@@ -77,7 +81,7 @@ const navProximas = () => {
           name: "Responsable",
         },
       ]}
-      data={row.filter((data)=>data!==undefined)}
+      data={rowF}
       search={true}
       pagination={{
         limit: 10,
@@ -93,6 +97,10 @@ const navProximas = () => {
       fixedHeader={true}
     />
   );
+}
+  }
+
+  
   return (
     <>
       {" "}
