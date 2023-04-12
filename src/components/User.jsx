@@ -11,15 +11,7 @@ import RemoveImg from "../images/remove.svg";
 import Swal from "sweetalert2";
 import { ROLES } from "../config/roles";
 import Modal from "react-modal";
-import {
-  MDBBtn,
-  MDBModal,
-  MDBModalDialog,
-  MDBModalContent,
-  MDBModalHeader,
-  MDBModalTitle,
-  MDBModalBody,
-} from "mdb-react-ui-kit";
+
 import ReImage from "../images/return.svg";
 import PeopleImg from "../images/users.svg";
 import useAuth from "../hooks/useAuth";
@@ -27,8 +19,9 @@ import useAuth from "../hooks/useAuth";
 Modal.setAppElement("#root");
 
 const USER_REGEX = /^[A-z]{3,20}$/;
-const PWD_REGEX = /^[A-z0-9!@#$%]{4,12}$/;
-const EMAIL_REGEX = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
+const PWD_REGEX = /^(?=\w*\d)(?=\w*[A-Z])(?=\w*[a-z])\S{8,16}$/;
+const EMAIL_REGEX =
+  /^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/;
 const PHONE_REGEX = /^[1-9]\d{2}-\d{3}-\d{4}/;
 
 const ACTION = {
@@ -108,7 +101,7 @@ const User = ({ userId, Lista }) => {
       deleteUser,
       { isSuccess: isDelSuccess, isError: isDelError, error: delerror },
     ] = useDeleteUserMutation();
-    
+
     useEffect(() => {
       if (user) {
         setUsername(user.user_name);
@@ -121,7 +114,7 @@ const User = ({ userId, Lista }) => {
       }
       if (isSuccess) {
         setIsOpen(false);
-        setIsisAbierto(false);      
+        setIsisAbierto(false);
       }
     }, [user, isSuccess]);
     const handleClearClick = (e) => {
@@ -247,12 +240,7 @@ const User = ({ userId, Lista }) => {
       }
     };
     const options = Object.keys(ROLES).map((role) => {
-      return (
-        <option value={ROLES[role]}>
-          {" "}
-          {role}
-        </option>
-      );
+      return <option value={ROLES[role]}> {role}</option>;
     });
 
     const actuUser = (
@@ -273,16 +261,20 @@ const User = ({ userId, Lista }) => {
                 </label>
                 <input
                   id="new-user-username"
-                  maxLength={20}
+                  maxLength={30}
                   className="form-control"
                   name="username"
                   type="text"
                   autoComplete="off"
-                  autoFocus
-                  placeholder="Ej: minombre07"
+                  pattern="^[A-z]{3,20}$"
+                  placeholder="Ej: minombre"
+                  required=""
                   value={username}
                   onChange={onUsernameChanged}
                 />
+                <div className="error-message">
+                  Nombre de usuario incorrecto
+                </div>
               </div>
 
               <div className="col-md-4 mb-3">
@@ -291,15 +283,16 @@ const User = ({ userId, Lista }) => {
                 </label>
                 <input
                   className="form-control"
-                  maxLength={20}
+                  maxLength={30}
                   name="names"
                   type="text"
                   autoComplete="off"
-                  autoFocus
+                  pattern="^[a-zA-Z ]*$"
                   placeholder="Ej: Juan Andres"
                   value={names ? names : ""}
                   onChange={onNamesChanged}
                 />
+                <div className="error-message">Formato incorrecto</div>
               </div>
 
               <div className="col-md-4 mb-3">
@@ -308,15 +301,16 @@ const User = ({ userId, Lista }) => {
                 </label>
                 <input
                   className="form-control"
-                  maxLength={20}
+                  maxLength={30}
                   name="surname"
                   type="text"
                   autoComplete="off"
-                  autoFocus
+                  pattern="^[a-zA-Z ]*$"
                   placeholder="Ej: Gómez Almanzar"
                   value={surname ? surname : ""}
                   onChange={onSurnameChanged}
                 />
+                <div className="error-message">Formato incorrecto</div>
               </div>
               <div className="col-md-4 mb-3">
                 <label id="username_label" htmlFor="phone">
@@ -324,16 +318,18 @@ const User = ({ userId, Lista }) => {
                 </label>
                 <input
                   type="tel"
-                  maxLength={20}
+                  maxLength={14}
                   pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
                   className="form-control"
                   name="surname"
                   autoComplete="off"
-                  autoFocus
-                  placeholder="Ej: 1-809-000-0000"
+                  placeholder="Ej: 809-000-0000"
                   value={phone ? phone : ""}
                   onChange={onPhoneChanged}
                 />
+                <div className="error-message">
+                  Formato de número incorrecto
+                </div>
               </div>
 
               <div className="col-md-4 mb-3">
@@ -346,11 +342,12 @@ const User = ({ userId, Lista }) => {
                   name="email"
                   type="text"
                   autoComplete="off"
-                  autoFocus
+                  pattern="^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$"
                   placeholder="Ej: nombre@ejemplo.com"
                   value={email ? email : ""}
                   onChange={onEmailChanged}
                 />
+                <div className="error-message">Nombre de correo incorrecto</div>
               </div>
 
               <div className="col-md-4 mb-3">
@@ -376,7 +373,7 @@ const User = ({ userId, Lista }) => {
                 Guardar usuario
               </button>
               <button className="btn btn-danger" onClick={handleClearClick}>
-                Limpiar
+                Retornar valor
               </button>
             </div>
           </form>
@@ -399,7 +396,7 @@ const User = ({ userId, Lista }) => {
               <div className="form-group">
                 <input
                   type="password"
-                  maxLength={50}
+                  maxLength={17}
                   className="form-control mb-3"
                   placeholder="Contraseña actual"
                   value={passwordAnt}
@@ -410,28 +407,39 @@ const User = ({ userId, Lista }) => {
               <div className="form-group">
                 <input
                   type="password"
-                  maxLength={50}
+                  maxLength={17}
                   className="form-control mb-3"
                   placeholder="Nueva contraseña"
                   value={password}
+                  pattern="^(?=\w*\d)(?=\w*[A-Z])(?=\w*[a-z])\S{8,16}$"
                   onChange={onPasswordChanged}
                 />
+                <div className="error-message">
+                  <p>Incorrecto</p>
+                </div>
                 <span className="form-text small text-muted">
-                  La contraseña debe contener entre 8-20 caracteres, y <b>no</b>{" "}
-                  debe contener espacios.
+                  <p>La contraseña debe tener: </p>
+                  <p>- Entre 8 y 16 caracteres</p>
+                  <p>- Al menos un dígito</p>
+                  <p>- Al menos una minúscula</p>
+                  <p>- Al menos una mayúscula</p>
+                  <p>- No contener espacio</p>
                 </span>
               </div>
               <div className="form-group">
                 <input
                   type="password"
-                  maxLength={50}
+                  maxLength={17}
                   className="form-control mb-3"
                   placeholder="Verificar contraseña"
+                  pattern="^(?=\w*\d)(?=\w*[A-Z])(?=\w*[a-z])\S{8,16}$"
                   value={passwordDu}
                   onChange={onPasswordDuChanged}
-                />
+                /><div className="error-message">
+                  <p>Incorrecto</p>
+                </div>
                 <span className="form-text small text-muted">
-                  Para confirmar, escriba la nueva contraseña.
+                  Para confirmar, Repita la nueva contraseña.
                 </span>
               </div>
               <div className="button-section">

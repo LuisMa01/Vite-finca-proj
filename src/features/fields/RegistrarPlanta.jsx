@@ -44,6 +44,13 @@ const RegistrarPlanta = () => {
   const onPlantDescChanged = (e) => setDesc(e.target.value);
   const onPlantVaryChanged = (e) => setVary(e.target.value);
   const onPlantFrameChanged = (e) => setPlantFrame(e.target.value);
+  const onClickClear = (e) =>{
+    e.preventDefault()
+    setPlantname("");
+      setDesc("");
+      setVary("");
+      setPlantFrame("");
+  }
   useEffect(() => {
     if (addissuccess) {
       setPlantname("");
@@ -56,7 +63,7 @@ const RegistrarPlanta = () => {
   let tableContent;
   if (isError) {
     tableContent = <p className="errmsg">{error?.data?.message}</p>;
-    console.log(error?.data?.message);
+    
   }
   if (isSuccess) {
     const { ids } = plants;
@@ -84,10 +91,14 @@ const RegistrarPlanta = () => {
                   className="form-control"
                   id="nombre_cultivo"
                   placeholder="Fruta X"
+                  pattern="^[a-zA-Z-0-9- ]{4,20}$"
                   value={plantName}
                   onChange={onPlantNameChanged}
-                  required
+                  required="campo requerido"
                 />
+                <div className="error-message">
+                  <p>Formato incorrecto</p>
+                </div>
               </div>
               <div className="col-md-4 mb-3">
                 <label htmlFor="nombre_cultivo" className="text-center">
@@ -97,10 +108,14 @@ const RegistrarPlanta = () => {
                   type="text"
                   maxLength={20}
                   className="form-control"
+                  pattern="^[a-zA-Z]{4,20}$"
                   id="nombre_cultivo"
                   value={variety}
                   onChange={onPlantVaryChanged}
                 />
+                <div className="error-message">
+                  <p>Formato incorrecto</p>
+                </div>
               </div>
               <div className="col-md-4 mb-3">
                 <label htmlFor="nombre_cultivo" className="text-center">
@@ -111,9 +126,12 @@ const RegistrarPlanta = () => {
                   maxLength={15}
                   className="form-control"
                   id="nombre_cultivo"
+                  pattern="^[xX.0-9]*$"
                   value={plantFrame}
                   onChange={onPlantFrameChanged}
-                />
+                /><div className="error-message">
+                <p>Formato incorrecto</p>
+              </div>
               </div>
             </div>
 
@@ -125,9 +143,13 @@ const RegistrarPlanta = () => {
                   maxLength={200}
                   className="form-control"
                   id="responsable"
+                  pattern="^[a-zA-Z-0-9-. ]*$"
                   value={desc}
                   onChange={onPlantDescChanged}
                 />
+                <div className="error-message">
+                  <p>Formato incorrecto</p>
+                </div>
               </div>
             </div>
             <div className="cultivos_button-section">
@@ -138,7 +160,7 @@ const RegistrarPlanta = () => {
               >
                 Agregar
               </button>
-              <button className="btn btn-sm btn-danger" type="reset">
+              <button className="btn btn-sm btn-danger" onClick={onClickClear}>
                 Limpiar
               </button>
             </div>
