@@ -164,6 +164,7 @@ const Item = ({ itemId }) => {
                 <label for="nombre_cultivo">Nombre del Artículo</label>
                 <input
                   type="text"
+                  maxLength={30}
                   className="form-control"
                   placeholder="Fruta ##"
                   value={itemName}
@@ -204,6 +205,7 @@ const Item = ({ itemId }) => {
                 <label for="producto_final">Descripción del Artículo</label>
                 <input
                   type="text"
+                  maxLength={200}
                   className="form-control"
                   value={desc}
                   onChange={onItemDescChanged}

@@ -239,6 +239,7 @@ const Crop = ({ cropId, Lista }) => {
                 <label htmlFor="nombre_cultivo">Nombre del cultivo</label>
                 <input
                   type="text"
+                  maxLength={20}
                   className="form-control"
                   placeholder="Fruta ##"
                   value={cropName}
@@ -327,6 +328,7 @@ const Crop = ({ cropId, Lista }) => {
                 <label htmlFor="producto_final">Producto final</label>
                 <input
                   type="text"
+                  maxLength={100}
                   className="form-control"
                   value={finalProd}
                   onChange={onCropFinalProdChanged}

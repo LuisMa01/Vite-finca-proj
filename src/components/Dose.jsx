@@ -143,6 +143,7 @@ const Dose = ({ doseId }) => {
             <Collapse isOpened={isOpen}>
               <input
                 type="text"
+                maxLength={30}
                 className="form-control"
                 placeholder="Ej: hora/hombre"
                 value={doseName}
@@ -155,6 +156,7 @@ const Dose = ({ doseId }) => {
             <Collapse isOpened={isOpen}>
               <input
                 type="text"
+                maxLength={20}
                 className="form-control"
                 placeholder="Unidad"
                 value={doseUnit}
@@ -166,6 +168,7 @@ const Dose = ({ doseId }) => {
             <Collapse isOpened={isOpen}>
               <input
                 type="text"
+                maxLength={200}
                 className="form-control"
                 placeholder="Descripción"
                 value={desc}

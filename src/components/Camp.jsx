@@ -147,6 +147,7 @@ const Camp = ({ campId, Lista }) => {
               <label for="nombre_cultivo">Nombre del campo</label>
               <input
                 type="text"
+                maxLength={20}
                 className="form-control"
                 id="nombre_cultivo"
                 placeholder="Campo X"

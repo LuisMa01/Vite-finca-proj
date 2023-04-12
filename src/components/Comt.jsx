@@ -130,6 +130,7 @@ const Comt = ({ comtId, Lista }) => {
                   type="text"
                   placeholder="Ingresar Comentario"
                   value={desc}
+                  maxLength={200}
                   onChange={onComtDescChange}
                   rows={5}
                   cols={25}

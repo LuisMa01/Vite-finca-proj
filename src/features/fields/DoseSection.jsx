@@ -123,6 +123,7 @@ const DoseSection = () => {
               <div className="col-md-3 mb-3">
                 <input
                   type="text"
+                  maxLength={20}
                   className="form-control"
                   placeholder="Ej: hora/hombre"
                   value={doseName}
@@ -133,6 +134,7 @@ const DoseSection = () => {
               <div className="col-12 col-md-3 mb-2">
                 <input
                   type="text"
+                  maxLength={20}
                   className="form-control"
                   placeholder="Unidad"
                   value={doseUnit}
@@ -142,6 +144,7 @@ const DoseSection = () => {
               <div className="col-12 col-md-6 mb-3">
                 <input
                   type="text"
+                  maxLength={200}
                   className="form-control"
                   placeholder="Descripción"
                   value={desc}

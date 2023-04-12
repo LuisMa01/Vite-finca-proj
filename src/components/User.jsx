@@ -273,6 +273,7 @@ const User = ({ userId, Lista }) => {
                 </label>
                 <input
                   id="new-user-username"
+                  maxLength={20}
                   className="form-control"
                   name="username"
                   type="text"
@@ -290,6 +291,7 @@ const User = ({ userId, Lista }) => {
                 </label>
                 <input
                   className="form-control"
+                  maxLength={20}
                   name="names"
                   type="text"
                   autoComplete="off"
@@ -306,6 +308,7 @@ const User = ({ userId, Lista }) => {
                 </label>
                 <input
                   className="form-control"
+                  maxLength={20}
                   name="surname"
                   type="text"
                   autoComplete="off"
@@ -321,6 +324,7 @@ const User = ({ userId, Lista }) => {
                 </label>
                 <input
                   type="tel"
+                  maxLength={20}
                   pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
                   className="form-control"
                   name="surname"
@@ -338,6 +342,7 @@ const User = ({ userId, Lista }) => {
                 </label>
                 <input
                   className="form-control"
+                  maxLength={30}
                   name="email"
                   type="text"
                   autoComplete="off"
@@ -394,6 +399,7 @@ const User = ({ userId, Lista }) => {
               <div className="form-group">
                 <input
                   type="password"
+                  maxLength={50}
                   className="form-control mb-3"
                   placeholder="Contraseña actual"
                   value={passwordAnt}
@@ -404,6 +410,7 @@ const User = ({ userId, Lista }) => {
               <div className="form-group">
                 <input
                   type="password"
+                  maxLength={50}
                   className="form-control mb-3"
                   placeholder="Nueva contraseña"
                   value={password}
@@ -417,6 +424,7 @@ const User = ({ userId, Lista }) => {
               <div className="form-group">
                 <input
                   type="password"
+                  maxLength={50}
                   className="form-control mb-3"
                   placeholder="Verificar contraseña"
                   value={passwordDu}

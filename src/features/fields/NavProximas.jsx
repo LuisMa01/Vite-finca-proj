@@ -14,7 +14,7 @@ const navProximas = () => {
   const { username, isManager, isAdmin, userId } = useAuth();
   const navigate = useNavigate();
 
-  const { dates } = useGetDatesQuery("datesList", {
+  const { dates, isSuccess } = useGetDatesQuery("datesList", {
     selectFromResult: ({ data }) => ({
       dates: data?.ids?.map((Id) => {
         if (isAdmin) {

@@ -34,6 +34,12 @@ const EditarCampos = () => {
 
   const [campName, setCampname] = useState("");
   const [area, setArea] = useState("");
+  const [estado, setEstado] = useState("");
+
+  const searchEstado = (e) => {
+    e.preventDefault();
+    setEstado(e.target.value);
+  };
 
   const onSaveCampClicked = async (e) => {
     e.preventDefault();
@@ -47,6 +53,7 @@ const EditarCampos = () => {
     if (addissuccess) {
       setCampname("");
       setArea("");
+      setEstado("");
     }
   }, [addissuccess]);
 
@@ -56,11 +63,15 @@ const EditarCampos = () => {
     console.log(error?.data?.message);
   }
   if (isSuccess) {
-    const { ids } = camps;
+    const { ids, entities } = camps;
+
+    const results = !estado
+      ? ids
+      : ids.filter((dato) => `${entities[dato].camp_status}` == estado);
 
     tableContent =
-      ids?.length &&
-      ids.map((Id) => <Camp key={Id} campId={Id} Lista={"Lista1"} />);
+      results?.length &&
+      results.map((Id) => <Camp key={Id} campId={Id} Lista={"Lista1"} />);
   }
 
   return (
@@ -75,6 +86,7 @@ const EditarCampos = () => {
               <label htmlFor="nombre_cultivo">Nombre del campo</label>
               <input
                 type="text"
+                maxLength={20}
                 className="form-control"
                 id="nombre_cultivo"
                 placeholder="Campo X"
@@ -89,6 +101,7 @@ const EditarCampos = () => {
                 type="number"
                 step="any"
                 min={0}
+                max={1000}
                 className="form-control"
                 id="variedad_cultivo"
                 value={area}
@@ -112,13 +125,16 @@ const EditarCampos = () => {
       )}
 
       <div className="seccion_campos_checkbox-div">
-        <div>
-          <input type="checkBox" defaultChecked />
-          <span>Campos habilitados</span>
-        </div>
-        <div>
-          <input type="checkBox" />
-          <span>Campos inhabilitados</span>
+        <div className="col-6">
+          <select
+            className="form-control "
+            value={estado}
+            onChange={searchEstado}
+          >
+            <option value={""}>Todos</option>
+            <option value={true}>Activos</option>
+            <option value={false}>Inactivos</option>
+          </select>
         </div>
       </div>
       <div className=" container col-12 col-md-9 col-lg-6 edit_table-container">

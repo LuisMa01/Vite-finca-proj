@@ -244,6 +244,7 @@ const nuevoCultivo = () => {
                 <div className="col-7">
                   <input
                     type="text"
+                    maxLength={20}
                     className="form-control"
                     placeholder="Fruta ##"
                     value={cropNames}
@@ -268,6 +269,7 @@ const nuevoCultivo = () => {
               <label htmlFor="variedad_cultivo">Área de Cultivo (tareas)</label>
               <input
                 type="number"
+                maxLength={10}
                 step="any"
                 min={0}
                 className="form-control"
@@ -344,6 +346,7 @@ const nuevoCultivo = () => {
               <label htmlFor="producto_final">Producto final</label>
               <input
                 type="text"
+                maxLength={50}
                 className="form-control"
                 value={finalProd}
                 onChange={onCropFinalProdChanged}

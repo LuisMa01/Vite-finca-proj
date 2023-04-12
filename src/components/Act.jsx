@@ -110,6 +110,7 @@ const Act = ({ actId }) => {
                 <label for="nombre_actividad">Nombre de actividad</label>
                 <input
                   type="text"
+                  maxLength={20}
                   className="form-control"
                   placeholder="Actividad X"
                   value={actName}

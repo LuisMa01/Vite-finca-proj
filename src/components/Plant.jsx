@@ -119,6 +119,7 @@ const Plant = ({ plantId }) => {
                 </label>
                 <input
                   type="text"
+                  maxLength={20}
                   className="form-control"
                   id="nombre_cultivo"
                   placeholder="Fruta X"
@@ -133,6 +134,7 @@ const Plant = ({ plantId }) => {
                 </label>
                 <input
                   type="text"
+                  maxLength={20}
                   className="form-control"
                   id="nombre_cultivo"
                   value={variety}
@@ -145,6 +147,7 @@ const Plant = ({ plantId }) => {
                 </label>
                 <input
                   type="text"
+                  maxLength={30}
                   className="form-control"
                   id="nombre_cultivo"
                   value={plantFrame}
@@ -158,6 +161,7 @@ const Plant = ({ plantId }) => {
                 <label for="responsable">Descripción</label>
                 <input
                   type="text"
+                  maxLength={100}
                   className="form-control"
                   id="responsable"
                   value={desc}
