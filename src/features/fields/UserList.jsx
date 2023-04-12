@@ -84,7 +84,7 @@ const userList = () => {
           </Link>
         </div>
         <div className="container col-12 col-lg-6">
-          <div className="col-6">
+          <div className="col-6 col-lg-3">
             <select
               className="form-control "
               value={estado}
@@ -95,14 +95,15 @@ const userList = () => {
               <option value={false}>Inactivos</option>
             </select>
           </div>
-          <input
+          <div className="col-10 col-lg-6"><input
             value={search}
             maxLength={20}
             onChange={searcher}
             type="text"
             placeholder="Search"
             className="form-control"
-          />
+          /></div>
+          
         </div>
 
         <div className="table-container col-12 col-md-9 col-xl-6">
