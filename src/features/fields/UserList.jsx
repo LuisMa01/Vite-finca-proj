@@ -42,7 +42,7 @@ const userList = () => {
   if (isError) {
     content = <p className="errmsg">{error?.data?.message}</p>;
   }
-  if (users) {
+  if (isSuccess) {
     const { ids, entities } = users;
 
     const results = !search
@@ -97,6 +97,7 @@ const userList = () => {
           </div>
           <input
             value={search}
+            maxLength={20}
             onChange={searcher}
             type="text"
             placeholder="Search"

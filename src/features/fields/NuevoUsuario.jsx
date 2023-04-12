@@ -120,6 +120,7 @@ const NuevoUsuario = () => {
             <input
               id="new-user-username"
               className="form-control"
+              maxLength={20}
               name="username"
               type="text"
               autoComplete="off"
@@ -136,6 +137,7 @@ const NuevoUsuario = () => {
             </label>
             <input
               className="form-control"
+              maxLength={20}
               name="names"
               type="text"
               autoComplete="off"
@@ -152,6 +154,7 @@ const NuevoUsuario = () => {
             </label>
             <input
               className="form-control"
+              maxLength={20}
               name="surname"
               type="text"
               autoComplete="off"
@@ -167,6 +170,7 @@ const NuevoUsuario = () => {
             </label>
             <input
               type="tel"
+              maxLength={10}
               pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
               className="form-control"
               name="surname"
@@ -184,6 +188,7 @@ const NuevoUsuario = () => {
             </label>
             <input
               className="form-control"
+              maxLength={30}
               name="email"
               type="text"
               autoComplete="off"
@@ -199,6 +204,7 @@ const NuevoUsuario = () => {
             </label>
             <input
               id="new-user-pswd"
+              maxLength={30}
               className="form-control"
               name="password"
               type="password"

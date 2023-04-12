@@ -133,6 +133,7 @@ const registrarActividad = () => {
               <label htmlFor="nombre_actividad">Nombre de actividad</label>
               <input
                 type="text"
+                maxLength={20}
                 className="form-control"
                 placeholder="Actividad X"
                 value={state.actName}

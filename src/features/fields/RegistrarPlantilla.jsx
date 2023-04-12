@@ -31,7 +31,7 @@ const RegistrarPlantilla = () => {
     tableContent = <p className="errmsg">{error?.data?.message}</p>;
     console.log(error?.data?.message);
   }
-  console.log({crops});
+  
   if (crops) {
    
     tableContent =

@@ -161,6 +161,7 @@ const ItemSection = () => {
               <label htmlFor="nombre_cultivo">Nombre del Artículo</label>
               <input
                 type="text"
+                maxLength={20}
                 className="form-control"
                 placeholder="Articulo X"
                 value={itemName}
@@ -185,6 +186,7 @@ const ItemSection = () => {
               <label htmlFor="variedad_cultivo">Precio del Artículo</label>
               <input
                 type="number"
+                maxLength={30}
                 step="any"
                 min={0}
                 className="form-control"
@@ -200,6 +202,7 @@ const ItemSection = () => {
               <label htmlFor="producto_final">Descripción del Artículo</label>
               <input
                 type="text"
+                maxLength={200}
                 className="form-control"
                 value={desc}
                 onChange={onItemDescChanged}

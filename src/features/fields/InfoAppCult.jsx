@@ -319,6 +319,7 @@ const InfoAppCult = () => {
               </div>
               <input
                 type="number"
+                maxLength={9}
                 value={costQuantity}
                 min="0"
                 onChange={onCostQuantityChanged}
