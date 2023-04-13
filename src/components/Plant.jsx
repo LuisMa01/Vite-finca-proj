@@ -194,7 +194,7 @@ const Plant = ({ plantId }) => {
                 </label>
                 <input
                   type="text"
-                  maxLength={30}
+                  maxLength={12}
                   className="form-control"
                   id="nombre_cultivo"
                   placeholder="ej: 1.1X2.2"
@@ -216,9 +216,13 @@ const Plant = ({ plantId }) => {
                   maxLength={100}
                   className="form-control"
                   id="responsable"
+                  pattern="^[a-zA-Z-0-9-., ]*$"
                   value={desc}
                   onChange={onPlantDescChanged}
                 />
+                <div className="error-message">
+                  <p>No se admiten caracteres especiales, solo [.] [-] [,]</p>
+                </div>
               </div>
             </div>
             <div className="cultivos_button-section">

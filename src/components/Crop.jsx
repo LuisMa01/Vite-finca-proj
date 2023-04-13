@@ -20,6 +20,10 @@ import Modal from "react-modal";
 import useAuth from "../hooks/useAuth";
 
 Modal.setAppElement("#root");
+const CULT_REGEX =
+  /^([A-Z]{1})([a-z0-9]{4,20})(([-]{1}?)([a-zA-Z0-9]{1,20}?)){0,3}$/;
+const FINAL_PRO_REGEX =
+  /^([A-Z]{1})([a-z0-9]{4,20})(([-., ]{1}?)([a-zA-Z0-9]{1,20}?)){0,10}$/;
 
 const Cost = ({ cropId }) => {
   const { data: cost } = useGetCostsQuery("costsList", {
@@ -51,7 +55,7 @@ const Cost = ({ cropId }) => {
 };
 
 const Crop = ({ cropId, Lista }) => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const { username, isManager, isAdmin } = useAuth();
   const { crop } = useGetCropsQuery("cropsList", {
     selectFromResult: ({ data }) => ({
@@ -84,25 +88,36 @@ const Crop = ({ cropId, Lista }) => {
   const [active, setActive] = useState(crop.crop_status);
   const [cropArea, setCropArea] = useState(crop.crop_area);
   const [isOpen, setIsOpen] = useState(false);
+  const [validCultName, setValidCultName] = useState(false);
+  const [validCultFinalPro, setValidCultFinalPro] = useState(false);
+  useEffect(() => {
+    setValidCultName(CULT_REGEX.test(cropName));
+  }, [cropName]);
+  useEffect(() => {
+    setValidCultFinalPro(FINAL_PRO_REGEX.test(finalProd));
+  }, [finalProd]);
   const [updateCrop, { isLoading, isSuccess, isError, error }] =
-      useUpdateCropMutation();
+    useUpdateCropMutation();
+  const canSave =
+    [validCultName, finalProd ? validCultFinalPro : true].every(Boolean) &&
+    !isLoading;
+  const [
+    deleteCrop,
+    { isSuccess: isDelSuccess, isError: isDelError, error: delerror },
+  ] = useDeleteCropMutation();
 
-    const [
-      deleteCrop,
-      { isSuccess: isDelSuccess, isError: isDelError, error: delerror },
-    ] = useDeleteCropMutation();
-
-    const onCropNameChanged = (e) => setCropName(e.target.value);
-    const onRepUserChanged = (e) => setRepUser(e.target.value);
-    const onCropPlantChanged = (e) => setDatePlant(e.target.value);
-    const onCropHarvestChanged = (e) => setDateHarvest(e.target.value);
-    const onCropFinalProdChanged = (e) => setFinalProd(e.target.value);
-    const onCropCampChanged = (e) => setCropCampKey(e.target.value);
-    const onCropPlantKeyChanged = (e) => setCropPlantKey(e.target.value);
-    const onCropAreaChanged = (e) => setCropArea(e.target.value);
-    //id, repUser, cropName, datePlant, dateHarvest, finalProd, cropCampKey, cropPlantKey, active, cropArea
-    const onActiveChanged = async (e) => {
-      e.preventDefault();
+  const onCropNameChanged = (e) => setCropName(e.target.value);
+  const onRepUserChanged = (e) => setRepUser(e.target.value);
+  const onCropPlantChanged = (e) => setDatePlant(e.target.value);
+  const onCropHarvestChanged = (e) => setDateHarvest(e.target.value);
+  const onCropFinalProdChanged = (e) => setFinalProd(e.target.value);
+  const onCropCampChanged = (e) => setCropCampKey(e.target.value);
+  const onCropPlantKeyChanged = (e) => setCropPlantKey(e.target.value);
+  const onCropAreaChanged = (e) => setCropArea(e.target.value);
+  //id, repUser, cropName, datePlant, dateHarvest, finalProd, cropCampKey, cropPlantKey, active, cropArea
+  const onActiveChanged = async (e) => {
+    e.preventDefault();
+    if (canSave) {
       await updateCrop({
         id: crop.crop_id,
         cropName,
@@ -115,57 +130,53 @@ const Crop = ({ cropId, Lista }) => {
         active,
         cropArea,
       });
-      
-    };
-    const onStatusChanged = async (e) => {
-      await updateCrop({
-        id: crop.crop_id,
-        cropName,
-        repUser,
-        datePlant,
-        dateHarvest,
-        finalProd,
-        cropCampKey,
-        cropPlantKey,
-        active: e.target.checked,
-        cropArea,
-      });
-    };
-    //id, cropName, datePlant, dateHarvest, finalProd, cropCampKey, cropPlantKey, active
-    const onDeleteCropClicked = async () => {
-      Swal.fire({
-        title: "¿Seguro de eliminar?",
-        text: `Eliminar este cultivo afectará todos los datos asociados a este. Esta acción será irreversible.`,
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "#3085d6",
-        cancelButtonColor: "#d33",
-        confirmButtonText: "Sí, eliminar!",
-        cancelButtonText: "Cancelar",
-      }).then(async (result) => {
-        if (result.isConfirmed) {
-          await deleteCrop({ id: crop.crop_id });
-          Swal.fire(
-            "¡Eliminado!",
-            "Este cultivo ha sido eliminado.",
-            "success"
-          );
-        }
-      });
-    };
+    }
+  };
+  const onStatusChanged = async (e) => {
+    await updateCrop({
+      id: crop.crop_id,
+      cropName,
+      repUser,
+      datePlant,
+      dateHarvest,
+      finalProd,
+      cropCampKey,
+      cropPlantKey,
+      active: e.target.checked,
+      cropArea,
+    });
+  };
+  //id, cropName, datePlant, dateHarvest, finalProd, cropCampKey, cropPlantKey, active
+  const onDeleteCropClicked = async () => {
+    Swal.fire({
+      title: "¿Seguro de eliminar?",
+      text: `Eliminar este cultivo afectará todos los datos asociados a este. Esta acción será irreversible.`,
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Sí, eliminar!",
+      cancelButtonText: "Cancelar",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        await deleteCrop({ id: crop.crop_id });
+        Swal.fire("¡Eliminado!", "Este cultivo ha sido eliminado.", "success");
+      }
+    });
+  };
 
-    const handleClearClick = (e) => {
-      e.preventDefault();
-      setCropName(crop.crop_name);
-      setRepUser(crop.crop_user_key);
-      setDatePlant(crop.crop_plant);
-      setDateHarvest("");
-      setFinalProd(crop.crop_final_prod);
-      setCropCampKey(crop.crop_camp_key);
-      setCropPlantKey(crop.crop_plant_key);
-      setActive(crop.crop_status);
-      setCropArea(crop.crop_area);
-    };
+  const handleClearClick = (e) => {
+    e.preventDefault();
+    setCropName(crop.crop_name);
+    setRepUser(crop.crop_user_key);
+    setDatePlant(crop.crop_plant);
+    setDateHarvest("");
+    setFinalProd(crop.crop_final_prod);
+    setCropCampKey(crop.crop_camp_key);
+    setCropPlantKey(crop.crop_plant_key);
+    setActive(crop.crop_status);
+    setCropArea(crop.crop_area);
+  };
 
   useEffect(() => {
     if (crop) {
@@ -178,12 +189,10 @@ const Crop = ({ cropId, Lista }) => {
       setCropPlantKey(crop.crop_plant_key);
       setActive(crop.crop_status);
       setCropArea(crop.crop_area);
-      setIsOpen(false)
+      setIsOpen(false);
     }
   }, [crop]);
   if (crop) {
-    
-
     let userOption;
     if (useSucc) {
       const { ids, entities } = rpuser;
@@ -229,11 +238,28 @@ const Crop = ({ cropId, Lista }) => {
 
     const actCrop = (
       <Modal isOpen={isOpen} onRequestClose={() => setIsOpen(false)}>
-        <button className="btn btn-danger" onClick={() => setIsOpen(false)}>
+        <button
+          className="btn btn-danger"
+          onClick={() => {
+            setIsOpen(false);
+            setCropName(crop.crop_name);
+            setRepUser(crop.crop_user_key);
+            setDatePlant(crop.crop_plant);
+            setDateHarvest(crop.crop_harvest);
+            setFinalProd(crop.crop_final_prod);
+            setCropCampKey(crop.crop_camp_key);
+            setCropPlantKey(crop.crop_plant_key);
+            setActive(crop.crop_status);
+            setCropArea(crop.crop_area);
+          }}
+        >
           Cerrar
         </button>
         <div className="cultivos_button-section">
-          <form className="container needs-validation nuevo-cultivo-form">
+          <form
+            className="container needs-validation nuevo-cultivo-form"
+            onSubmit={onActiveChanged}
+          >
             <div className="form-row bg-light">
               <div className="col-md-6 mb-3">
                 <label htmlFor="nombre_cultivo">Nombre del cultivo</label>
@@ -241,11 +267,15 @@ const Crop = ({ cropId, Lista }) => {
                   type="text"
                   maxLength={20}
                   className="form-control"
-                  placeholder="Fruta ##"
+                  placeholder="Cultivo-##"
+                  pattern="^([A-Z]{1})([a-z0-9]{4,20})(([-]{1}?)([a-zA-Z0-9]{1,20}?)){0,3}$"
                   value={cropName}
                   onChange={onCropNameChanged}
                   required
                 />
+                <div className="error-message">
+                  <p>Formato incorrecto. Ej: [Cultivo-##]</p>
+                </div>
               </div>
               <div className="col-12 col-md-3 mb-2">
                 <label htmlFor="variedad_cultivo">
@@ -330,22 +360,26 @@ const Crop = ({ cropId, Lista }) => {
                   type="text"
                   maxLength={100}
                   className="form-control"
+                  pattern="^([A-Z]{1})([a-z0-9ñ]{0,20})(([-., ]{1}?)([a-zA-Z0-9ñ]{1,20}?)){0,10}$"
                   value={finalProd}
                   onChange={onCropFinalProdChanged}
                 />
+                <div className="error-message">
+                  <p>No se admiten caracteres especiales, solo [.] [-] [,]</p>
+                </div>
               </div>
             </div>
 
             <div className="cultivos_button-section">
               <button
                 className="btn btn-success"
-                onClick={onActiveChanged}
+                disabled={!canSave}
                 type="submit"
               >
                 Guardar Cambios
               </button>
               <button className="btn btn-danger" onClick={handleClearClick}>
-                Limpiar
+                Retornar valor
               </button>
             </div>
           </form>
@@ -505,20 +539,27 @@ const Crop = ({ cropId, Lista }) => {
             </div>
           </div>
           <div>
-          {isAdmin && <div type="button" className="btn btn-success" onClick={() => setIsOpen(true)}>Editar</div>}
-          {isAdmin && <>{actCrop}</>}
-          {(isManager || isAdmin) && (
-          
-            <button
-            className="btn btn-success"
-              onClick={(e) => navigate(`/dash/cultivos/info-cultivo-pdf/${cropId}`)}
-            >
-              Vista en PDF
-            </button>
-          
-        )}
+            {isAdmin && (
+              <div
+                type="button"
+                className="btn btn-success"
+                onClick={() => setIsOpen(true)}
+              >
+                Editar
+              </div>
+            )}
+            {isAdmin && <>{actCrop}</>}
+            {(isManager || isAdmin) && (
+              <button
+                className="btn btn-success"
+                onClick={(e) =>
+                  navigate(`/dash/cultivos/info-cultivo-pdf/${cropId}`)
+                }
+              >
+                Vista en PDF
+              </button>
+            )}
           </div>
-          
         </div>
       );
     }

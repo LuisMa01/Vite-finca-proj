@@ -157,7 +157,7 @@ const RegistrarPlanta = () => {
                 </label>
                 <input
                   type="text"
-                  maxLength={15}
+                  maxLength={12}
                   className="form-control"
                   id="nombre_cultivo"
                   pattern="^((\d{1,3})(\.?)(\d{0,2}))[X-x]((\d{1,3})(\.?)(\d{0,2}))"
@@ -179,12 +179,12 @@ const RegistrarPlanta = () => {
                   maxLength={200}
                   className="form-control"
                   id="responsable"
-                  pattern="^[a-zA-Z-0-9-. ]*$"
+                  pattern="^[a-zA-Z-0-9-., ]*$"
                   value={desc}
                   onChange={onPlantDescChanged}
                 />
                 <div className="error-message">
-                  <p>Solo letras y numeros</p>
+                  <p>No se admiten caracteres especiales, solo [.] [-] [,]</p>
                 </div>
               </div>
             </div>
