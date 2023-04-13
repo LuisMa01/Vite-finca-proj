@@ -11,11 +11,16 @@ import { useState, useEffect } from "react";
 import Plant from "../../components/Plant";
 import useAuth from "../../hooks/useAuth";
 
+const PLANT_REGEX =
+  /^([A-Z]{1})([a-z0-9]{4,20})(([- ]{1}?)([a-zA-Z0-9]{1,20}?)){0,3}$/;
+const VARY_REGEX = /^([A-Z]{1})([a-z-0-9]{2,20})$/;
+const FRAME_REGEX = /^((\d{1,3})(\.?)(\d{0,2}))[X-x]((\d{1,3})(\.?)(\d{0,2}))/;
+
 const RegistrarPlanta = () => {
   const { username, isManager, isAdmin } = useAuth();
   const {
     data: plants,
-    isLoading,
+
     isSuccess,
     isError,
     error,
@@ -26,31 +31,57 @@ const RegistrarPlanta = () => {
   });
   const [
     addNewPlant,
-    { isSuccess: addissuccess, isError: addiserror, error: adderror },
+    {
+      isLoading,
+      isSuccess: addissuccess,
+      isError: addiserror,
+      error: adderror,
+    },
   ] = useAddNewPlantMutation();
 
   const [plantName, setPlantname] = useState("");
   const [desc, setDesc] = useState("");
   const [variety, setVary] = useState("");
   const [plantFrame, setPlantFrame] = useState("");
+  const [validPlantName, setValidPlantName] = useState(false);
+  const [validVary, setValidVary] = useState(false);
+  const [validFrame, setValidFrame] = useState(false);
+
+  useEffect(() => {
+    setValidPlantName(PLANT_REGEX.test(plantName));
+  }, [plantName]);
+  useEffect(() => {
+    setValidVary(VARY_REGEX.test(variety));
+  }, [variety]);
+  useEffect(() => {
+    setValidFrame(FRAME_REGEX.test(plantFrame));
+  }, [plantFrame]);
+
+  const canSave =
+    [
+      validPlantName,
+      variety ? validVary : true,
+      plantFrame ? validFrame : true,
+    ].every(Boolean) && !isLoading;
 
   const onSavePlantClicked = async (e) => {
     e.preventDefault();
-
-    await addNewPlant({ plantName, desc, variety, plantFrame });
+    if (canSave) {
+      await addNewPlant({ plantName, desc, variety, plantFrame });
+    }
   };
 
   const onPlantNameChanged = (e) => setPlantname(e.target.value);
   const onPlantDescChanged = (e) => setDesc(e.target.value);
   const onPlantVaryChanged = (e) => setVary(e.target.value);
   const onPlantFrameChanged = (e) => setPlantFrame(e.target.value);
-  const onClickClear = (e) =>{
-    e.preventDefault()
+  const onClickClear = (e) => {
+    e.preventDefault();
     setPlantname("");
-      setDesc("");
-      setVary("");
-      setPlantFrame("");
-  }
+    setDesc("");
+    setVary("");
+    setPlantFrame("");
+  };
   useEffect(() => {
     if (addissuccess) {
       setPlantname("");
@@ -63,7 +94,6 @@ const RegistrarPlanta = () => {
   let tableContent;
   if (isError) {
     tableContent = <p className="errmsg">{error?.data?.message}</p>;
-    
   }
   if (isSuccess) {
     const { ids } = plants;
@@ -79,7 +109,10 @@ const RegistrarPlanta = () => {
       )}
       <div className="ventana_plantillas">
         {isAdmin && (
-          <form className="container col-12 col-sm-11 col-lg-9 bg-light">
+          <form
+            className="container col-12 col-sm-11 col-lg-9 bg-light"
+            onSubmit={onSavePlantClicked}
+          >
             <div className="form-row justify-content-center">
               <div className="col-md-4 mb-3">
                 <label htmlFor="nombre_cultivo" className="text-center">
@@ -90,8 +123,8 @@ const RegistrarPlanta = () => {
                   maxLength={20}
                   className="form-control"
                   id="nombre_cultivo"
-                  placeholder="Fruta X"
-                  pattern="^[a-zA-Z-0-9- ]{4,20}$"
+                  placeholder="Ej: Fruta X o Fruta-X"
+                  pattern="^([A-Z]{1})([a-z0-9]{4,20})(([- ]{1}?)([a-zA-Z0-9]{1,20}?)){0,3}$"
                   value={plantName}
                   onChange={onPlantNameChanged}
                   required="campo requerido"
@@ -108,8 +141,9 @@ const RegistrarPlanta = () => {
                   type="text"
                   maxLength={20}
                   className="form-control"
-                  pattern="^[a-zA-Z]{4,20}$"
+                  pattern="^([A-Z]{1})([a-z-0-9]{2,20})$"
                   id="nombre_cultivo"
+                  placeholder="Herbáceas"
                   value={variety}
                   onChange={onPlantVaryChanged}
                 />
@@ -126,12 +160,14 @@ const RegistrarPlanta = () => {
                   maxLength={15}
                   className="form-control"
                   id="nombre_cultivo"
-                  pattern="^[xX.0-9]*$"
+                  pattern="^((\d{1,3})(\.?)(\d{0,2}))[X-x]((\d{1,3})(\.?)(\d{0,2}))"
                   value={plantFrame}
+                  placeholder="ej: 1.1X2.2"
                   onChange={onPlantFrameChanged}
-                /><div className="error-message">
-                <p>Formato incorrecto</p>
-              </div>
+                />
+                <div className="error-message">
+                  <p>Formato incorrecto</p>
+                </div>
               </div>
             </div>
 
@@ -148,15 +184,15 @@ const RegistrarPlanta = () => {
                   onChange={onPlantDescChanged}
                 />
                 <div className="error-message">
-                  <p>Formato incorrecto</p>
+                  <p>Solo letras y numeros</p>
                 </div>
               </div>
             </div>
             <div className="cultivos_button-section">
               <button
                 className="btn btn-sm btn-success"
-                onClick={onSavePlantClicked}
                 type="submit"
+                disabled={!canSave}
               >
                 Agregar
               </button>

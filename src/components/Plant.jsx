@@ -16,6 +16,11 @@ import useAuth from "../hooks/useAuth";
 
 Modal.setAppElement("#root");
 
+const PLANT_REGEX =
+  /^([A-Z]{1})([a-z0-9]{4,20})(([- ]{1}?)([a-zA-Z0-9]{1,20}?)){0,3}$/;
+const VARY_REGEX = /^([A-Z]{1})([a-z-0-9]{2,20})$/;
+const FRAME_REGEX = /^((\d{1,3})(\.?)(\d{0,2}))[X-x]((\d{1,3})(\.?)(\d{0,2}))/;
+
 const Plant = ({ plantId }) => {
   const { username, isManager, isAdmin } = useAuth();
   const { plant } = useGetPlantsQuery("plantsList", {
@@ -30,6 +35,19 @@ const Plant = ({ plantId }) => {
     const [plantFrame, setPlantFrame] = useState(plant.plant_frame);
     const [variety, setVariety] = useState(plant.plant_variety);
     const [isOpen, setIsOpen] = useState(false);
+    const [validPlantName, setValidPlantName] = useState(false);
+    const [validVary, setValidVary] = useState(false);
+    const [validFrame, setValidFrame] = useState(false);
+
+    useEffect(() => {
+      setValidPlantName(PLANT_REGEX.test(plantName));
+    }, [plantName]);
+    useEffect(() => {
+      setValidVary(VARY_REGEX.test(variety));
+    }, [variety]);
+    useEffect(() => {
+      setValidFrame(FRAME_REGEX.test(plantFrame));
+    }, [plantFrame]);
 
     //id, plantName, desc, variety, active, plantFrame
 
@@ -40,6 +58,13 @@ const Plant = ({ plantId }) => {
       deletePlant,
       { isSuccess: isDelSuccess, isError: isDelError, error: delerror },
     ] = useDeletePlantMutation();
+
+    const canSave =
+      [
+        validPlantName,
+        variety ? validVary : true,
+        plantFrame ? validFrame : true,
+      ].every(Boolean) && !isLoading;
 
     const onPlantNameChanged = (e) => setPlantName(e.target.value);
     const onPlantDescChanged = (e) => setDesc(e.target.value);
@@ -58,14 +83,17 @@ const Plant = ({ plantId }) => {
     };
     const onPlantChanged = async (e) => {
       e.preventDefault();
-      await updatePlant({
-        id: plant.plant_id,
-        plantName,
-        desc,
-        variety,
-        active,
-        plantFrame,
-      });
+      if (canSave) {
+        await updatePlant({
+          id: plant.plant_id,
+          plantName,
+          desc,
+          variety,
+          active,
+          plantFrame,
+        });
+      }
+
       setIsOpen(false);
     };
     // id, plantName, desc, variety, active
@@ -107,11 +135,21 @@ const Plant = ({ plantId }) => {
     }, [plant]);
     const updPlant = (
       <Modal isOpen={isOpen} onRequestClose={() => setIsOpen(false)}>
-        <button className="btn btn-danger" onClick={() => setIsOpen(false)}>
+        <button
+          className="btn btn-danger"
+          onClick={() => {
+            setIsOpen(false);
+            setPlantName(plant.plant_name);
+            setDesc(plant.plant_desc);
+            setVariety(plant.plant_variety);
+            setPlantFrame(plant.plant_frame);
+            setActive(plant.plant_status);
+          }}
+        >
           Cerrar
         </button>
         <div className="cultivos_button-section">
-          <form>
+          <form onSubmit={onPlantChanged}>
             <div className="form-row justify-content-center">
               <div className="col-md-4 mb-3">
                 <label for="nombre_cultivo" className="text-center">
@@ -122,11 +160,15 @@ const Plant = ({ plantId }) => {
                   maxLength={20}
                   className="form-control"
                   id="nombre_cultivo"
-                  placeholder="Fruta X"
+                  placeholder="Fruta X o Fruta-x"
+                  pattern="^([A-Z]{1})([a-z0-9]{4,20})(([- ]{1}?)([a-zA-Z0-9]{1,20}?)){0,3}$"
                   value={plantName}
                   onChange={onPlantNameChanged}
                   required
                 />
+                <div className="error-message">
+                  <p>Formato incorrecto</p>
+                </div>
               </div>
               <div className="col-md-4 mb-3">
                 <label for="nombre_cultivo" className="text-center">
@@ -137,9 +179,14 @@ const Plant = ({ plantId }) => {
                   maxLength={20}
                   className="form-control"
                   id="nombre_cultivo"
+                  placeholder="Herbáceas"
+                  pattern="^([A-Z]{1})([a-z-0-9]{2,20})$"
                   value={variety}
                   onChange={onPlantVaryChanged}
                 />
+                <div className="error-message">
+                  <p>Formato incorrecto</p>
+                </div>
               </div>
               <div className="col-md-4 mb-3">
                 <label for="nombre_cultivo" className="text-center">
@@ -150,9 +197,14 @@ const Plant = ({ plantId }) => {
                   maxLength={30}
                   className="form-control"
                   id="nombre_cultivo"
+                  placeholder="ej: 1.1X2.2"
+                  pattern="^((\d{1,3})(\.?)(\d{0,2}))[X-x]((\d{1,3})(\.?)(\d{0,2}))"
                   value={plantFrame}
                   onChange={onPlantFrameChanged}
                 />
+                <div className="error-message">
+                <p>Formato incorrecto</p>
+              </div>
               </div>
             </div>
 
@@ -172,8 +224,8 @@ const Plant = ({ plantId }) => {
             <div className="cultivos_button-section">
               <button
                 className="btn btn-sm btn-success"
-                onClick={onPlantChanged}
                 type="submit"
+                disabled={!canSave}
               >
                 Guardar Cambios
               </button>
@@ -181,7 +233,7 @@ const Plant = ({ plantId }) => {
                 onClick={handleClearClick}
                 className="btn btn-outline-danger limpiar"
               >
-                Limpiar
+                Retornar Valor
               </button>
             </div>
           </form>
@@ -226,7 +278,7 @@ const Plant = ({ plantId }) => {
           </td>
         )}
         {isAdmin && <td onClick={() => setIsOpen(true)}>Editar</td>}
-        {isAdmin && <>{ updPlant }</>}
+        {isAdmin && <>{updPlant}</>}
       </tr>
     );
 
