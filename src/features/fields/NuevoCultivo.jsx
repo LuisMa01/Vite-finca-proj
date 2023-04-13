@@ -12,6 +12,10 @@ import { useEffect, useState } from "react";
 import Crop from "../../components/Crop";
 import useAuth from "../../hooks/useAuth";
 
+const CULT_REGEX =
+  /^([A-Z]{1})([a-z0-9]{4,20})(([-]{1}?)([a-zA-Z0-9]{1,20}?)){0,3}$/;
+  const FINAL_PRO_REGEX = /^([A-Z]{1})([a-z0-9]{4,20})(([-., ]{1}?)([a-zA-Z0-9]{1,20}?)){0,10}$/
+
 const nuevoCultivo = () => {
   const { username, isManager, isAdmin } = useAuth();
   const {
@@ -66,11 +70,7 @@ const nuevoCultivo = () => {
 
     plantOption = ids.map((Id) => {
       if (entities[Id].plant_status) {
-        return (
-          <option value={Id}>
-            {entities[Id].plant_name}
-          </option>
-        );
+        return <option value={Id}>{entities[Id].plant_name}</option>;
       }
     });
   }
@@ -81,11 +81,7 @@ const nuevoCultivo = () => {
 
     campOption = ids.map((Id) => {
       if (entities[Id].camp_status) {
-        return (
-          <option value={Id}>
-            {entities[Id].camp_name}
-          </option>
-        );
+        return <option value={Id}>{entities[Id].camp_name}</option>;
       }
     });
   }
@@ -113,6 +109,16 @@ const nuevoCultivo = () => {
   const [plantilla, setPlantilla] = useState("");
   const [cropName, setCropName] = useState("");
   const navigate = useNavigate();
+  const [validCultName, setValidCultName] = useState(false);
+  const [validCultFinalPro, setValidCultFinalPro] = useState(false);
+    useEffect(() => {
+      setValidCultName(CULT_REGEX.test(cropNames));
+    }, [cropNames]);
+    useEffect(() => {
+      setValidCultFinalPro(FINAL_PRO_REGEX.test(finalProd));
+    }, [finalProd]);
+
+    const canSave = [validCultName, finalProd? validCultFinalPro:true].every(Boolean) && !isNewLoading;
 
   const onCropNamesChanged = (e) => {
     setCropNames(e.target.value);
@@ -147,28 +153,33 @@ const nuevoCultivo = () => {
   };
 
   const save = async (e) => {
-    await addNewCrop({
-      repUser,
-      cropName,
-      datePlant,
-      dateHarvest,
-      finalProd,
-      cropCampKey,
-      cropPlantKey,
-      cropArea,
-    });
+    if (canSave) {
+      await addNewCrop({
+        repUser,
+        cropName,
+        datePlant,
+        dateHarvest,
+        finalProd,
+        cropCampKey,
+        cropPlantKey,
+        cropArea,
+      });
+    }
+    
   };
   const savePlantilla = async (e) => {
-    await addNewCrop({
-      repUser: "",
-      cropName,
-      datePlant: "",
-      dateHarvest: "",
-      finalProd: "",
-      cropCampKey: "",
-      cropPlantKey,
-      cropArea: "",
-    });
+    if (canSave) {
+      await addNewCrop({
+        repUser: "",
+        cropName,
+        datePlant: "",
+        dateHarvest: "",
+        finalProd: "",
+        cropCampKey: "",
+        cropPlantKey,
+        cropArea: "",
+      });
+    }    
   };
 
   const onSaveCropClicked = async (e) => {
@@ -182,12 +193,10 @@ const nuevoCultivo = () => {
   };
   useEffect(() => {
     setCropName(`${plantilla}${cropNames}`);
-    
   }, [plantilla, cropNames]);
 
   useEffect(() => {
     if (addissuccess) {
-      
       setCropNames("");
       setRepUser("");
       setCropPlant();
@@ -217,7 +226,6 @@ const nuevoCultivo = () => {
       ids.map((Id) => {
         let plnt = `${entities[Id].crop_name}`.split("-")[0];
         if (plnt !== "Plantilla") {
-          
           return <Crop key={Id} cropId={Id} Lista={"Lista1"} />;
         }
       });
@@ -236,7 +244,7 @@ const nuevoCultivo = () => {
       )}
 
       {isAdmin && (
-        <form className="container needs-validation nuevo-cultivo-form">
+        <form className="container needs-validation nuevo-cultivo-form" onSubmit={onSaveCropClicked}>
           <div className="form-row bg-light">
             <div className="col-md-6 mb-3">
               <label htmlFor="nombre_cultivo">Nombre del cultivo</label>
@@ -244,13 +252,17 @@ const nuevoCultivo = () => {
                 <div className="col-7">
                   <input
                     type="text"
-                    maxLength={20}
+                    maxLength={30}
                     className="form-control"
-                    placeholder="Fruta ##"
+                    placeholder="Cultivo-##"
+                    pattern="^([A-Z]{1})([a-z0-9]{4,20})(([-]{1}?)([a-zA-Z0-9]{1,20}?)){0,3}$"
                     value={cropNames}
                     onChange={onCropNamesChanged}
-                    required
+                    required=""
                   />
+                  <div className="error-message">
+                    <p>Formato incorrecto. Ej: [Cultivo-##]</p>
+                  </div>
                 </div>
                 <div className="col-5">
                   <select
@@ -269,9 +281,9 @@ const nuevoCultivo = () => {
               <label htmlFor="variedad_cultivo">Área de Cultivo (tareas)</label>
               <input
                 type="number"
-                maxLength={10}
                 step="any"
                 min={0}
+                max={1000}
                 className="form-control"
                 id="variedad_cultivo"
                 value={cropArea}
@@ -285,7 +297,7 @@ const nuevoCultivo = () => {
                 className="form-control"
                 value={datePlant}
                 onChange={onCropPlantChanged}
-                required
+                required=""
               />
             </div>
           </div>
@@ -346,18 +358,22 @@ const nuevoCultivo = () => {
               <label htmlFor="producto_final">Producto final</label>
               <input
                 type="text"
-                maxLength={50}
+                maxLength={100}
                 className="form-control"
+                pattern="^([A-Z]{1})([a-z0-9ñ]{0,20})(([-., ]{1}?)([a-zA-Z0-9ñ]{1,20}?)){0,10}$"
                 value={finalProd}
                 onChange={onCropFinalProdChanged}
               />
+              <div className="error-message">
+                <p>No se admiten caracteres especiales, solo [.] [-] [,]</p>
+              </div>
             </div>
           </div>
 
           <div className="cultivos_button-section">
             <button
               className="btn btn-success"
-              onClick={onSaveCropClicked}
+              disabled={!canSave}
               type="submit"
             >
               Guardar cultivo

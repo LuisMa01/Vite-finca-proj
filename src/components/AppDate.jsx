@@ -249,7 +249,7 @@ const AppDate = ({ dateId, Lista }) => {
                   Guardar Cambios
                 </button>
                 <button className="btn btn-danger" onClick={handleClearClick}>
-                  Limpiar
+                  Retornar valor
                 </button>
               </div>
             </div>

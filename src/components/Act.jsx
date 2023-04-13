@@ -12,12 +12,15 @@ import RemoveImg from "../images/remove.svg";
 import Swal from "sweetalert2";
 import { ROLES } from "../config/roles";
 import Modal from "react-modal";
-import useAuth from '../hooks/useAuth'
+import useAuth from "../hooks/useAuth";
 
 Modal.setAppElement("#root");
 
+const ACT_REGEX =
+  /^([A-Z]{1})([a-z0-9]{4,20})(([- ]{1}?)([a-zA-Z0-9]{1,20}?)){0,3}$/;
+
 const Act = ({ actId }) => {
-  const { username, isManager, isAdmin } = useAuth()
+  const { username, isManager, isAdmin } = useAuth();
   const { act } = useGetActsQuery("actsList", {
     selectFromResult: ({ data }) => ({
       act: data?.entities[actId],
@@ -28,6 +31,10 @@ const Act = ({ actId }) => {
     const [desc, setDesc] = useState(act.act_desc);
     const [active, setActive] = useState(act.act_status);
     const [isOpen, setIsOpen] = useState(false);
+    const [validActName, setValidActName] = useState(false);
+    useEffect(() => {
+      setValidActName(ACT_REGEX.test(actName));
+    }, [actName]);
 
     //id, actName, desc, active
     const [updateAct, { isLoading, isSuccess, isError, error }] =
@@ -37,6 +44,8 @@ const Act = ({ actId }) => {
       deleteAct,
       { isSuccess: isDelSuccess, isError: isDelError, error: delerror },
     ] = useDeleteActMutation();
+
+    const canSave = [validActName].every(Boolean) && !isLoading;
 
     const onActNameChanged = (e) => setActName(e.target.value);
     const onActDescChanged = (e) => setDesc(e.target.value);
@@ -49,7 +58,6 @@ const Act = ({ actId }) => {
     };
 
     const onActiveChanged = async (e) => {
-
       await updateAct({
         id: act.act_id,
         actName,
@@ -57,14 +65,16 @@ const Act = ({ actId }) => {
       });
     };
     const onActChanged = async (e) => {
-      e.preventDefault()
-      await updateAct({
-        id: act.act_id,
-        actName,
-        active,
-        desc,
-      });
-      setIsOpen(false);
+      e.preventDefault();
+      if (canSave) {
+        await updateAct({
+          id: act.act_id,
+          actName,
+          active,
+          desc,
+        });
+        setIsOpen(false);
+      }
     };
     // id, actName, desc, active
     const onDeleteActClicked = async () => {
@@ -100,11 +110,22 @@ const Act = ({ actId }) => {
 
     const updAct = (
       <Modal isOpen={isOpen} onRequestClose={() => setIsOpen(false)}>
-        <button className="btn btn-danger" onClick={() => setIsOpen(false)}>
+        <button
+          className="btn btn-danger"
+          onClick={() => {
+            setActName(act.act_name);
+            setDesc(act.act_desc);
+            setActive(act.act_status);
+            setIsOpen(false);
+          }}
+        >
           Cerrar
         </button>
         <div className="cultivos_button-section">
-          <form className="container myform col-6 needs-validation" novalidate>
+          <form
+            className="container myform col-6 needs-validation"
+            onSubmit={onActChanged}
+          >
             <div className="form-row bg-light">
               <div className="col-12">
                 <label for="nombre_actividad">Nombre de actividad</label>
@@ -112,34 +133,39 @@ const Act = ({ actId }) => {
                   type="text"
                   maxLength={20}
                   className="form-control"
-                  placeholder="Actividad X"
+                  placeholder="Actividad X o Actividad-x"
+                  pattern="^([A-Z]{1})([a-z0-9]{4,20})(([- ]{1}?)([a-zA-Z0-9]{1,20}?)){0,3}$"
                   value={actName}
                   onChange={onActNameChanged}
-                  required
+                  required=""
                 />
+                <div className="error-message">
+                  <p>Formato incorrecto</p>
+                </div>
               </div>
-              
-              
+
               <div className="col-12">
                 <label for="descripcion_actividad">
                   Descripción (opcional)
                 </label>
-                
-                <textarea
-                type="text"
-                className="form-control rounded-1"
-                placeholder="Ingresar descripción"
-                value={desc}
-                onChange={onActDescChanged}
-                rows="10"
-                cols="50"
-              />
+
+                <input
+                  type="text"
+                  className="form-control rounded-1"
+                  placeholder="Ingresar descripción"
+                  pattern="^[a-zA-Z-0-9-., ]*$"
+                  value={desc}
+                  onChange={onActDescChanged}
+                  
+                /><div className="error-message">
+                <p>No se admiten caracteres especiales, solo [.] [-] [,]</p>
+              </div>
               </div>
             </div>
             <div className="edit-campo-button-section_parent">
               <button
                 type="submit"
-                onClick={onActChanged}
+                disabled={!canSave}
                 className="btn btn-outline-primary limpiar"
               >
                 Guardar Cambios
@@ -148,7 +174,7 @@ const Act = ({ actId }) => {
                 onClick={handleClearClick}
                 className="btn btn-outline-danger limpiar"
               >
-                Limpiar
+                Retornar valor
               </button>
             </div>
           </form>
@@ -171,22 +197,27 @@ const Act = ({ actId }) => {
       <tr key={actId}>
         <td>{actname}</td>
         <td>{desc ? desc : ""}</td>
-        {(isManager || isAdmin) &&
-        <td>
-          <input type="checkbox" checked={active} onChange={onActiveChanged} />
-        </td>}
-        {(isAdmin) &&
-        <td>
-          <img
-            onClick={onDeleteActClicked}
-            className="remove-img"
-            src={RemoveImg}
-            alt="Remove"
-          />
-        </td>}
-        {isAdmin &&
-        <td onClick={() => setIsOpen(true)}>Editar</td>}
-         {isAdmin && <>{updAct}</> }
+        {(isManager || isAdmin) && (
+          <td>
+            <input
+              type="checkbox"
+              checked={active}
+              onChange={onActiveChanged}
+            />
+          </td>
+        )}
+        {isAdmin && (
+          <td>
+            <img
+              onClick={onDeleteActClicked}
+              className="remove-img"
+              src={RemoveImg}
+              alt="Remove"
+            />
+          </td>
+        )}
+        {isAdmin && <td onClick={() => setIsOpen(true)}>Editar</td>}
+        {isAdmin && <>{updAct}</>}
       </tr>
     );
 

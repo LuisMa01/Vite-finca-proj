@@ -16,6 +16,11 @@ import useAuth from "../hooks/useAuth";
 
 Modal.setAppElement("#root");
 
+const ITEM_REGEX =
+  /^([A-Z]{1})([a-z0-9]{0,20})(([- ]{1}?)([a-zA-Z0-9]{1,20}?)){0,3}$/;
+
+const DESC_REGEX =
+  /^([A-Z]{1})([a-z0-9]{0,20})(([-., ]{1}?)([a-zA-Z0-9]{1,20}?)){0,50}$/;
 const Dose = ({ doseId }) => {
   const { dose } = useGetDosesQuery("dosesList", {
     selectFromResult: ({ data }) => ({
@@ -61,6 +66,16 @@ const Item = ({ itemId }) => {
     const [itemDose, setItemDose] = useState(item.item_dose_key);
     const [active, setActive] = useState(item.item_status);
     const [isOpen, setIsOpen] = useState(false);
+    const [validItemName, setValidItemName] = useState(false);
+    const [validDesc, setValidUnit] = useState(false);
+    useEffect(() => {
+      setValidItemName(ITEM_REGEX.test(itemName));
+    }, [itemName]);
+    useEffect(() => {
+      setValidUnit(DESC_REGEX.test(desc));
+    }, [desc]);
+    const canSave =
+      [validItemName, desc ? validDesc : true].every(Boolean) && !isLoading;
 
     const onItemNameChanged = (e) => setItemName(e.target.value);
     const onItemPriceChanged = (e) => setItemPrice(e.target.value);
@@ -79,14 +94,17 @@ const Item = ({ itemId }) => {
     };
     const onItemChanged = async (e) => {
       e.preventDefault();
-      await updateItem({
-        id: item.item_id,
-        itemName,
-        itemPrice,
-        desc,
-        itemDose,
-        active,
-      });
+      if (canSave) {
+        await updateItem({
+          id: item.item_id,
+          itemName,
+          itemPrice,
+          desc,
+          itemDose,
+          active,
+        });
+      }
+
       setIsOpen(false);
     };
     //id, itemName, desc, itemPrice, active, itemDose
@@ -137,11 +155,7 @@ const Item = ({ itemId }) => {
 
       doseOption = ids.map((Id) => {
         if (entities[Id].dose_status) {
-          return (
-            <option value={Id}>
-              {entities[Id].dose_name}
-            </option>
-          );
+          return <option value={Id}>{entities[Id].dose_name}</option>;
         }
       });
     }
@@ -153,12 +167,35 @@ const Item = ({ itemId }) => {
     }).format(parseFloat(itemPrice));
 
     const updItem = (
-      <Modal isOpen={isOpen} onRequestClose={() => setIsOpen(false)}>
-        <button className="btn btn-danger" onClick={() => setIsOpen(false)}>
+      <Modal
+        isOpen={isOpen}
+        onRequestClose={() => {
+          setIsOpen(false);
+          setItemName(item.item_name);
+          setItemPrice(item.item_price);
+          setDesc(item.item_desc);
+          setItemDose(item.item_dose_key);
+          setActive(item.item_status);
+        }}
+      >
+        <button
+          className="btn btn-danger"
+          onClick={() => {
+            setIsOpen(false);
+            setItemName(item.item_name);
+            setItemPrice(item.item_price);
+            setDesc(item.item_desc);
+            setItemDose(item.item_dose_key);
+            setActive(item.item_status);
+          }}
+        >
           Cerrar
         </button>
         <div className="cultivos_button-section">
-          <form className="container needs-validation nuevo-cultivo-form">
+          <form
+            className="container needs-validation nuevo-cultivo-form"
+            onSubmit={onItemChanged}
+          >
             <div className="form-row bg-light">
               <div className="col-md-4 mb-3">
                 <label for="nombre_cultivo">Nombre del Artículo</label>
@@ -166,11 +203,15 @@ const Item = ({ itemId }) => {
                   type="text"
                   maxLength={30}
                   className="form-control"
-                  placeholder="Fruta ##"
+                  placeholder="Articulo X o Articulo-X"
+                  pattern="^([A-Z]{1})([a-z0-9]{0,20})(([- ]{1}?)([a-zA-Z0-9]{1,20}?)){0,3}$"
                   value={itemName}
                   onChange={onItemNameChanged}
                   required
                 />
+                <div className="error-message">
+                  <p>Formato incorrecto. Ej: [Item-##] [Item ##]</p>
+                </div>
               </div>
             </div>
             <div className="form-row">
@@ -195,6 +236,7 @@ const Item = ({ itemId }) => {
                   type="number"
                   step="any"
                   min={0}
+                  max={1000000}
                   className="form-control"
                   id="variedad_cultivo"
                   value={itemPrice}
@@ -207,15 +249,19 @@ const Item = ({ itemId }) => {
                   type="text"
                   maxLength={200}
                   className="form-control"
+                  pattern="^([A-Z]{1})([a-z0-9]{0,20})(([-., ]{1}?)([a-zA-Z0-9]{1,20}?)){0,50}$"
                   value={desc}
                   onChange={onItemDescChanged}
                 />
+                <div className="error-message">
+                  <p>No se admiten caracteres especiales, solo [.] [-] [,]</p>
+                </div>
               </div>
             </div>
             <div className="cultivos_button-section">
               <button
                 className="btn btn-success"
-                onClick={onItemChanged}
+                disabled={!canSave}
                 type="submit"
               >
                 Guardar Cambios
@@ -224,7 +270,7 @@ const Item = ({ itemId }) => {
                 onClick={handleClearClick}
                 className="btn btn-outline-danger limpiar"
               >
-                Limpiar
+                Retornar valor
               </button>
             </div>
           </form>
@@ -267,7 +313,7 @@ const Item = ({ itemId }) => {
           </td>
         )}
         {isAdmin && <td onClick={() => setIsOpen(true)}>Editar</td>}
-        {isAdmin && <>{ updItem }</>}
+        {isAdmin && <>{updItem}</>}
       </tr>
     );
 

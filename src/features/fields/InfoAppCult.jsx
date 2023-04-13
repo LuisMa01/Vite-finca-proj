@@ -67,6 +67,7 @@ const Comentario = ({ dateId, info }) => {
                 type="text"
                 placeholder="Ingresar Comentario"
                 value={desc}
+                maxLength={300}
                 onChange={onComtDescChange}
                 rows={"5"}
                 cols={"25"}

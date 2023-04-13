@@ -12,6 +12,11 @@ import DoseSection from "./DoseSection";
 import useAuth from "../../hooks/useAuth";
 
 Modal.setAppElement("#root");
+const ITEM_REGEX =
+  /^([A-Z]{1})([a-z0-9]{0,20})(([- ]{1}?)([a-zA-Z0-9]{1,20}?)){0,3}$/;
+
+const DESC_REGEX =
+  /^([A-Z]{1})([a-z0-9]{0,20})(([-., ]{1}?)([a-zA-Z0-9]{1,20}?)){0,50}$/;
 
 const ItemSection = () => {
   const { username, isManager, isAdmin } = useAuth();
@@ -34,7 +39,12 @@ const ItemSection = () => {
 
   const [
     addNewItem,
-    { isSuccess: addissuccess, isError: addiserror, error: adderror },
+    {
+      isLoading: isLoadingNew,
+      isSuccess: addissuccess,
+      isError: addiserror,
+      error: adderror,
+    },
   ] = useAddNewItemMutation();
 
   const [itemName, setItemName] = useState("");
@@ -42,13 +52,24 @@ const ItemSection = () => {
   const [itemPrice, setItemPrice] = useState("");
   const [itemDose, setItemDose] = useState("");
   const [isOpen, setIsOpen] = useState(false);
+  const [validItemName, setValidItemName] = useState(false);
+  const [validDesc, setValidUnit] = useState(false);
+  useEffect(() => {
+    setValidItemName(ITEM_REGEX.test(itemName));
+  }, [itemName]);
+  useEffect(() => {
+    setValidUnit(DESC_REGEX.test(desc));
+  }, [desc]);
 
   //itemName, desc, itemPrice, itemDose
+  const canSave =
+    [validItemName, desc ? validDesc : true].every(Boolean) && !isLoadingNew;
 
   const onSaveItemClicked = async (e) => {
     e.preventDefault();
-
-    await addNewItem({ itemName, desc, itemPrice, itemDose });
+    if (canSave) {
+      await addNewItem({ itemName, desc, itemPrice, itemDose });
+    }
   };
 
   const onItemNameChanged = (e) => setItemName(e.target.value);
@@ -72,11 +93,7 @@ const ItemSection = () => {
 
     doseOption = ids.map((Id) => {
       if (entities[Id].dose_status) {
-        return (
-          <option value={Id}>
-            {entities[Id].dose_name}
-          </option>
-        );
+        return <option value={Id}>{entities[Id].dose_name}</option>;
       }
     });
   }
@@ -155,7 +172,10 @@ const ItemSection = () => {
         <DoseSection />
       </Modal>
       {isAdmin && (
-        <form className="container col-12 col-sm-11 col-lg-9 bg-light needs-validation nuevo-cultivo-form">
+        <form
+          className="container col-12 col-sm-11 col-lg-9 bg-light needs-validation nuevo-cultivo-form"
+          onSubmit={onSaveItemClicked}
+        >
           <div className="form-row bg-light">
             <div className="col-md-4 mb-3">
               <label htmlFor="nombre_cultivo">Nombre del Artículo</label>
@@ -163,11 +183,15 @@ const ItemSection = () => {
                 type="text"
                 maxLength={20}
                 className="form-control"
-                placeholder="Articulo X"
+                placeholder="Articulo X o Articulo-X"
+                pattern="^([A-Z]{1})([a-z0-9]{0,20})(([- ]{1}?)([a-zA-Z0-9]{1,20}?)){0,3}$"
                 value={itemName}
                 onChange={onItemNameChanged}
-                required
+                required=""
               />
+              <div className="error-message">
+                <p>Formato incorrecto. Ej: [Item-##] [Item ##]</p>
+              </div>
             </div>
             <div className="col-md-4 mb-3">
               <label htmlFor="campo_cultivo">Dosis y Unidad</label>
@@ -186,7 +210,7 @@ const ItemSection = () => {
               <label htmlFor="variedad_cultivo">Precio del Artículo</label>
               <input
                 type="number"
-                maxLength={30}
+                max={1000000}
                 step="any"
                 min={0}
                 className="form-control"
@@ -204,15 +228,19 @@ const ItemSection = () => {
                 type="text"
                 maxLength={200}
                 className="form-control"
+                pattern="^([A-Z]{1})([a-z0-9]{0,20})(([-., ]{1}?)([a-zA-Z0-9]{1,20}?)){0,50}$"
                 value={desc}
                 onChange={onItemDescChanged}
               />
+              <div className="error-message">
+                <p>No se admiten caracteres especiales, solo [.] [-] [,]</p>
+              </div>
             </div>
           </div>
           <div className="cultivos_button-section">
             <button
               className="btn btn-success"
-              onClick={onSaveItemClicked}
+              disabled={!canSave}
               type="submit"
             >
               Guardar Item

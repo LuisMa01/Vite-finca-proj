@@ -26,11 +26,17 @@ const reducer = (state, action) => {
       throw new Error();
   }
 };
+const ACT_REGEX =
+  /^([A-Z]{1})([a-z0-9]{4,20})(([- ]{1}?)([a-zA-Z0-9]{1,20}?)){0,3}$/;
 
 const registrarActividad = () => {
   const { username, isManager, isAdmin } = useAuth();
   const [state, dispatch] = useReducer(reducer, { actName: "", desc: "" });
-  const [stado, setStado] = useState("")
+  const [stado, setStado] = useState("");
+  const [validActName, setValidActName] = useState(false);
+  useEffect(() => {
+    setValidActName(ACT_REGEX.test(state.actName));
+  }, [state.actName]);
   const {
     data: acts,
     isLoading,
@@ -44,22 +50,30 @@ const registrarActividad = () => {
   });
   const [
     addNewAct,
-    { isSuccess: addissuccess, isError: addiserror, error: adderror },
+    {
+      isLoading: isLoadingNewAct,
+      isSuccess: addissuccess,
+      isError: addiserror,
+      error: adderror,
+    },
   ] = useAddNewActMutation();
+
+  const canSave = [validActName].every(Boolean) && !isLoadingNewAct;
 
   const onSaveActClicked = async (e) => {
     e.preventDefault();
-
-    await addNewAct({ actName: state.actName, desc: state.desc });
+    if (canSave) {
+      await addNewAct({ actName: state.actName, desc: state.desc });
+    }
   };
   const searchEstado = (e) => {
     e.preventDefault();
     setStado(e.target.value);
   };
-  
+
   useEffect(() => {
     if (addissuccess) {
-      dispatch({ type: ACTION.CLEAR })
+      dispatch({ type: ACTION.CLEAR });
     }
   }, [addissuccess]);
 
@@ -76,7 +90,8 @@ const registrarActividad = () => {
       ? ids
       : ids.filter((dato) => `${entities[dato].act_status}` == stado);
 
-    tableContent = results?.length && results.map((Id) => <Act key={Id} actId={Id} />);
+    tableContent =
+      results?.length && results.map((Id) => <Act key={Id} actId={Id} />);
 
     content = (
       <>
@@ -127,7 +142,10 @@ const registrarActividad = () => {
       </p>
 
       {isAdmin && (
-        <form className="container myform col-6 needs-validation">
+        <form
+          className="container myform col-6 needs-validation"
+          onSubmit={onSaveActClicked}
+        >
           <div className="form-row bg-light">
             <div className="col-12 col-md-6 mb-2">
               <label htmlFor="nombre_actividad">Nombre de actividad</label>
@@ -135,34 +153,55 @@ const registrarActividad = () => {
                 type="text"
                 maxLength={20}
                 className="form-control"
-                placeholder="Actividad X"
+                placeholder="Actividad X o Actividad-x"
+                pattern="^([A-Z]{1})([a-z0-9]{4,20})(([- ]{1}?)([a-zA-Z0-9]{1,20}?)){0,3}$"
                 value={state.actName}
-                onChange={(e) => dispatch({ type: ACTION.ACTIVITY_NAME, payload: e.target.value })}
-                required
+                onChange={(e) =>
+                  dispatch({
+                    type: ACTION.ACTIVITY_NAME,
+                    payload: e.target.value,
+                  })
+                }
+                required=""
               />
+              <div className="error-message">
+                <p>Formato incorrecto</p>
+              </div>
             </div>
             <div className="col-12 col-md-6 mb-2">
               <label htmlFor="descripcion_actividad">
                 Descripción (opcional)
               </label>
-              <textarea
+              <input
                 className="form-control rounded-1"
-                rows="1"
                 placeholder="Esta actividad consiste en..."
                 value={state.desc}
-                onChange={(e) => dispatch({ type: ACTION.ACTIVITY_DESC, payload: e.target.value })}
-              ></textarea>
+                pattern="^[a-zA-Z-0-9-., ]*$"
+                onChange={(e) =>
+                  dispatch({
+                    type: ACTION.ACTIVITY_DESC,
+                    payload: e.target.value,
+                  })
+                }
+              />
+              <div className="error-message">
+                <p>No se admiten caracteres especiales, solo [.] [-] [,]</p>
+              </div>
             </div>
           </div>
           <div className="edit-campo-button-section_parent">
             <button
               type="submit"
-              onClick={onSaveActClicked}
+              disabled={!canSave}
               className="btn btn-outline-primary limpiar"
             >
               Añadir actividad
             </button>
-            <button type="reset" className="btn btn-outline-danger limpiar" onClick={(e)=>dispatch({ type: ACTION.CLEAR })}>
+            <button
+              type="reset"
+              className="btn btn-outline-danger limpiar"
+              onClick={(e) => dispatch({ type: ACTION.CLEAR })}
+            >
               Limpiar
             </button>
           </div>
@@ -171,17 +210,16 @@ const registrarActividad = () => {
 
       <div className="seccion_campos_checkbox-div">
         <div>
-        <select
-              className="form-control"
-              value={stado}
-              onChange={searchEstado}
-            >
-              <option value={""}>Todos</option>
-              <option value={true}>Activos</option>
-              <option value={false}>Inactivos</option>
-            </select>
+          <select
+            className="form-control"
+            value={stado}
+            onChange={searchEstado}
+          >
+            <option value={""}>Todos</option>
+            <option value={true}>Activos</option>
+            <option value={false}>Inactivos</option>
+          </select>
         </div>
-        
       </div>
     </>
   );
