@@ -245,7 +245,19 @@ const User = ({ userId, Lista }) => {
 
     const actuUser = (
       <Modal isOpen={isOpen} onRequestClose={() => setIsOpen(false)}>
-        <button className="btn btn-danger" onClick={() => setIsOpen(false)}>
+        <button
+          className="btn btn-danger"
+          onClick={() => {
+            setIsOpen(false);
+            setUsername(user.user_name);
+            setNames(user.user_nombre);
+            setSurname(user.user_apellido);
+            setRoles(user.user_rol);
+            setEmail(user.email);
+            setPhone(user.user_phone);
+            setStatus(user.user_status);
+          }}
+        >
           Cerrar
         </button>
         <div className="cultivos_button-section">
@@ -435,7 +447,8 @@ const User = ({ userId, Lista }) => {
                   pattern="^(?=\w*\d)(?=\w*[A-Z])(?=\w*[a-z])\S{8,16}$"
                   value={passwordDu}
                   onChange={onPasswordDuChanged}
-                /><div className="error-message">
+                />
+                <div className="error-message">
                   <p>Incorrecto</p>
                 </div>
                 <span className="form-text small text-muted">
