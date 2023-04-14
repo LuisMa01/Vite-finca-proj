@@ -198,7 +198,7 @@ const Item = ({ itemId }) => {
           >
             <div className="form-row bg-light">
               <div className="col-md-4 mb-3">
-                <label for="nombre_cultivo">Nombre del Artículo</label>
+                <label htmlFor="nombre_cultivo">Nombre del Artículo</label>
                 <input
                   type="text"
                   maxLength={30}
@@ -216,7 +216,7 @@ const Item = ({ itemId }) => {
             </div>
             <div className="form-row">
               <div className="col-md-3 mb-3">
-                <label for="campo_cultivo">Dosis y Unidad</label>
+                <label htmlFor="campo_cultivo">Dosis y Unidad</label>
                 <select
                   className="form-control"
                   value={itemDose}
@@ -231,7 +231,7 @@ const Item = ({ itemId }) => {
             </div>
             <div className="form-row bg-light">
               <div className="col-12 col-md-6 mb-2">
-                <label for="variedad_cultivo">Precio del Artículo</label>
+                <label htmlFor="variedad_cultivo">Precio del Artículo</label>
                 <input
                   type="number"
                   step="any"
@@ -244,7 +244,7 @@ const Item = ({ itemId }) => {
                 />
               </div>
               <div className="col-md-6 mb-3">
-                <label for="producto_final">Descripción del Artículo</label>
+                <label htmlFor="producto_final">Descripción del Artículo</label>
                 <input
                   type="text"
                   maxLength={200}

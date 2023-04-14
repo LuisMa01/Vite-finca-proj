@@ -10,7 +10,7 @@ import Prefetch from "./features/auth/Prefetch";
 import PersistLogin from "./features/auth/PersistLogin";
 import RequireAuth from "./features/auth/RequireAuth";
 import { ROLES } from "./config/roles";
-import "./App.css";
+
 import NavInicio from "./features/fields/NavInicio";
 import NavProximas from "./features/fields/NavProximas";
 import MiPerfil from "./features/fields/MiPerfil";
@@ -27,12 +27,10 @@ import RegistrarPlanta from "./features/fields/RegistrarPlanta";
 import InfoCultivo from "./features/fields/InfoCultivo";
 import InfoCultivoPdf from "./features/fields/InfoCultivoPdf";
 import InfoAppCult from "./features/fields/InfoAppCult";
-import useAuth from "./hooks/useAuth";
 
 
 function App() {
-  const { isManager, isAdmin } = useAuth();
-  return (
+    return (
     <Routes>
       <Route path="/" element={<Layouts />}>
         <Route index element={<Login />} />
@@ -50,7 +48,10 @@ function App() {
                   <Route index element={<NavCultivos />} />
                   <Route path="nuevo-cultivo" element={<NuevoCultivo />} />
                   <Route path="info-cultivo/:id" element={<InfoCultivo />} />
-                  <Route path="info-cultivo-pdf/:id" element={<InfoCultivoPdf />} />
+                  <Route
+                    path="info-cultivo-pdf/:id"
+                    element={<InfoCultivoPdf />}
+                  />
                   <Route
                     element={
                       <RequireAuth
@@ -58,7 +59,7 @@ function App() {
                       />
                     }
                   >
-                  <Route path="info-app/:id" element={<InfoAppCult />} />
+                    <Route path="info-app/:id" element={<InfoAppCult />} />
                   </Route>
                   <Route
                     path="registrar-plantilla"

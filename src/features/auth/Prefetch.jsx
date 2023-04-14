@@ -13,20 +13,17 @@ import { useEffect } from 'react';
 import { Outlet } from 'react-router-dom';
 
 const Prefetch = () => {
-    useEffect(() => {
-              
-        
+    useEffect(() => {        
         store.dispatch(usersApiSlice.util.prefetch('getUsers', 'usersList', {force: true}))
         store.dispatch(actApiSlice.util.prefetch('getActs', 'actsList', {force: true}))
         store.dispatch(dateApiSlice.util.prefetch('getDates', 'datesList', {force: true}))
         store.dispatch(campApiSlice.util.prefetch('getCamps', 'campsList', {force: true}))
         store.dispatch(comtApiSlice.util.prefetch('getComts', 'comtsList', {force: true}))
         store.dispatch(costApiSlice.util.prefetch('getCosts', 'cotsList', {force: true}))
-         store.dispatch(cropApiSlice.util.prefetch('getCrops', 'cropsList', {force: true}))
-         store.dispatch(doseApiSlice.util.prefetch('getDoses', 'dosesList', {force: true}))
+        store.dispatch(cropApiSlice.util.prefetch('getCrops', 'cropsList', {force: true}))
+        store.dispatch(doseApiSlice.util.prefetch('getDoses', 'dosesList', {force: true}))
         store.dispatch(itemApiSlice.util.prefetch('getItems', 'itemsList', {force: true}))
-         store.dispatch(plantApiSlice.util.prefetch('getPlants', 'plantsList', {force: true}))
-
+        store.dispatch(plantApiSlice.util.prefetch('getPlants', 'plantsList', {force: true}))
     }, [])
 
     return <Outlet />

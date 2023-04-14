@@ -12,7 +12,19 @@ import "../../styles/login.css";
 import EyeImg from "../../images/eye.svg";
 import LeafImg from "../../images/leaf.svg";
 
+
+
+const seePassword=()=> {
+  let myPassword = document.getElementById("password");
+
+  if (myPassword.type === "password") {
+    myPassword.type = "text";
+  } else {
+    myPassword.type = "password";
+  }
+}
 const Login = () => {
+  
   const userRef = useRef();
   const errRef = useRef();
   const [username, setUsername] = useState("");
@@ -28,6 +40,8 @@ const Login = () => {
   useEffect(() => {
     userRef.current.focus();
   }, []);
+  
+  
 
   useEffect(() => {
     setErrMsg("");
@@ -136,7 +150,8 @@ const Login = () => {
             <input
               type="password"
               maxLength={50}
-              className="login-input password"
+              id="password"
+              className="login-input"
               placeholder="Contraseña"
               onChange={handlePwdInput}
               value={password}
@@ -179,14 +194,6 @@ const Login = () => {
   return content;
 };
 
-function seePassword() {
-  let myPassword = document.getElementById("password");
 
-  if (myPassword.type === "password") {
-    myPassword.type = "text";
-  } else {
-    myPassword.type = "password";
-  }
-}
 
 export default Login;
