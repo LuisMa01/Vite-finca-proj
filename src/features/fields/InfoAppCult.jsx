@@ -128,7 +128,7 @@ const Comentario = ({ dateId, info }) => {
                     Eliminar
                   </th>
                 )}
-                {(!info && isAdmin)&& (<th className="align-middle" scope="col">
+                {(!info && (isAdmin || isManager))&& (<th className="align-middle" scope="col">
                   Editar
                 </th>)}
               </tr>
@@ -284,7 +284,7 @@ const InfoAppCult = () => {
           MATERIALES, INSUMOS Y MANO DE OBRA
         </div>
         <div>{contentApp}</div>
-        {(!finalDate && isAdmin) && (<form>
+        {(!finalDate && (isAdmin || isManager)) && (<form>
           <div className="new-activity-miniform d-flex justify-content-center col-12 col-md-10 col-xl-9 form-row bg-light">
             <div className="col-md-6 col-lg-3 mb-3">
               <label htmlFor="campo_cultivo">Articulos</label>

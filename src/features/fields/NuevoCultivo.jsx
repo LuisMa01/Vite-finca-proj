@@ -11,13 +11,15 @@ import { useGetUsersQuery } from "./redux/usersApiSlice";
 import { useEffect, useState } from "react";
 import Crop from "../../components/Crop";
 import useAuth from "../../hooks/useAuth";
+import { ROLES } from "../../config/roles";
 
 const CULT_REGEX =
-  /^([A-Z]{1})([a-z0-9]{4,20})(([-]{1}?)([a-zA-Z0-9]{1,20}?)){0,3}$/;
-  const FINAL_PRO_REGEX = /^([A-Z]{1})([a-z0-9]{4,20})(([-., ]{1}?)([a-zA-Z0-9]{1,20}?)){0,10}$/
+  /^([A-Z]{1})([a-z0-9]{0,20})(([-]{1}?)([a-zA-Z0-9]{1,20}?)){0,3}$/;
+const FINAL_PRO_REGEX =
+  /^([A-Z]{1})([a-z0-9]{0,20})(([-., ]{1}?)([a-zA-Z0-9]{1,20}?)){0,10}$/;
 
 const nuevoCultivo = () => {
-  const { username, isManager, isAdmin } = useAuth();
+  const { username, isManager, isAdmin, userId } = useAuth();
   const {
     data: crops,
     isLoading,
@@ -53,13 +55,18 @@ const nuevoCultivo = () => {
 
     userOption = ids.map((Id) => {
       if (entities[Id].user_status) {
-        return (
-          <option value={entities[Id].user_id}>
-            {entities[Id].user_nombre
-              ? entities[Id].user_nombre
-              : entities[Id].user_name}
-          </option>
-        );
+        if (
+          entities[Id].user_rol == ROLES.Administrador ||
+          entities[Id].user_rol == ROLES.Supervisor
+        ) {
+          return (
+            <option value={entities[Id].user_id}>
+              {entities[Id].user_nombre
+                ? entities[Id].user_nombre
+                : entities[Id].user_name}
+            </option>
+          );
+        }
       }
     });
   }
@@ -111,14 +118,16 @@ const nuevoCultivo = () => {
   const navigate = useNavigate();
   const [validCultName, setValidCultName] = useState(false);
   const [validCultFinalPro, setValidCultFinalPro] = useState(false);
-    useEffect(() => {
-      setValidCultName(CULT_REGEX.test(cropNames));
-    }, [cropNames]);
-    useEffect(() => {
-      setValidCultFinalPro(FINAL_PRO_REGEX.test(finalProd));
-    }, [finalProd]);
+  useEffect(() => {
+    setValidCultName(CULT_REGEX.test(cropNames));
+  }, [cropNames]);
+  useEffect(() => {
+    setValidCultFinalPro(FINAL_PRO_REGEX.test(finalProd));
+  }, [finalProd]);
 
-    const canSave = [validCultName, finalProd? validCultFinalPro:true].every(Boolean) && !isNewLoading;
+  const canSave =
+    [validCultName, finalProd ? validCultFinalPro : true].every(Boolean) &&
+    !isNewLoading;
 
   const onCropNamesChanged = (e) => {
     setCropNames(e.target.value);
@@ -165,7 +174,6 @@ const nuevoCultivo = () => {
         cropArea,
       });
     }
-    
   };
   const savePlantilla = async (e) => {
     if (canSave) {
@@ -179,7 +187,7 @@ const nuevoCultivo = () => {
         cropPlantKey,
         cropArea: "",
       });
-    }    
+    }
   };
 
   const onSaveCropClicked = async (e) => {
@@ -226,7 +234,17 @@ const nuevoCultivo = () => {
       ids.map((Id) => {
         let plnt = `${entities[Id].crop_name}`.split("-")[0];
         if (plnt !== "Plantilla") {
-          return <Crop key={Id} cropId={Id} Lista={"Lista1"} />;
+          if (isAdmin) {
+            return <Crop key={Id} cropId={Id} Lista={"Lista1"} />;
+          } else if (isManager) {
+            if (entities[Id].crop_user_key == userId || entities[Id].date_user_key == userId) {
+              return <Crop key={Id} cropId={Id} Lista={"Lista1"} />;
+            }
+          } else {
+            if (entities[Id].date_user_key == userId) {
+              return <Crop key={Id} cropId={Id} Lista={"Lista1"} />;
+            }
+          }
         }
       });
   }
@@ -244,7 +262,10 @@ const nuevoCultivo = () => {
       )}
 
       {isAdmin && (
-        <form className="container needs-validation nuevo-cultivo-form" onSubmit={onSaveCropClicked}>
+        <form
+          className="container needs-validation nuevo-cultivo-form"
+          onSubmit={onSaveCropClicked}
+        >
           <div className="form-row bg-light">
             <div className="col-md-6 mb-3">
               <label htmlFor="nombre_cultivo">Nombre del cultivo</label>
@@ -255,7 +276,7 @@ const nuevoCultivo = () => {
                     maxLength={30}
                     className="form-control"
                     placeholder="Cultivo-##"
-                    pattern="^([A-Z]{1})([a-z0-9]{4,20})(([-]{1}?)([a-zA-Z0-9]{1,20}?)){0,3}$"
+                    pattern="^([A-Z]{1})([a-z0-9]{0,20})(([-]{1}?)([a-zA-Z0-9]{1,20}?)){0,3}$"
                     value={cropNames}
                     onChange={onCropNamesChanged}
                     required=""
@@ -400,6 +421,9 @@ const nuevoCultivo = () => {
                 </th>
                 <th className="align-middle" scope="col">
                   Campo
+                </th>
+                <th className="align-middle" scope="col">
+                  Responsable
                 </th>
                 {(isManager || isAdmin) && (
                   <th className="align-middle" scope="col">

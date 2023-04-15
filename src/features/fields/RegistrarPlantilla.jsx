@@ -60,9 +60,7 @@ const RegistrarPlantilla = () => {
                 <th className="align-middle" scope="col">
                   Planta
                 </th>
-                <th className="align-middle" scope="col">
-                  Campo
-                </th>
+                
                 {(isManager || isAdmin) && (
                   <th className="align-middle" scope="col">
                     Estatus

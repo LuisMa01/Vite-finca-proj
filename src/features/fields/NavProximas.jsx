@@ -19,6 +19,10 @@ const navProximas = () => {
       dates: data?.ids?.map((Id) => {
         if (isAdmin) {
           return data?.entities[Id];
+        } else if(isManager){
+          if (data?.entities[Id].crop_user_key == userId || data?.entities[Id].date_user_key == userId) {
+            return data?.entities[Id];
+          }
         } else {
           if (data?.entities[Id].date_user_key == userId) {
             return data?.entities[Id];
@@ -56,7 +60,10 @@ const navProximas = () => {
           : `${date?.date_init}`.split("T")[0];
 
       if (plnt !== "Plantilla") {
-        return [actNma, cropNma, campNma, fecha, nomnb];
+        if (date) {
+          return [actNma, cropNma, campNma, fecha, nomnb];
+        }
+        
       }
     });
 
