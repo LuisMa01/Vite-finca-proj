@@ -426,47 +426,55 @@ const infoCultivoPdf = () => {
       dateList = <Text>{dateError?.data?.message}</Text>;
     }
    */
-    contenido = (
-      <PDFViewer style={{ width: "100%", height: "90vh" }}>
-        <Document>
-          <Page size="A4" style={styles.body}>
-            <View style={styles.headRow}>
-              <View style={styles.imageItem}>
-                <Image style={styles.image} src={loyola70} />
-              </View>
-              <View>
-                <Text>Finca Experimental</Text>
-                <Text>Profesor André Vloebergh</Text>
-              </View>
+  const pdfDoc = ( <Document>
+    <Page size="A4" style={styles.body}>
+      <View style={styles.headRow}>
+        <View style={styles.imageItem}>
+          <Image style={styles.image} src={loyola70} />
+        </View>
+        <View>
+          <Text>Finca Experimental</Text>
+          <Text>Profesor André Vloebergh</Text>
+        </View>
+      </View>
+      <View>{generalInfo}</View>
+      <View>
+        <Text>LABORES DEL CULTIVO</Text>
+        <View style={styles.flexcontainerCol}>
+          <View style={styles.flexcontainerHeadRow}>
+            <View style={styles.itemsNum}>
+              <Text>#</Text>
             </View>
-            <View>{generalInfo}</View>
-            <View>
-              <Text>LABORES DEL CULTIVO</Text>
-              <View style={styles.flexcontainerCol}>
-                <View style={styles.flexcontainerHeadRow}>
-                  <View style={styles.itemsNum}>
-                    <Text>#</Text>
-                  </View>
-                  <View style={styles.items}>
-                    <Text>Actividad</Text>
-                  </View>
-                  <View style={styles.items}>
-                    <Text>Fecha Programada</Text>
-                  </View>
-                  <View style={styles.items}>
-                    <Text>Fecha Ejecutada</Text>
-                  </View>
-                </View>
+            <View style={styles.items}>
+              <Text>Actividad</Text>
+            </View>
+            <View style={styles.items}>
+              <Text>Fecha Programada</Text>
+            </View>
+            <View style={styles.items}>
+              <Text>Fecha Ejecutada</Text>
+            </View>
+          </View>
 
-                {dateList}
-              </View>
-            </View>
-          </Page>
-          {contenidoCost}
-          {contenidoComt}
-        </Document>
+          {dateList}
+        </View>
+      </View>
+    </Page>
+    {contenidoCost}
+    {contenidoComt}
+  </Document>)
+    contenido = (<>
+    <div>
+    <PDFDownloadLink document={<pdfDoc />} fileName={`${crop.crop_name}.pdf`}>
+      {({ blob, url, loading, error }) =>
+        loading ? 'Loading document...' : 'Download'
+      }
+    </PDFDownloadLink>
+  </div>
+      <PDFViewer style={{ width: "100%", height: "90vh" }}>
+       {pdfDoc}
       </PDFViewer>
-    );
+      </>);
   } else {
     contenido = (
       <PDFViewer>

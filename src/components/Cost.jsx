@@ -6,6 +6,7 @@ import { useGetDosesQuery } from "../features/fields/redux/doseApiSlice";
 import { useEffect, useState } from "react";
 import { useGetActsQuery } from "../features/fields/redux/actApiSlice";
 import { useGetUsersQuery } from "../features/fields/redux/usersApiSlice";
+import { useGetCropsQuery } from "../features/fields/redux/cropApiSlice";
 import {
   useGetCostsQuery,
   useUpdateCostMutation,
@@ -36,6 +37,11 @@ const Cost = ({ costId, Lista }) => {
   const { cost } = useGetCostsQuery("costsList", {
     selectFromResult: ({ data }) => ({
       cost: data?.entities[costId],
+    }),
+  });
+  const { crop } = useGetCropsQuery("cropsList", {
+    selectFromResult: ({ data }) => ({
+      crop: data?.entities[cost?.date_crop_key],
     }),
   });
   const [costItemKey, setItemKey] = useState(cost.cost_item_key);
@@ -100,7 +106,7 @@ const Cost = ({ costId, Lista }) => {
 
   if (cost) {
     //const handleEdit = () => navigate(`/dash/users/${actId}`)
-    const finalDate = (cost?.crop_harvest !== null || !cost.crop_status)? true:false
+    const finalDate = (crop?.crop_harvest !== null || !crop.crop_status)? true:false
     const { item } = useGetItemsQuery("itemsList", {
       selectFromResult: ({ data }) => ({
         item: data?.entities[costItemKey],
