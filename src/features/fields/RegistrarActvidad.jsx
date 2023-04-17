@@ -27,7 +27,7 @@ const reducer = (state, action) => {
   }
 };
 const ACT_REGEX =
-  /^([A-Z]{1})([a-z0-9]{4,20})(([- ]{1}?)([a-zA-Z0-9]{1,20}?)){0,3}$/;
+  /^([A-Z]{1})([a-z0-9]{0,20})(([- ]{1}?)([a-zA-Z0-9]{1,20}?)){0,3}$/;
 
 const registrarActividad = () => {
   const { username, isManager, isAdmin } = useAuth();
@@ -154,7 +154,7 @@ const registrarActividad = () => {
                 maxLength={20}
                 className="form-control"
                 placeholder="Actividad X o Actividad-x"
-                pattern="^([A-Z]{1})([a-z0-9]{4,20})(([- ]{1}?)([a-zA-Z0-9]{1,20}?)){0,3}$"
+                pattern="^([A-Z]{1})([a-z0-9]{0,20})(([- ]{1}?)([a-zA-Z0-9]{1,20}?)){0,3}$"
                 value={state.actName}
                 onChange={(e) =>
                   dispatch({

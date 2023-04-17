@@ -11,6 +11,7 @@ import {
   useUpdateCostMutation,
   useDeleteCostMutation,
 } from "../features/fields/redux/costApiSlice";
+import { useGetCropsQuery } from "../features/fields/redux/cropApiSlice";
 import {
   useGetComtsQuery,
   useUpdateComtMutation,
@@ -43,6 +44,11 @@ const Comt = ({ comtId, Lista }) => {
   const { comt } = useGetComtsQuery("comtsList", {
     selectFromResult: ({ data }) => ({
       comt: data?.entities[comtId],
+    }),
+  });
+  const { crop } = useGetCropsQuery("cropsList", {
+    selectFromResult: ({ data }) => ({
+      crop: data?.entities[comt?.date_crop_key],
     }),
   });
   const [desc, setComtDesc] = useState(comt.comt_desc);
@@ -115,8 +121,28 @@ const Comt = ({ comtId, Lista }) => {
   }, [comt]);
 
   const updComt = (
-    <Modal isOpen={isOpen} onRequestClose={() => setIsOpen(false)}>
-      <button className="btn btn-danger" onClick={() => setIsOpen(false)}>
+    <Modal
+      isOpen={isOpen}
+      onRequestClose={() => {
+        setComtDesc(comt.comt_desc);
+        setComtDate(comt.comt_date);
+        setComtDateKey(comt.comt_date_key);
+        setComtDateActKey(comt.date_act_key);
+        setComtUserKey(comt.comt_user_key);
+        setIsOpen(false);
+      }}
+    >
+      <button
+        className="btn btn-danger"
+        onClick={() => {
+          setComtDesc(comt.comt_desc);
+          setComtDate(comt.comt_date);
+          setComtDateKey(comt.comt_date_key);
+          setComtDateActKey(comt.date_act_key);
+          setComtUserKey(comt.comt_user_key);
+          setIsOpen(false);
+        }}
+      >
         Cerrar
       </button>
       <div className="cultivos_button-section">
@@ -159,8 +185,15 @@ const Comt = ({ comtId, Lista }) => {
   );
 
   if (comt) {
-    const finalDate = (comt?.crop_harvest !== null || !comt.crop_status)? true:false
-    
+    let finalDate 
+
+
+    if (crop) {
+      finalDate = crop?.crop_harvest !== null || !crop?.crop_status ? true : false; 
+      
+    }
+      
+
     if (comt) {
       const fecha = `${comtDate}`.split("T")[0];
 
@@ -177,7 +210,7 @@ const Comt = ({ comtId, Lista }) => {
           <tr key={comtId}>
             <td>{fecha}</td>
             <td>{desc}</td>
-            {(!finalDate && isAdmin) && (
+            {!finalDate && isAdmin && (
               <td>
                 <img
                   onClick={onDeleteComtClicked}
@@ -187,10 +220,10 @@ const Comt = ({ comtId, Lista }) => {
                 />
               </td>
             )}
-            {(!finalDate && (isManager || isAdmin)) && (
+            {!finalDate && (isManager || isAdmin) && (
               <td onClick={() => setIsOpen(true)}>Editar</td>
             )}
-            {(!finalDate && (isManager || isAdmin)) && <>{ updComt }</>}
+            {!finalDate && (isManager || isAdmin) && <>{updComt}</>}
           </tr>
         );
       }
@@ -200,11 +233,11 @@ const Comt = ({ comtId, Lista }) => {
             <td>{fecha}</td>
             <td>
               <Link to={`/dash/cultivos/info-app/${comtDateKey}`}>
-              <Act key={comtDateActKey} actId={comtDateActKey} />
+                <Act key={comtDateActKey} actId={comtDateActKey} />
               </Link>
             </td>
             <td>{desc}</td>
-            {(!finalDate && (isAdmin) )&& (
+            {!finalDate && isAdmin && (
               <td>
                 <img
                   onClick={onDeleteComtClicked}
@@ -214,10 +247,10 @@ const Comt = ({ comtId, Lista }) => {
                 />
               </td>
             )}
-            {(!finalDate && (isManager || isAdmin)) && (
+            {!finalDate && (isManager || isAdmin) && (
               <td onClick={() => setIsOpen(true)}>Editar</td>
             )}
-            {(!finalDate && (isManager || isAdmin)) && <>{ updComt }</>}
+            {!finalDate && (isManager || isAdmin) && <>{updComt}</>}
           </tr>
         );
       }

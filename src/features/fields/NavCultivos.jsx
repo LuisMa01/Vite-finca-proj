@@ -5,8 +5,10 @@ import { Link } from "react-router-dom";
 
 import { useGetCropsQuery } from "./redux/cropApiSlice";
 import Crop from "../../components/Crop";
+import useAuth from "../../hooks/useAuth";
 
 const NavCultivos = () => {
+  const { username, isManager, isAdmin, userId } = useAuth();
   const [stado, setStado] = useState("");
   const {
     data: crops,
@@ -36,7 +38,19 @@ const NavCultivos = () => {
       results.map((Id) => {
         let plnt = `${entities[Id].crop_name}`.split("-")[0];
         if (plnt !== "Plantilla") {
-          return <Crop key={Id} cropId={Id} Lista={"Lista2"} />;
+
+         
+          if (isAdmin) {
+            return <Crop key={Id} cropId={Id} Lista={"Lista2"} />;
+          } else if (isManager) {
+            if (entities[Id].crop_user_key == userId || entities[Id].date_user_key == userId) {
+              return <Crop key={Id} cropId={Id} Lista={"Lista2"} />;
+            }
+          } else {
+            if (entities[Id].date_user_key == userId) {
+              return <Crop key={Id} cropId={Id} Lista={"Lista2"} />;
+            }
+          }
         }
       });
   }

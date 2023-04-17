@@ -192,20 +192,31 @@ const Crop = ({ cropId, Lista }) => {
       setIsOpen(false);
     }
   }, [crop]);
+  let user;
   if (crop) {
     let userOption;
     if (useSucc) {
       const { ids, entities } = rpuser;
-
+      if (repUser) {
+        user = entities[repUser].user_nombre
+        ? entities[repUser].user_nombre
+        : entities[repUser].user_name;
+      }
+      
       userOption = ids.map((Id) => {
         if (entities[Id].user_status) {
-          return (
-            <option value={entities[Id].user_id}>
-              {entities[Id].user_nombre
-                ? entities[Id].user_nombre
-                : entities[Id].user_name}
-            </option>
-          );
+          if (
+            entities[Id].user_rol == ROLES.Administrador ||
+            entities[Id].user_rol == ROLES.Supervisor
+          ) {
+            return (
+              <option value={entities[Id].user_id}>
+                {entities[Id].user_nombre
+                  ? entities[Id].user_nombre
+                  : entities[Id].user_name}
+              </option>
+            );
+          }
         }
       });
     }
@@ -399,6 +410,7 @@ const Crop = ({ cropId, Lista }) => {
     }
     let contenido;
     if (Lista == "Lista1") {
+      let plnt = `${crop?.crop_name}`.split("-")[0];
       contenido = (
         <tr>
           <td>
@@ -408,7 +420,8 @@ const Crop = ({ cropId, Lista }) => {
           </td>
 
           <td>{crop?.plant_name}</td>
-          <td>{crop?.camp_name}</td>
+          {(plnt !== "Plantilla") && ( <td>{crop?.camp_name}</td>)}
+          {(plnt !== "Plantilla") && (<td>{user}</td>)}
           {(isManager || isAdmin) && (
             <td>
               <input
@@ -476,6 +489,10 @@ const Crop = ({ cropId, Lista }) => {
                   {finalProd}
                 </li>
                 <li className="col-12">
+                <b>Responsable: </b>
+                {user ? user : "no asignado"}
+                </li>
+                <li className="col-12">
                   <b>Costo acumulado: </b>
                   <Cost key={cropId} cropId={cropId} />
                 </li>
@@ -524,6 +541,10 @@ const Crop = ({ cropId, Lista }) => {
               </p>
             </div>
             <div className="row">
+              <p>
+                <b>Responsable: </b>
+                {user ? user : "no asignado"}
+              </p>
               <p>
                 <b>Fecha de cosecha: </b>
                 {fechaFin}

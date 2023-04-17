@@ -73,6 +73,11 @@ const AppDate = ({ dateId, Lista }) => {
       date: data?.entities[dateId],
     }),
   });
+  const { crop } = useGetCropsQuery("cropsList", {
+    selectFromResult: ({ data }) => ({
+      crop: data?.entities[date?.date_crop_key],
+    }),
+  });
   //console.log(dateId);
   const { data: rpuser } = useGetUsersQuery("usersList", {
     pollingInterval: 60000,
@@ -80,7 +85,8 @@ const AppDate = ({ dateId, Lista }) => {
     refetchOnMountOrArgChange: true,
   });
   if (date) {
-    const finalDate = (date?.crop_harvest !== null || !date.crop_status)? true:false
+    const finalDate =
+      crop?.crop_harvest !== null || !crop?.crop_status ? true : false;
     const [actKey, setActKey] = useState(date.date_act_key);
     const [dateInit, setDateInit] = useState(date.date_init);
     const [dateEnd, setDateEnd] = useState(date.date_end);
@@ -197,13 +203,36 @@ const AppDate = ({ dateId, Lista }) => {
     const fechaFin = dateEnd == "null" ? "" : `${dateEnd}`.split("T")[0];
 
     const updateApp = (
-      <Modal isOpen={isOpen} onRequestClose={() => setIsOpen(false)}>
-        <button className="btn btn-danger" onClick={() => setIsOpen(false)}>
+      <Modal
+        isOpen={isOpen}
+        onRequestClose={() => {
+          setActKey(date.date_act_key);
+          setDateInit(date.date_init);
+          setDateEnd(date.date_end);
+          setUserRep(date.date_user_key);
+          setPlantKey(date.crop_plant_key);
+          setCropKey(date.date_crop_key);
+          setIsOpen(false);
+        }}
+      >
+        <button
+          className="btn btn-danger"
+          onClick={() => {
+            setActKey(date.date_act_key);
+            setDateInit(date.date_init);
+            setDateEnd(date.date_end);
+            setUserRep(date.date_user_key);
+            setPlantKey(date.crop_plant_key);
+            setCropKey(date.date_crop_key);
+            setIsOpen(false);
+          }}
+        >
           Cerrar
         </button>
         <p className="titulo_campos font-weight-bold">
-        <b><Act key={actKey} actId={actKey} /></b>
-          
+          <b>
+            <Act key={actKey} actId={actKey} />
+          </b>
         </p>
         <div className="cultivos_button-section">
           <form>
@@ -212,7 +241,7 @@ const AppDate = ({ dateId, Lista }) => {
                 <label htmlFor="campo_cultivo">Responsable</label>
                 <select
                   className="form-control"
-                  value={userRep}
+                  value={userRep?userRep:""}
                   onChange={onUserRepChanged}
                 >
                   <option disabled value={""}>
@@ -264,7 +293,6 @@ const AppDate = ({ dateId, Lista }) => {
 
     //console.log(`${user.user_id} ${userName} ${userRolesString} ${active} ${errContent}`);
     if (isSuccess) {
-      console.log(`no hay error ${errContent}`);
     }
     let contenido;
     if (Lista == "Lista1") {
@@ -281,7 +309,7 @@ const AppDate = ({ dateId, Lista }) => {
           <td>
             <User key={userRep} userId={userRep} />
           </td>
-          {!finalDate && (isAdmin) && (
+          {!finalDate && isAdmin && (
             <td>
               <img
                 onClick={onDeleteDateClicked}
@@ -291,7 +319,7 @@ const AppDate = ({ dateId, Lista }) => {
               />
             </td>
           )}
-          {(!finalDate && (isManager || isAdmin)) && (
+          {!finalDate && (isManager || isAdmin) && (
             <td
               onClick={() => {
                 if (plntCrop !== "Plantilla") {
@@ -302,7 +330,7 @@ const AppDate = ({ dateId, Lista }) => {
               Editar
             </td>
           )}
-          {(!finalDate && (isManager || isAdmin)) && <>{updateApp}</>}
+          {!finalDate && (isManager || isAdmin) && <>{updateApp}</>}
         </tr>
       );
     }
@@ -366,7 +394,7 @@ const AppDate = ({ dateId, Lista }) => {
                   {fechaFin == "null" ? "no fecha asignada" : fechaFin}
                 </p>
               </div>
-              {(!finalDate && (isManager || isAdmin)) && (
+              {!finalDate && (isManager || isAdmin) && (
                 <div className="row">
                   <p>
                     <button
@@ -380,7 +408,7 @@ const AppDate = ({ dateId, Lista }) => {
               )}
             </div>
 
-            {(!finalDate && (isManager || isAdmin)) && <>{updateApp}</>}
+            {!finalDate && (isManager || isAdmin) && <>{updateApp}</>}
           </div>
         </>
       );
