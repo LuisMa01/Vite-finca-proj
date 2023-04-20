@@ -14,6 +14,7 @@ import BootstrapTable from "react-bootstrap-table-next";
 import paginationFactory from "react-bootstrap-table2-paginator";
 
 const navProximas = () => {
+  /*
   const { username, isManager, isAdmin, userId } = useAuth();
   const navigate = useNavigate();
   const { SearchBar } = Search;
@@ -120,11 +121,10 @@ const navProximas = () => {
           }
         });
   
-
+*/
   return (
     <>
-      {" "}
-      <p className="titulo_proximas_actividades">
+      {/*       <p className="titulo_proximas_actividades">
         Estas son las próximas actividades a realizar en la finca, de todos los
         campos y cultivos
       </p>
@@ -145,6 +145,8 @@ const navProximas = () => {
           )}
         </ToolkitProvider>
       </div>
+      */}
+    <div>Probando esto</div>
     </>
   );
 };
