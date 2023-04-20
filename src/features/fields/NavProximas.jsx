@@ -159,7 +159,7 @@ const navProximas = () => {
         campos y cultivos
       </p>
       <div className="table-container col-12 col-md-10 col-lg-8">
-        <div>hola mundo, ahora</div>
+        
         <div>
           <table {...getTableProps()} style={{ border: "solid 1px blue" }}>
             <thead>
