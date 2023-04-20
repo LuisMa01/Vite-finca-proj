@@ -1,15 +1,21 @@
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react";
+
 //import dns from 'dns'
 
 // https://vitejs.dev/config/
 
 export default defineConfig({
-  server:{
-   // host: "127.0.0.1" 
+  
+  build: {
+    outDir: "../dist",
+ },
+  server: {
+    host: "127.0.0.1",
+    hot: true    
   },
   plugins: [react()],
-})
+});
 
 /*
 dns.setDefaultResultOrder('verbatim')
@@ -20,4 +26,3 @@ export default defineConfig({
   },
 })
 */
-
