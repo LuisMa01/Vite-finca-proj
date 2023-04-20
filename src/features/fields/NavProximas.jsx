@@ -147,7 +147,7 @@ const navProximas = () => {
         </ToolkitProvider>
       </div>
       */}
-      <div>hola mundo</div>
+      <div>hola mundo, ahora si</div>
     </>
   );
 };
