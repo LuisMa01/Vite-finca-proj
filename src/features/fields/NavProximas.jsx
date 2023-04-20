@@ -9,9 +9,6 @@ import useAuth from "../../hooks/useAuth";
 import AppDate from "../../components/AppDate";
 import { useNavigate } from "react-router-dom";
 
-import ToolkitProvider, { Search } from "react-bootstrap-table2-toolkit";
-import BootstrapTable from "react-bootstrap-table-next";
-import paginationFactory from "react-bootstrap-table2-paginator";
 
 const navProximas = () => {
   /*
@@ -124,30 +121,16 @@ const navProximas = () => {
 */
   return (
     <>
-      {/* 
+      
       <p className="titulo_proximas_actividades">
         Estas son las próximas actividades a realizar en la finca, de todos los
         campos y cultivos
       </p>
       <div className="table-container col-12 col-md-10 col-lg-8">
-        <ToolkitProvider keyField="id" data={prodArr} columns={columns} search>
-          {(props) => (
-            <div>
-              <h5>Buscar:</h5>
-              <SearchBar {...props.searchProps} />
-              <hr />
-              <BootstrapTable
-                {...props.baseProps}
-                pagination={paginationFactory()}
-                classes="table table-hover table-sm table-striped table-responsive-sm table-bordered"
-                headerClasses="thead-loyola"
-              />
-            </div>
-          )}
-        </ToolkitProvider>
-      </div>
-      */}
       <div>hola mundo, ahora</div>
+      </div>
+      
+      
     </>
   );
 };
