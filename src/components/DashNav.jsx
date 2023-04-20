@@ -105,6 +105,13 @@ const DashHeader = () => {
                 Campos
               </li>
             </Link>
+            {isAdmin && (
+            <Link className="nav-item" to={"/dash/reporteria"}>
+              <li className={`menu-inicio`} id="d">
+                Informe
+              </li>
+            </Link>
+            )}
             <li id="e" className={`menu-inicio nav-item dropdown`}>
               Usuario
               <ul>

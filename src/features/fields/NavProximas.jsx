@@ -3,111 +3,124 @@ import "../../styles/proximas.css";
 import ReImage from "../../images/return.svg";
 import { Link } from "react-router-dom";
 import focusClick from "../../components/DashHeader";
-import { Grid, _ } from "gridjs-react";
+
 import { useGetDatesQuery } from "./redux/appApiSlice";
 import useAuth from "../../hooks/useAuth";
 import AppDate from "../../components/AppDate";
 import { useNavigate } from "react-router-dom";
-import { h } from "gridjs";
+
+import ToolkitProvider, { Search } from "react-bootstrap-table2-toolkit";
+import BootstrapTable from "react-bootstrap-table-next";
+import paginationFactory from "react-bootstrap-table2-paginator";
 
 const navProximas = () => {
   const { username, isManager, isAdmin, userId } = useAuth();
   const navigate = useNavigate();
+  const { SearchBar } = Search;
 
   const { dates, isSuccess } = useGetDatesQuery("datesList", {
     selectFromResult: ({ data }) => ({
       dates: data?.ids?.map((Id) => {
-        if (isAdmin) {
-          return data?.entities[Id];
-        } else if(isManager){
-          if (data?.entities[Id].crop_user_key == userId || data?.entities[Id].date_user_key == userId) {
+        let plnt = `${data?.entities[Id].crop_name}`.split("-")[0];
+        if (plnt !== "Plantilla") {
+          if (isAdmin) {
             return data?.entities[Id];
-          }
-        } else {
-          if (data?.entities[Id].date_user_key == userId) {
-            return data?.entities[Id];
+          } else if (isManager) {
+            if (
+              data?.entities[Id].crop_user_key == userId ||
+              data?.entities[Id].date_user_key == userId
+            ) {
+              return data?.entities[Id];
+            }
+          } else {
+            if (data?.entities[Id].date_user_key == userId) {
+              return data?.entities[Id];
+            }
           }
         }
       }),
     }),
   });
-  let dateTable=<></>;
-  if (dates) {
-    const row = dates?.length &&
-    dates.map((date) => {
-      let plnt = `${date?.crop_name}`.split("-")[0];
-      let nomnb =
-        `${date?.date_user_key}` == "null"
-          ? "no"
-          : date?.user_nombre
-          ? date?.user_nombre
-          : date?.user_name;
-      let actNma =
-        date?.act_name == 0 || date?.act_name == undefined
-          ? "no"
-          : date?.act_name;
-      let cropNma =
-        date?.crop_name == 0 || date?.crop_name == undefined
-          ? "no"
-          : date?.crop_name;
-      let campNma =
-        date?.camp_name == 0 || date?.camp_name == undefined
-          ? "no"
-          : date?.camp_name;
-      let fecha =
-        `${date?.date_init}` == "null"
-          ? "no asignada"
-          : `${date?.date_init}`.split("T")[0];
 
-      if (plnt !== "Plantilla") {
-        if (date) {
-          return [actNma, cropNma, campNma, fecha, nomnb];
-        }
-        
-      }
-    });
+  const columns = [
+    {
+      dataField: "id",
+      text: "#",
+      sort: true,
+    },
+    {
+      dataField: "act",
+      text: "Actividad",
+      sort: true,
+    },
+    {
+      dataField: "cult",
+      text: "Cultivo",
+      sort: true,
+    },
+    {
+      dataField: "camp",
+      text: "Campo",
+      sort: true,
+    },
+    {
+      dataField: "fech",
+      text: "Fecha programada",
+      sort: true,
+    },
+    {
+      dataField: "resp",
+      text: "Responsable",
+      sort: true,
+    },
+  ];
 
-
-
-
-const rowF = row.filter((data)=>data!==undefined)
-
-if (rowF) {
-  dateTable = (
-    <Grid
-      columns={[
-        {
-          name: "Actividad",
-        },
-        { name: "Cultivo" },
-        { name: "Campo" },
-        {
-          name: "Fecha programada",
-        },
-        {
-          name: "Responsable",
-        },
-      ]}
-      data={rowF}
-      search={true}
-      pagination={{
-        limit: 10,
-      }}
-      sort={true}
-      className={{
-        table:
-          "table table-hover table-sm table-striped table-responsive-sm table-bordered",
-        thead: "thead-loyola",
-        th: "align-middle",
-        search: "form-control",
-      }}
-      fixedHeader={true}
-    />
-  );
-}
-  }
-
+  let products;
+  let prodArr = [];
   
+    let num = 0;
+    products =
+      dates?.length &&
+      dates
+        .filter((data) => data !== undefined)
+        .map((date) => {
+          if (date) {
+            num = num + 1;
+            let nomnb =
+              `${date?.date_user_key}` == "null"
+                ? "no"
+                : date?.user_nombre
+                ? date?.user_nombre
+                : date?.user_name;
+            let actNma =
+              date?.act_name == 0 || date?.act_name == undefined
+                ? "no"
+                : date?.act_name;
+            let cropNma =
+              date?.crop_name == 0 || date?.crop_name == undefined
+                ? "no"
+                : date?.crop_name;
+            let campNma =
+              date?.camp_name == 0 || date?.camp_name == undefined
+                ? "no"
+                : date?.camp_name;
+            let fecha =
+              `${date?.date_init}` == "null"
+                ? "no asignada"
+                : `${date?.date_init}`.split("T")[0];
+            
+            prodArr.push({
+              id: num,
+              act: actNma,
+              cult: cropNma,
+              camp: campNma,
+              fech: fecha,
+              resp: nomnb,
+            });
+          }
+        });
+  
+
   return (
     <>
       {" "}
@@ -115,9 +128,22 @@ if (rowF) {
         Estas son las próximas actividades a realizar en la finca, de todos los
         campos y cultivos
       </p>
-     
       <div className="table-container col-12 col-md-10 col-lg-8">
-        {dateTable}
+        <ToolkitProvider keyField="id" data={prodArr} columns={columns} search>
+          {(props) => (
+            <div>
+              <h5>Buscar:</h5>
+              <SearchBar {...props.searchProps} />
+              <hr />
+              <BootstrapTable
+                {...props.baseProps}
+                pagination={paginationFactory()}
+                classes="table table-hover table-sm table-striped table-responsive-sm table-bordered"
+                headerClasses="thead-loyola"
+              />
+            </div>
+          )}
+        </ToolkitProvider>
       </div>
     </>
   );

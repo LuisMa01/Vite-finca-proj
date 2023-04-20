@@ -5,6 +5,7 @@ import { useGetDatesQuery } from "./redux/appApiSlice";
 import { useGetItemsQuery } from "./redux/itemApiSlice";
 import { useGetCostsQuery, useAddNewCostMutation } from "./redux/costApiSlice";
 import { useGetComtsQuery, useAddNewComtMutation } from "./redux/comtApiSlice";
+import { useGetCropsQuery } from "./redux/cropApiSlice";
 import { Link } from "react-router-dom";
 import { Collapse } from "react-collapse";
 import ReImage from "../../images/return.svg";
@@ -24,6 +25,7 @@ const Comentario = ({ dateId, info }) => {
     refetchOnFocus: true,
     refetchOnMountOrArgChange: true,
   });
+  
   const [
     addNewComt,
     { isSuccess: addComtSuc, isError: addComtIserror, error: addComterror },
@@ -60,19 +62,17 @@ const Comentario = ({ dateId, info }) => {
 
      {(!info && (isAdmin || isManager)) && ( <form className="container myform col-6 needs-validation">
         <div className="form-row bg-light">
-          <div className="col-12 col-md-6 mb-2">
-            <label htmlFor="nombre_actividad">Ingresar</label>
-            <div className="col-12 col-md-6 mb-2">
-              <textarea
-                type="text"
-                placeholder="Ingresar Comentario"
-                value={desc}
-                maxLength={300}
-                onChange={onComtDescChange}
-                rows={"5"}
-                cols={"25"}
-              />
-            </div>
+          <div className="col-12 mb-2 form-group">
+            <textarea
+              type="text"
+                  className="form-control col-12"
+                  placeholder="Ingresar Comentario"
+                  value={desc}
+                  maxLength={300}
+                  onChange={onComtDescChange}
+                  rows={2}
+                  cols={25}
+            />
           </div>
         </div>
         <div className="edit-campo-button-section_parent col-12">
@@ -174,6 +174,11 @@ const InfoAppCult = () => {
     }),
   });
   const { data: items } = useGetItemsQuery("itemsList");
+  const { crop } = useGetCropsQuery("cropsList", {
+    selectFromResult: ({ data }) => ({
+      crop: data?.entities[date?.date_crop_key],
+    }),
+  });
 
   const onItemCostChanged = (e) => {
     e.preventDefault();
@@ -223,7 +228,7 @@ const InfoAppCult = () => {
   }, [date, costs]);
 
   let itemOption;
-
+  
   if (items) {
     const { ids, entities } = items;
 
@@ -265,7 +270,7 @@ const InfoAppCult = () => {
 
   if (date) {
     let contentApp;
-    const finalDate = (date?.crop_harvest !== null || !date.crop_status)? true:false
+    const finalDate = (crop?.crop_harvest !== null || !crop.crop_status)? true:false
 
     if (date) {
       contentApp = date.date_id.length ?? (
@@ -280,8 +285,8 @@ const InfoAppCult = () => {
 
     return (
       <>
-        <div className="nuevo-cultivo-header">
-          MATERIALES, INSUMOS Y MANO DE OBRA
+        <div className="font-weight-bold titulo_campos">
+          Materiales, insumos y mano de obra
         </div>
         <div>{contentApp}</div>
         {(!finalDate && (isAdmin || isManager)) && (<form>

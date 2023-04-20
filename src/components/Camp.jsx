@@ -151,10 +151,14 @@ const Camp = ({ campId, Lista }) => {
                 className="form-control"
                 id="nombre_cultivo"
                 placeholder="Campo X"
+                pattern="^([A-Z]{1})([a-z0-9]{0,20})(([- ]{1}?)([a-zA-Z0-9]{1,20}?)){0,4}$"
                 value={campName}
                 onChange={onCampNameChanged}
                 required
               />
+              <div className="error-message">
+                  <p>Formato incorrecto. ej: Campo X</p>
+                </div>
             </div>
             <div className="col-12 col-md-6 mb-2">
               <label for="variedad_cultivo">Área (tareas)</label>

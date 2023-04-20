@@ -146,23 +146,21 @@ const Comt = ({ comtId, Lista }) => {
         Cerrar
       </button>
       <div className="cultivos_button-section">
-        <p className="titulo_tipos-de-actividades col-12">Comentario</p>
+        <p className="titulo_tipos-de-actividades col-12">Editar comentario</p>
         <form className="container myform col-6 needs-validation" novalidate>
           <div className="form-row bg-light">
-            <div className="col-12 col-md-6 mb-2">
-              <label for="nombre_actividad">Ingresar</label>
-              <div className="col-12 col-md-6 mb-2">
+              <div className="form-group col-12 mb-2">
                 <textarea
                   type="text"
+                  className="form-control col-12"
                   placeholder="Ingresar Comentario"
                   value={desc}
                   maxLength={300}
                   onChange={onComtDescChange}
-                  rows={5}
+                  rows={2}
                   cols={25}
                 />
               </div>
-            </div>
           </div>
           <div className="edit-campo-button-section_parent col-12">
             <button
