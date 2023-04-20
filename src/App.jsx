@@ -1,5 +1,5 @@
 import "./App.css";
-import 'react-bootstrap-table-next/dist/react-bootstrap-table2.min.css'
+import "react-bootstrap-table-next/dist/react-bootstrap-table2.min.css";
 import { Routes, Route } from "react-router-dom";
 
 import Layouts from "./components/Layouts";
@@ -30,9 +30,8 @@ import InfoCultivoPdf from "./features/fields/InfoCultivoPdf";
 import Report from "./features/fields/Report";
 import InfoAppCult from "./features/fields/InfoAppCult";
 
-
 function App() {
-    return (
+  return (
     <Routes>
       <Route path="/" element={<Layouts />}>
         <Route index element={<Login />} />
@@ -106,14 +105,10 @@ function App() {
                   </Route>
                 </Route>
                 <Route
-                    element={
-                      <RequireAuth
-                        allowedRoles={[ROLES.Administrador]}
-                      />
-                    }
-                  >
-                    <Route path="reporteria" element={<Report />} />
-                  </Route>
+                  element={<RequireAuth allowedRoles={[ROLES.Administrador]} />}
+                >
+                  <Route path="reporteria" element={<Report />} />
+                </Route>
                 {/*lo agregado aqui en adelante es de fran*/}
               </Route>
             </Route>

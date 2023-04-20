@@ -1,7 +1,7 @@
 {
   "name": "vite-finca-proj",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -24,7 +24,6 @@
     "react-modal": "^3.16.1",
     "react-redux": "^8.0.5",
     "react-router-dom": "^6.4.5",
-    "react-table": "^7.8.0",
     "sweetalert2": "^11.7.0"
   },
   "devDependencies": {
