@@ -129,8 +129,7 @@ const navProximas = () => {
       <div className="table-container col-12 col-md-10 col-lg-8">
       <div>hola mundo, ahora</div>
       </div>
-      
-      
+
     </>
   );
 };
