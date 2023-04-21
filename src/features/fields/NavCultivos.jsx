@@ -2,12 +2,14 @@ import React, { useState } from "react";
 import "../../styles/nav_cultivos.css";
 import ReImage from "../../images/return.svg";
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 import { useGetCropsQuery } from "./redux/cropApiSlice";
 import Crop from "../../components/Crop";
 import useAuth from "../../hooks/useAuth";
 
 const NavCultivos = () => {
+  const navigate = useNavigate();
   const { username, isManager, isAdmin, userId } = useAuth();
   const [stado, setStado] = useState("");
   const {
@@ -38,12 +40,13 @@ const NavCultivos = () => {
       results.map((Id) => {
         let plnt = `${entities[Id].crop_name}`.split("-")[0];
         if (plnt !== "Plantilla") {
-
-         
           if (isAdmin) {
             return <Crop key={Id} cropId={Id} Lista={"Lista2"} />;
           } else if (isManager) {
-            if (entities[Id].crop_user_key == userId || entities[Id].date_user_key == userId) {
+            if (
+              entities[Id].crop_user_key == userId ||
+              entities[Id].date_user_key == userId
+            ) {
               return <Crop key={Id} cropId={Id} Lista={"Lista2"} />;
             }
           } else {
@@ -60,43 +63,44 @@ const NavCultivos = () => {
       <div className="seccion_cultivos">
         <div>
           <div className="button-section_parent ">
-            <Link to={"/dash/cultivos/nuevo-cultivo"} className="Link">
-              <button className="btn btn-outline-primary seccion_cultivos_btn-agr">
-                Cultivo
-              </button>
-            </Link>
-            <Link to={"/dash/cultivos/registrar-plantilla"} className="Link">
-              <button
-                type="button"
-                className="btn btn-outline-secondary seccion_cultivos_btn-agr"
-              >
-                Plantillas de cultivos
-              </button>
-            </Link>
-            <Link to={"/dash/cultivos/registrar-planta"} className="Link">
-              <button
-                type="button"
-                className="btn btn-outline-secondary seccion_cultivos_btn-agr"
-              >
-                Plantas
-              </button>
-            </Link>
-            <Link to={"/dash/cultivos/registrar-actividad"} className="Link">
-              <button
-                type="button"
-                className="btn btn-outline-secondary seccion_cultivos_btn-agr"
-              >
-                Actividades de cultivo
-              </button>
-            </Link>
-            <Link to={"/dash/cultivos/item-section"} className="Link">
-              <button
-                type="button"
-                className="btn btn-outline-secondary seccion_cultivos_btn-agr"
-              >
-                Materiales y mano de obra
-              </button>
-            </Link>
+            <button
+              className="btn btn-outline-primary seccion_cultivos_btn-agr"
+              onClick={() => navigate("/dash/cultivos/nuevo-cultivo")}
+            >
+              Cultivo
+            </button>
+
+            <button
+              type="button"
+              className="btn btn-outline-secondary seccion_cultivos_btn-agr"
+              onClick={() => navigate("/dash/cultivos/registrar-plantilla")}
+            >
+              Plantillas de cultivos
+            </button>
+
+            <button
+              type="button"
+              className="btn btn-outline-secondary seccion_cultivos_btn-agr"
+              onClick={() => navigate("/dash/cultivos/registrar-planta")}
+            >
+              Plantas
+            </button>
+
+            <button
+              type="button"
+              className="btn btn-outline-secondary seccion_cultivos_btn-agr"
+              onClick={() => navigate("/dash/cultivos/registrar-actividad")}
+            >
+              Actividades de cultivo
+            </button>
+
+            <button
+              type="button"
+              className="btn btn-outline-secondary seccion_cultivos_btn-agr"
+              onClick={() => navigate("/dash/cultivos/item-section")}
+            >
+              Materiales y mano de obra
+            </button>
           </div>
         </div>
         <div className="seccion_cultivos_checkbox-div">

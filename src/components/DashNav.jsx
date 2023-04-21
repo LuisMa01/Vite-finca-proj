@@ -64,7 +64,7 @@ const DashHeader = () => {
   const content = (
     <>
       <p className={errClass}>{error?.data?.message}</p>
-      <nav className="nav-bar navbar navbar-expand-lg bg-body-tertiary navbar-light">
+      <nav className="nav-bar navbar navbar-expand-lg navbar-light">
         <a className="navbar-brand">
           <div className="return-div">
             <div onClick={goBack} className="return-button">
@@ -72,19 +72,22 @@ const DashHeader = () => {
             </div>
           </div>
         </a>
-        <button
-          className="navbar-toggler"
-          type="button"
-          data-toggle="collapse"
-          data-target="#navbarNav"
-          aria-controls="navbarNav"
-          aria-expanded="false"
-          aria-label="Toggle navigation"
-        >
-          <span className="navbar-toggler-icon"></span>
-        </button>
-        <div className="collapse navbar-collapse" id="navbarNav">
-          <ul className="navbar-nav me-auto mb-2 mb-lg-0">
+        <a className="navbar-brand">
+          <button
+            className="navbar-toggler"
+            type="button"
+            data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+          >
+            <span className="navbar-toggler-icon"></span>
+          </button>
+        </a>
+
+        <div className="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul className="navbar-nav mr-auto">
             <Link className="nav-item" to={"/dash"}>
               <li className={`menu-inicio`} id="a">
                 Inicio
@@ -106,11 +109,11 @@ const DashHeader = () => {
               </li>
             </Link>
             {isAdmin && (
-            <Link className="nav-item" to={"/dash/reporteria"}>
-              <li className={`menu-inicio`} id="d">
-                Informe
-              </li>
-            </Link>
+              <Link className="nav-item" to={"/dash/reporteria"}>
+                <li className={`menu-inicio`} id="d">
+                  Informe
+                </li>
+              </Link>
             )}
             <li id="e" className={`menu-inicio nav-item dropdown`}>
               Usuario
