@@ -1,3 +1,4 @@
+
 header{
     width: 100%;
     color: #e6eaea;
@@ -48,13 +49,13 @@ header{
     background-color: #1d4263;
 }
 .nav-bar {
-    position: relative;
+    
     background-color: #116FA2;
     width: 100%;
-    height: fit-content;
+    
     padding: 0;
-    display: flex;
-    margin: -10px 0 0;    
+   
+    margin: -20px 0 0;    
 }
 .nav-bar ul{
     width: 100%;
@@ -130,7 +131,7 @@ header{
     margin: 0px;
 }
 .navbar-toggler{
-    position: relative;
+    
     margin: 0 0 0 auto;
     background-color:#2d86e7;
     border-radius: 0;

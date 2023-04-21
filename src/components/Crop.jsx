@@ -449,8 +449,8 @@ const Crop = ({ cropId, Lista }) => {
     if (Lista == "Lista2") {
       contenido = (
         <div className="big-cont col-12 col-sm-6 col-md-4 col-xl-3">
-          <div className="card">
-            <Link to={`/dash/cultivos/info-cultivo/${cropId}`}>
+          <div className="card" onClick={()=>navigate(`/dash/cultivos/info-cultivo/${cropId}`)}>
+            
               <div className="card-header rounded">
                 <h5>{crop?.plant_name}</h5>
               </div>
@@ -497,7 +497,7 @@ const Crop = ({ cropId, Lista }) => {
                   <Cost key={cropId} cropId={cropId} />
                 </li>
               </ul>
-            </Link>
+            
           </div>
         </div>
       );
