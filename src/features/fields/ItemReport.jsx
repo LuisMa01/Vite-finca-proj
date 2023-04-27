@@ -1,5 +1,5 @@
 import React from "react";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useReducer } from "react";
 import { useParams } from "react-router-dom";
 import { useGetDatesQuery } from "./redux/appApiSlice";
 import { useGetItemsQuery } from "./redux/itemApiSlice";
@@ -18,33 +18,93 @@ import AppDate from "../../components/AppDate";
 import Comt from "../../components/Comt";
 import useAuth from "../../hooks/useAuth";
 
-const Report = () => {
+const ACTION = {
+  ITEM_ID: "itemId",
+  PLANTA: "planta",
+  CAMPO: "campo",
+  CULTIVO: "cultivo",
+  ACTIVIDAD: "actividad",
+};
+const reducer = (state, action) => {
+  switch (action.type) {
+    case ACTION.ITEM_ID:
+      return { ...state, itemId: action.payload };
+    case ACTION.PLANTA:
+      return { ...state, planta: action.payload };
+    case ACTION.CAMPO:
+      return { ...state, campo: action.payload };
+    case ACTION.CULTIVO:
+      return { ...state, cultivo: !state.cultivo };
+    case ACTION.ACTIVIDAD:
+      return { ...state, actividad: !state.actividad };
+
+    default:
+      throw new Error();
+  }
+};
+
+const ItemReport = () => {
   const { username, isManager, isAdmin, userId } = useAuth();
+  const [state, dispatch] = useReducer(reducer, {
+    itemId: "",
+    planta: false,
+    campo: false,
+    cultivo: false,
+    actividad: false,
+  });
+
   const { data: plants, isSuccess: plantSucc } =
     useGetPlantsQuery("plantsList");
-  const { data: camps } = useGetCampsQuery("campsList");
-  const { data: crops } = useGetCropsQuery("cropsList");
-  const { data: acts } = useGetActsQuery("actsList");
-  const { data: dates } = useGetDatesQuery("datesList");
-  const { data: items } = useGetItemsQuery("itemsList");
-  const { data: costs } = useGetCostsQuery("costsList");
+  const { data: camps, isSuccess: campSucc } = useGetCampsQuery("campsList");
+  const { data: crops, isSuccess: cropSucc } = useGetCropsQuery("cropsList");
+  const { data: acts, isSuccess: actSucc } = useGetActsQuery("actsList");
+  const { data: dates, isSuccess: dateSucc } = useGetDatesQuery("datesList");
+  const { data: items, isSuccess: itemSucc } = useGetItemsQuery("itemsList");
+  const { data: costs, isSuccess: costSucc } = useGetCostsQuery("costsList");
 
-  const onPlantSelect =(e)=>{
+  const onItemSelect = (e) => {
     e.preventDefault();
-    console.log("aqui");
-  }
+  };
 
-  let plantOption;
-  if (plantSucc) {
-    const { ids, entities } = plants;
+  let itemsOption;
+  if (itemSucc) {
+    const { ids, entities } = items;
 
-    plantOption = ids.map((Id) => {
-      if (entities[Id].plant_status) {
-        return <option value={Id}>{entities[Id].plant_name}</option>;
+    itemsOption = ids.map((Id) => {
+      let oob = Object.values(costs.entities).filter(
+        (Ids) => Ids.cost_item_key == entities[Id].item_id
+      ).length;
+      
+      if (oob > 0) {
+        return <option value={Id}>{entities[Id].item_name}</option>;
       }
     });
   }
 
+  if (state.itemId) {
+    
+  }
+  if (state.itemId == "") {
+  }
+  if (state.cultivo) {
+    
+  }
+  let itemArr = [];
+
+  if (costSucc) {
+    const { ids, entities } = costs;
+
+    const result =
+      state.itemId == ""
+        ? ids
+        : ids?.length &&
+          ids?.filter((Id) => entities[Id].cost_item_key == state.itemId);
+
+    result?.length &&
+      result?.map((Id) => {
+        itemArr.push(entities[Id]);
+      });
+  }
 
   /*
   const {
@@ -120,6 +180,7 @@ const Report = () => {
   }).format(parseFloat(itemPrecio));
 
 */
+  /*
   const { datess } = useGetDatesQuery("datesList", {
     selectFromResult: ({ data }) => ({
       datess: data?.ids?.map((Id) => {
@@ -284,31 +345,60 @@ const Report = () => {
       </div>
     </>
   );
-
+*/
   return (
     <>
       <div className="font-weight-bold titulo_campos">Reporteria</div>
       <div className="container needs-validation nuevo-cultivo-form">
-        <div className="form-row">
+        <div className="form-row bg-light">
           <div className="col-md-3 mb-3">
-            <label htmlFor="campo_cultivo">Plantas</label>
+            <label htmlFor="campo_cultivo">Articulos</label>
             <select
               className="form-control"
-              value={""}
-              onChange={onPlantSelect}
+              value={state.itemId}
+              onChange={(e) =>
+                dispatch({
+                  type: ACTION.ITEM_ID,
+                  payload: e.target.value,
+                })
+              }
             >
-              <option disabled value={""}>
-                Elegir Planta
-              </option>
-              {plantOption}
+              <option value={""}>Todas</option>
+              {itemsOption}
             </select>
+          </div>
+          <div className="form-row bg-light">
+            <div div className="col-md-2 mb-3">
+              <label htmlFor="campo_cultivo">Planta</label>
+              <input type="checkbox" value={state.planta} />
+            </div>
+            <div div className="col-md-3 mb-3">
+              <label htmlFor="campo_cultivo">Campo</label>
+              <input type="checkbox" value={state.campo} />
+            </div>
+            <div div className="col-md-3 mb-3">
+              <label htmlFor="campo_cultivo">Cultivo</label>
+              <input
+                type="checkbox"
+                value={state.cultivo}
+                onChange={(e) =>
+                  dispatch({
+                    type: ACTION.CULTIVO,
+                  })
+                }
+              />
+            </div>
+            <div div className="col-md-3 mb-3">
+              <label htmlFor="campo_cultivo">Actividad</label>
+              <input type="checkbox" />
+            </div>
           </div>
         </div>
       </div>
 
-      <div>{conteido}</div>
+      <div></div>
     </>
   );
 };
 
-export default Report;
+export default ItemReport;

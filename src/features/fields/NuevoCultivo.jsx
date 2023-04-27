@@ -224,7 +224,7 @@ const nuevoCultivo = () => {
   let tableContent;
   if (isError) {
     tableContent = <p className="errmsg">{error?.data?.message}</p>;
-    console.log(error?.data?.message);
+    
   }
   if (cropSuc) {
     const { ids, entities } = crops;
