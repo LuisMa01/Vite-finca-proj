@@ -142,7 +142,7 @@ const navProximas = () => {
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
     useTable({ columns, data }, useSortBy);
 let conteido
-    if (datess) {
+    
       
       conteido=(<>
         
@@ -190,7 +190,7 @@ let conteido
           </div>
         </div>
       </>)
-    }
+    
   return (
     <>
     <p className="titulo_proximas_actividades">

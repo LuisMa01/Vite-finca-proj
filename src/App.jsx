@@ -28,6 +28,7 @@ import RegistrarPlanta from "./features/fields/RegistrarPlanta";
 import InfoCultivo from "./features/fields/InfoCultivo";
 import InfoCultivoPdf from "./features/fields/InfoCultivoPdf";
 import Report from "./features/fields/Report";
+import ItemReport from "./features/fields/ItemReport";
 import InfoAppCult from "./features/fields/InfoAppCult";
 
 function App() {
@@ -107,7 +108,10 @@ function App() {
                 <Route
                   element={<RequireAuth allowedRoles={[ROLES.Administrador]} />}
                 >
-                  <Route path="reporteria" element={<Report />} />
+                  <Route path="reporteria">
+                    <Route index element={<Report />} />
+                    <Route path="items" element={<ItemReport />} />
+                  </Route>
                 </Route>
                 {/*lo agregado aqui en adelante es de fran*/}
               </Route>
