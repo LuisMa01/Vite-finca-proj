@@ -245,7 +245,7 @@ const InfoAppCult = () => {
   let costTotal = [];
   if (costs) {
     const { ids, entities } = costs;
-
+ 
     costList =
       ids?.length &&
       ids.map((Id) => {

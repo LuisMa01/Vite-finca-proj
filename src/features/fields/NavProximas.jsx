@@ -8,12 +8,64 @@ import useAuth from "../../hooks/useAuth";
 import AppDate from "../../components/AppDate";
 import { useNavigate } from "react-router-dom";
 
+const TablePr = ({ columns, data }) => {
+  const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
+    useTable({ columns, data }, useSortBy);
+
+  return (
+    <>
+      <div className="table-container col-12 col-md-10 col-lg-8">
+        <div>
+          <table
+            {...getTableProps()}
+            className="table table-hover table-sm table-striped table-responsive-sm table-bordered"
+          >
+            <thead className="thead-loyola">
+              {headerGroups.map((headerGroup) => (
+                <tr {...headerGroup.getHeaderGroupProps()}>
+                  {headerGroup.headers.map((column) => (
+                    <th
+                      {...column.getHeaderProps(column.getSortByToggleProps())}
+                    >
+                      {column.render("Header")}
+                      <span>
+                        {column.isSorted
+                          ? column.isSortedDesc
+                            ? " 🔽"
+                            : " 🔼"
+                          : ""}
+                      </span>
+                    </th>
+                  ))}
+                </tr>
+              ))}
+            </thead>
+            <tbody {...getTableBodyProps()}>
+              {rows.map((row) => {
+                prepareRow(row);
+                return (
+                  <tr {...row.getRowProps()}>
+                    {row.cells.map((cell) => {
+                      return (
+                        <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
+                      );
+                    })}
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </>
+  );
+};
+
 const navProximas = () => {
   const { username, isManager, isAdmin, userId } = useAuth();
   const navigate = useNavigate();
-  
-  
-  const { data : datess } = useGetDatesQuery("datesList");
+
+  const { data: datess } = useGetDatesQuery("datesList");
   const { dates } = useGetDatesQuery("datesList", {
     selectFromResult: ({ data }) => ({
       dates: data?.ids?.map((Id) => {
@@ -38,16 +90,11 @@ const navProximas = () => {
     }),
   });
 
-
-
-
-
- 
-  let prodArr = [];
-
   let num = 0;
-  
- dates?.length && dates
+
+  let prodArr =
+    dates?.length &&
+    dates
       ?.filter((data) => data !== undefined)
       .map((date) => {
         if (date) {
@@ -75,34 +122,36 @@ const navProximas = () => {
               ? "no asignada"
               : `${date?.date_init}`.split("T")[0];
 
-          prodArr.push({
+          return {
             id: num,
             act: actNma,
             cult: cropNma,
             camp: campNma,
             fech: fecha,
             resp: nomnb,
-          });
+          };
         }
       });
-    
-
 
  
 
-  const data = React.useMemo(() => {
-    return prodArr?.map((info) => {
-      return {
-        col1: info.id,
-        col2: info.act,
-        col3: info.cult,
-        col4: info.camp,
-        col5: info.fech,
-        col6: info.resp,
-      };
-    });
-  }, []);
+  const data = React.useMemo(
+    () =>
+      prodArr?.length &&
+      Object.keys(prodArr).map((info) => {
+        const col1 = prodArr[info].id;
+        const col2 = prodArr[info].act;
+        const col3 = prodArr[info].cult;
+        const col4 = prodArr[info].camp;
+        const col5 = prodArr[info].fech;
+        const col6 = prodArr[info].resp;
 
+        return { col1, col2, col3, col4, col5, col6 };
+      }),
+    [prodArr]
+  );
+
+  
   const columns = React.useMemo(
     () => [
       {
@@ -136,68 +185,23 @@ const navProximas = () => {
         sortType: "basic",
       },
     ],
-    []
+    [prodArr]
   );
 
-  const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
-    useTable({ columns, data }, useSortBy);
-let conteido
-    
-      
-      conteido=(<>
-        
-        <div className="table-container col-12 col-md-10 col-lg-8">
-          <div>
-            <table
-              {...getTableProps()}
-              className="table table-hover table-sm table-striped table-responsive-sm table-bordered"
-            >
-              <thead className="thead-loyola">
-                {headerGroups.map((headerGroup) => (
-                  <tr {...headerGroup.getHeaderGroupProps()}>
-                    {headerGroup.headers.map((column) => (
-                      <th
-                        {...column.getHeaderProps(column.getSortByToggleProps())}
-                      >
-                        {column.render("Header")}
-                        <span>
-                          {column.isSorted
-                            ? column.isSortedDesc
-                              ? " 🔽"
-                              : " 🔼"
-                            : ""}
-                        </span>
-                      </th>
-                    ))}
-                  </tr>
-                ))}
-              </thead>
-              <tbody {...getTableBodyProps()}>
-                {rows.map((row) => {
-                  prepareRow(row);
-                  return (
-                    <tr {...row.getRowProps()}>
-                      {row.cells.map((cell) => {
-                        return (
-                          <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
-                        );
-                      })}
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </>)
-    
+  let content =
+    prodArr?.length > 0 ? (
+      <TablePr columns={columns} data={data} />
+    ) : (
+      <>Loading...</>
+    );
+
   return (
     <>
-    <p className="titulo_proximas_actividades">
-          Estas son las próximas actividades a realizar en la finca, de todos los
-          campos y cultivos
-        </p>
-      {conteido}
+      <p className="titulo_proximas_actividades">
+        Estas son las próximas actividades a realizar en la finca, de todos los
+        campos y cultivos
+      </p>
+      {content}
     </>
   );
 };
