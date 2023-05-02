@@ -1,5 +1,6 @@
 import { apiSlice } from "../../app/api/apiSlice"
 import { logOut, setCredentials } from "./authSlice"
+import { PURGE } from "redux-persist";
 
 export const authApiSlice = apiSlice.injectEndpoints({
     endpoints: builder => ({
@@ -25,6 +26,11 @@ export const authApiSlice = apiSlice.injectEndpoints({
                 } catch (err) {
                     console.log(err)
                 }
+            },
+            extraReducers: (builder) => {
+                builder.addCase(PURGE, (state) => {
+                    customEntityAdapter.removeAll(state);
+                });
             }
         }),
         refresh: builder.mutation({

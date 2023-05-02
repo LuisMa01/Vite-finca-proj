@@ -1,4 +1,6 @@
-import React from "react";
+import React, { useMemo, useRef } from "react";
+import { DownloadTableExcel } from "react-export-table-to-excel";
+import _ from "lodash";
 import { useEffect, useState, useReducer } from "react";
 import { useParams } from "react-router-dom";
 import { useGetDatesQuery } from "./redux/appApiSlice";
@@ -20,264 +22,19 @@ import useAuth from "../../hooks/useAuth";
 
 const ACTION = {
   ITEM_ID: "itemId",
-  PLANTA: "planta",
-  CAMPO: "campo",
-  CULTIVO: "cultivo",
-  ACTIVIDAD: "actividad",
 };
 const reducer = (state, action) => {
   switch (action.type) {
     case ACTION.ITEM_ID:
       return { ...state, itemId: action.payload };
-    case ACTION.PLANTA:
-      return { ...state, planta: action.payload };
-    case ACTION.CAMPO:
-      return { ...state, campo: action.payload };
-    case ACTION.CULTIVO:
-      return { ...state, cultivo: !state.cultivo };
-    case ACTION.ACTIVIDAD:
-      return { ...state, actividad: !state.actividad };
 
     default:
       throw new Error();
   }
 };
 
-const ItemReport = () => {
-  const { username, isManager, isAdmin, userId } = useAuth();
-  const [state, dispatch] = useReducer(reducer, {
-    itemId: "",
-    planta: false,
-    campo: false,
-    cultivo: false,
-    actividad: false,
-  });
-
-  const { data: plants, isSuccess: plantSucc } =
-    useGetPlantsQuery("plantsList");
-  const { data: camps, isSuccess: campSucc } = useGetCampsQuery("campsList");
-  const { data: crops, isSuccess: cropSucc } = useGetCropsQuery("cropsList");
-  const { data: acts, isSuccess: actSucc } = useGetActsQuery("actsList");
-  const { data: dates, isSuccess: dateSucc } = useGetDatesQuery("datesList");
-  const { data: items, isSuccess: itemSucc } = useGetItemsQuery("itemsList");
-  const { data: costs, isSuccess: costSucc } = useGetCostsQuery("costsList");
-
-  const onItemSelect = (e) => {
-    e.preventDefault();
-  };
-
-  let itemsOption;
-  if (itemSucc) {
-    const { ids, entities } = items;
-
-    itemsOption = ids.map((Id) => {
-      let oob = Object.values(costs.entities).filter(
-        (Ids) => Ids.cost_item_key == entities[Id].item_id
-      ).length;
-      
-      if (oob > 0) {
-        return <option value={Id}>{entities[Id].item_name}</option>;
-      }
-    });
-  }
-
-  if (state.itemId) {
-    
-  }
-  if (state.itemId == "") {
-  }
-  if (state.cultivo) {
-    
-  }
-  let itemArr = [];
-
-  if (costSucc) {
-    const { ids, entities } = costs;
-
-    const result =
-      state.itemId == ""
-        ? ids
-        : ids?.length &&
-          ids?.filter((Id) => entities[Id].cost_item_key == state.itemId);
-
-    result?.length &&
-      result?.map((Id) => {
-        itemArr.push(entities[Id]);
-      });
-  }
-
-  /*
-  const {
-    data: costs,
-    isError: costIsError,
-    error: costError,
-  } = useGetCostsQuery("costsList", {
-    pollingInterval: 60000,
-    refetchOnFocus: true,
-    refetchOnMountOrArgChange: true,
-  });
-
-  const { date } = useGetDatesQuery("datesList", {
-    selectFromResult: ({ data }) => ({
-      date: data?.entities[id],
-    }),
-  });
-  const { data: items } = useGetItemsQuery("itemsList");
-  const { crop } = useGetCropsQuery("cropsList", {
-    selectFromResult: ({ data }) => ({
-      crop: data?.entities[date?.date_crop_key],
-    }),
-  });
-
-  const onItemCostChanged = (e) => {
-    e.preventDefault();
-    setItemCostKey(e.target.value);
-    if (items) {
-      const { entities } = items;
-      setItemPrecioKey(`${entities[e.target.value].item_price}`);
-      setItemDoseKey(`${entities[e.target.value].dose_name}`);
-    }
-  };
-  const onCostQuantityChanged = (e) => {
-    e.preventDefault();
-    setCostQuantityKey(e.target.value);
-  };
-
-  const onAddCostClicked = async (e) => {
-    e.preventDefault();
-  };
-  //  costItemKey, costQuantity, costDateKey
-  const handleClearClick = (e) => {};
-
-  let costList;
-  let costTotal = [];
-  if (costs) {
-    const { ids, entities } = costs;
-
-    costList =
-      ids?.length &&
-      ids.map((Id) => {
-        if (entities[Id].cost_date_key == id) {
-          let list = <Cost key={Id} costId={Id} Lista={"Lista1"} />;
-          costTotal.push(parseFloat(entities[Id].cost_price));
-          return list;
-        }
-      });
-  }
-  let TT = costTotal.reduce((valorAnterior, valorActual) => {
-    return valorAnterior + valorActual;
-  }, 0);
-  let precioTT = new Intl.NumberFormat("es-do", {
-    style: "currency",
-    currency: "DOP",
-  }).format(parseFloat(TT));
-
-  let contentApp;
-
-  let precio = new Intl.NumberFormat("es-do", {
-    style: "currency",
-    currency: "DOP",
-  }).format(parseFloat(itemPrecio));
-
-*/
-  /*
-  const { datess } = useGetDatesQuery("datesList", {
-    selectFromResult: ({ data }) => ({
-      datess: data?.ids?.map((Id) => {
-        let plnt = `${data?.entities[Id].crop_name}`.split("-")[0];
-        if (plnt !== "Plantilla") {
-          return data?.entities[Id];
-        }
-      }),
-    }),
-  });
-  let ddd = datess.filter((data) => data !== undefined);
-
-  let num = 0;
-  const data = React.useMemo(() => {
-    return ddd?.map((date) => {
-      if (date !== undefined) {
-        num = num + 1;
-        let nomnb =
-          `${date?.date_user_key}` == "null"
-            ? "no"
-            : date?.user_nombre
-            ? date?.user_nombre
-            : date?.user_name;
-        let actNma =
-          date?.act_name == 0 || date?.act_name == undefined
-            ? "no"
-            : date?.act_name;
-        let cropNma =
-          date?.crop_name == 0 || date?.crop_name == undefined
-            ? "no"
-            : date?.crop_name;
-        let campNma =
-          date?.camp_name == 0 || date?.camp_name == undefined
-            ? "no"
-            : date?.camp_name;
-        let fecha =
-          `${date?.date_init}` == "null"
-            ? "no asignada"
-            : `${date?.date_init}`.split("T")[0];
-
-        return {
-          col1: num,
-          col2: actNma,
-          col3: cropNma,
-          col4: campNma,
-          col5: fecha,
-          col6: nomnb,
-        };
-      }
-    });
-  }, []);
-
-  const columns = React.useMemo(
-    () => [
-      {
-        Header: "#",
-        accessor: "col1", // accessor is the "key" in the data
-        sortType: "basic",
-      },
-      {
-        Header: "Actividad",
-        accessor: "col2",
-        sortType: "basic",
-      },
-      {
-        Header: "Cultivo",
-        accessor: "col3",
-        sortType: "basic",
-      },
-      {
-        Header: "Campo",
-        accessor: "col4", // accessor is the "key" in the data
-        sortType: "basic",
-      },
-      {
-        Header: "Fecha Programada",
-        accessor: "col5",
-        sortType: "basic",
-        Footer: (info) => {
-          // Only calculate total visits if rows change
-          const total = React.useMemo(
-            () => info.rows.reduce((sum, row) => 1 + sum, 0),
-            [info.rows]
-          );
-
-          return <>Total: {total}</>;
-        },
-      },
-      {
-        Header: "Responsable",
-        accessor: "col6",
-        sortType: "basic",
-      },
-    ],
-    []
-  );
-
+const TableCont = ({ columns, data }) => {
+  const tableRef = useRef(null);
   const {
     getTableProps,
     getTableBodyProps,
@@ -287,11 +44,19 @@ const ItemReport = () => {
     prepareRow,
   } = useTable({ columns, data }, useSortBy);
 
-  let conteido = (
+  return (
     <>
+      <DownloadTableExcel
+        filename="users table"
+        sheet="users"
+        currentTableRef={tableRef.current}
+      >
+        <button className="btn btn-success"> Export excel </button>
+      </DownloadTableExcel>
       <div className="table-container col-12 col-md-10 col-lg-8">
         <div>
           <table
+            ref={tableRef}
             {...getTableProps()}
             className="table table-hover table-sm table-striped table-responsive-sm table-bordered"
           >
@@ -316,7 +81,7 @@ const ItemReport = () => {
               ))}
             </thead>
             <tbody {...getTableBodyProps()}>
-              {rows.map((row) => {
+              {rows.map((row, i) => {
                 prepareRow(row);
                 return (
                   <tr {...row.getRowProps()}>
@@ -345,7 +110,385 @@ const ItemReport = () => {
       </div>
     </>
   );
-*/
+};
+
+const ItemReport = () => {
+  const { username, isManager, isAdmin, userId } = useAuth();
+  const [state, dispatch] = useReducer(reducer, {
+    itemId: "",
+  });
+  const [selectedOption, setSelectedOption] = useState("articulo");
+
+  const handleOptionChange = (event) => {
+    setSelectedOption(event.target.value);
+  };
+
+  // const { data: plants, isSuccess: plantSucc } = useGetPlantsQuery("plantsList");
+  // const { data: camps, isSuccess: campSucc } = useGetCampsQuery("campsList");
+  //const { data: crops, isSuccess: cropSucc } = useGetCropsQuery("cropsList");
+  //const { data: acts, isSuccess: actSucc } = useGetActsQuery("actsList");
+  // const { data: dates, isSuccess: dateSucc } = useGetDatesQuery("datesList");
+  //const { data: items, isSuccess: itemSucc } = useGetItemsQuery("itemsList");
+  const { data: costs, isSuccess: costSucc } = useGetCostsQuery("costsList");
+
+  const onItemSelect = (e) => {
+    e.preventDefault();
+  };
+
+  let itemsOption;
+  let itemArr;
+  let contenido = <></>;
+  let actNma;
+  if (costSucc) {
+    const { ids, entities } = costs;
+
+    const itms = _.groupBy(entities, "item_name");
+    itemsOption = Object.keys(itms).map((itm) => {
+      const key = _.reduce(itms[itm], (sum, item) => item.cost_item_key, 0);
+      if (state.itemId == key) {
+        const nn = _.reduce(itms[itm], (sum, item) => itm, 0);
+        actNma = nn;
+      }
+
+      return <option value={key}>{itm}</option>;
+    });
+
+    const result =
+      state.itemId == ""
+        ? ids
+        : ids?.length &&
+          ids?.filter((Id) => entities[Id].cost_item_key == state.itemId);
+
+    itemArr =
+      result?.length &&
+      result?.map((Id) => {
+        return entities[Id];
+      });
+  }
+
+  // Agrupa los datos por cultivo
+  const dataByCrop = _.groupBy(itemArr, "crop_name");
+
+  // Agrupa los datos por actividad
+  const dataByActivity = _.groupBy(itemArr, "act_name");
+
+  const dataByCamp = _.groupBy(itemArr, "camp_name");
+
+  const itemByCamp = _.groupBy(itemArr, "item_name");
+
+  const campData = useMemo(
+    () =>
+      Object.keys(dataByCamp).map((camp) => {
+        const items = _.reduce(dataByCamp[camp], (sum, item) => sum + 1, 0);
+        const costs = _.reduce(
+          dataByCamp[camp],
+          (sum, item) => sum + parseFloat(item.cost_price),
+          0
+        );
+        let cost = new Intl.NumberFormat("es-do", {
+          style: "currency",
+          currency: "DOP",
+        }).format(costs);
+        return { camp, items, cost };
+      }),
+    []
+  );
+
+  const activityData = useMemo(
+    () =>
+      Object.keys(dataByActivity).map((activity) => {
+        const items = _.reduce(
+          dataByActivity[activity],
+          (sum, item) => sum + 1,
+          0
+        );
+        const costs = _.reduce(
+          dataByActivity[activity],
+          (sum, item) => sum + parseFloat(item.cost_price),
+          0
+        );
+        let cost = new Intl.NumberFormat("es-do", {
+          style: "currency",
+          currency: "DOP",
+        }).format(costs);
+        return { activity, items, cost };
+      }),
+    [state.itemId]
+  );
+
+  const cropData = useMemo(
+    () =>
+      Object.keys(dataByCrop).map((crop) => {
+        const items = _.reduce(dataByCrop[crop], (sum, item) => sum + 1, 0);
+        const costs = _.reduce(
+          dataByCrop[crop],
+          (sum, item) => sum + parseFloat(item.cost_price),
+          0
+        );
+        let cost = new Intl.NumberFormat("es-do", {
+          style: "currency",
+          currency: "DOP",
+        }).format(costs);
+        return { crop, items, cost };
+      }),
+    []
+  );
+
+  const itemData = useMemo(
+    () =>
+      Object.keys(itemByCamp).map((itm) => {
+        const items = _.reduce(
+          itemByCamp[itm],
+          (sum, item) => sum + parseFloat(item.cost_quantity),
+          0
+        );
+        const costs = _.reduce(
+          itemByCamp[itm],
+          (sum, item) => sum + parseFloat(item.cost_price),
+          0
+        );
+        let cost = new Intl.NumberFormat("es-do", {
+          style: "currency",
+          currency: "DOP",
+        }).format(costs);
+        return { itm, items, cost };
+      }),
+    [state.itemId]
+  );
+
+  // Define las columnas para la tabla de actividades
+  const activityColumns = useMemo(
+    () => [
+      { Header: "Actividad", accessor: "activity" },
+      { Header: "Cantidad de Items", accessor: "items" },
+      {
+        Header: "Costo Total",
+        accessor: "cost",
+        Footer: (info) => {
+          // Only calculate total visits if rows change
+          const total = React.useMemo(
+            () =>
+              info.rows.reduce(
+                (sum, row) =>
+                  sum +
+                  parseFloat(`${row.values.cost.slice(3)}`.replace(",", "")),
+                0
+              ),
+            [info.rows]
+          );
+
+          let precioTT = new Intl.NumberFormat("es-do", {
+            style: "currency",
+            currency: "DOP",
+          }).format(total);
+          return (
+            <>
+              {" "}
+              <b>Total:</b> {precioTT}
+            </>
+          );
+        },
+      },
+    ],
+    [state.itemId]
+  );
+  const activityColumn = useMemo(
+    () => [
+      {
+        Header: `Articulo: ${actNma}`,
+        Footer: "",
+        columns: [
+          { Header: "Actividad", accessor: "activity", sortType: "basic" },
+        ],
+      },
+      {
+        Header: "Fecha",
+        Footer: "",
+        columns: [
+          { Header: "Cantidad de Items", accessor: "items", sortType: "basic" },
+          {
+            Header: "Costo Total",
+            accessor: "cost",
+            sortType: "basic",
+            Footer: (info) => {
+              // Only calculate total visits if rows change
+              const total = React.useMemo(
+                () =>
+                  info.rows.reduce(
+                    (sum, row) =>
+                      sum +
+                      parseFloat(
+                        `${row.values.cost.slice(3)}`.replace(",", "")
+                      ),
+                    0
+                  ),
+                [info.rows]
+              );
+
+              let precioTT = new Intl.NumberFormat("es-do", {
+                style: "currency",
+                currency: "DOP",
+              }).format(total);
+              return (
+                <>
+                  {" "}
+                  <b>Total:</b> {precioTT}
+                </>
+              );
+            },
+          },
+        ],
+      },
+    ],
+    [state.itemId]
+  );
+
+  const cropColumns = useMemo(
+    () => [
+      { Header: "Cultivo", accessor: "crop" },
+      { Header: "Cantidad de Items", accessor: "items" },
+      {
+        Header: "Costo Total",
+        accessor: "cost",
+        Footer: (info) => {
+          // Only calculate total visits if rows change
+          const total = React.useMemo(
+            () =>
+              info.rows.reduce(
+                (sum, row) =>
+                  sum +
+                  parseFloat(`${row.values.cost.slice(3)}`.replace(",", "")),
+                0
+              ),
+            [info.rows]
+          );
+
+          let precioTT = new Intl.NumberFormat("es-do", {
+            style: "currency",
+            currency: "DOP",
+          }).format(total);
+          return (
+            <>
+              {" "}
+              <b>Total:</b> {precioTT}
+            </>
+          );
+        },
+      },
+    ],
+    [state.itemId]
+  );
+  const cropColumn = useMemo(
+    () => [
+      {
+        Header: `Articulo: ${actNma}`,
+        Footer: "",
+        columns: [{ Header: "Actividad", accessor: "crop", sortType: "basic" }],
+      },
+      {
+        Header: "Fecha",
+        Footer: "",
+        columns: [
+          { Header: "Cantidad de Items", accessor: "items", sortType: "basic" },
+          {
+            Header: "Costo Total",
+            accessor: "cost",
+            sortType: "basic",
+            Footer: (info) => {
+              // Only calculate total visits if rows change
+              const total = React.useMemo(
+                () =>
+                  info.rows.reduce(
+                    (sum, row) =>
+                      sum +
+                      parseFloat(
+                        `${row.values.cost.slice(3)}`.replace(",", "")
+                      ),
+                    0
+                  ),
+                [info.rows]
+              );
+
+              let precioTT = new Intl.NumberFormat("es-do", {
+                style: "currency",
+                currency: "DOP",
+              }).format(total);
+              return (
+                <>
+                  {" "}
+                  <b>Total:</b> {precioTT}
+                </>
+              );
+            },
+          },
+        ],
+      },
+    ],
+    [state.itemId]
+  );
+
+  const itemColumns = useMemo(
+    () => [
+      { Header: "Articulo", accessor: "itm" },
+      { Header: "Cantidad", accessor: "items" },
+      {
+        Header: "Costo Total",
+        accessor: "cost",
+        Footer: (info) => {
+          // Only calculate total visits if rows change
+          const total = React.useMemo(
+            () =>
+              info.rows.reduce(
+                (sum, row) =>
+                  sum +
+                  parseFloat(`${row.values.cost.slice(3)}`.replace(",", "")),
+                0
+              ),
+            [info.rows]
+          );
+
+          let precioTT = new Intl.NumberFormat("es-do", {
+            style: "currency",
+            currency: "DOP",
+          }).format(total);
+          return (
+            <>
+              {" "}
+              <b>Total:</b> {precioTT}
+            </>
+          );
+        },
+      },
+    ],
+    [state.itemId]
+  );
+
+  // Define las columnas para la tabla de cultivos
+
+  if (selectedOption == "articulo") {
+    contenido = <TableCont columns={itemColumns} data={itemData} />;
+  }
+  if (selectedOption == "actividad") {
+    if (state.itemId == "") {
+      contenido = <TableCont columns={activityColumns} data={activityData} />;
+    }
+    if (state.itemId !== "") {
+      contenido = <TableCont columns={activityColumn} data={activityData} />;
+    }
+  }
+  if (selectedOption == "campo") {
+    if (state.itemId == "") {
+      contenido = <TableCont columns={cropColumns} data={cropData} />;
+    }
+    if (state.itemId !== "") {
+      contenido = <TableCont columns={cropColumn} data={cropData} />;
+    }
+  }
+  if (selectedOption == "planta") {
+  }
+  if (selectedOption == "cultivo") {
+  }
+
   return (
     <>
       <div className="font-weight-bold titulo_campos">Reporteria</div>
@@ -368,35 +511,61 @@ const ItemReport = () => {
             </select>
           </div>
           <div className="form-row bg-light">
-            <div div className="col-md-2 mb-3">
-              <label htmlFor="campo_cultivo">Planta</label>
-              <input type="checkbox" value={state.planta} />
-            </div>
-            <div div className="col-md-3 mb-3">
-              <label htmlFor="campo_cultivo">Campo</label>
-              <input type="checkbox" value={state.campo} />
-            </div>
-            <div div className="col-md-3 mb-3">
-              <label htmlFor="campo_cultivo">Cultivo</label>
+            <div className="col-md-2 mb-3">
+              <label htmlFor="campo_cultivo">Articulo</label>
               <input
-                type="checkbox"
-                value={state.cultivo}
-                onChange={(e) =>
-                  dispatch({
-                    type: ACTION.CULTIVO,
-                  })
-                }
+                type="radio"
+                name="fav_language"
+                value={"articulo"}
+                checked={selectedOption === "articulo"}
+                onChange={handleOptionChange}
               />
             </div>
-            <div div className="col-md-3 mb-3">
+            <div className="col-md-2 mb-3">
+              <label htmlFor="campo_cultivo">Planta</label>
+              <input
+                type="radio"
+                name="fav_language"
+                value={"planta"}
+                checked={selectedOption === "planta"}
+                onChange={handleOptionChange}
+              />
+            </div>
+            <div className="col-md-3 mb-3">
+              <label htmlFor="campo_cultivo">Campo</label>
+              <input
+                type="radio"
+                name="fav_language"
+                value={"campo"}
+                checked={selectedOption === "campo"}
+                onChange={handleOptionChange}
+              />
+            </div>
+            <div className="col-md-3 mb-3">
+              <label htmlFor="campo_cultivo">Cultivo</label>
+              <input
+                type="radio"
+                name="fav_language"
+                value={"cultivo"}
+                checked={selectedOption === "cultivo"}
+                onChange={handleOptionChange}
+              />
+            </div>
+            <div className="col-md-3 mb-3">
               <label htmlFor="campo_cultivo">Actividad</label>
-              <input type="checkbox" />
+              <input
+                type="radio"
+                name="fav_language"
+                value={"actividad"}
+                checked={selectedOption === "actividad"}
+                onChange={handleOptionChange}
+              />
             </div>
           </div>
         </div>
       </div>
 
-      <div></div>
+      <div>{contenido}</div>
     </>
   );
 };
