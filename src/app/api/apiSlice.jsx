@@ -50,7 +50,7 @@ export const apiSlice = createApi({
   baseQuery: baseQueryWithReauth,
   extractRehydrationInfo(action, { reducerPath }) {
     if (action.type === REHYDRATE) {
-      return action.payload[reducerPath];
+      return action.payload?.[reducerPath];
     }
   },
   tagTypes: [
