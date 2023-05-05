@@ -4,7 +4,7 @@ import { useParams } from "react-router-dom";
 import { format } from "date-fns";
 //import { filterBetween } from 'date-fns/fp';
 import { isWithinInterval, parseISO } from "date-fns";
-import Chart from "chart.js/auto";
+
 import { Bar } from "react-chartjs-2";
 
 import PropTypes from "prop-types";
@@ -293,7 +293,8 @@ const Report = () => {
   const [tres, setTres] = useState(false);
   const [cuatro, setCuatro] = useState(false);
   const [cinco, setCinco] = useState(false);
-
+  const [seis, setSeis] = useState(true);
+  const [siete, setSiete] = useState(true);
 
   const { username, isManager, isAdmin, userId } = useAuth();
   //const [focusedInput, setFocusedInput]=useState()
@@ -354,8 +355,8 @@ const Report = () => {
   function formatMonthYear(date) {
     const dateObj = new Date(date);
     const year = dateObj.getFullYear();
-    const options = { month: 'long' };
-  const month = dateObj.toLocaleString('es', options);
+    const options = { month: "long" };
+    const month = dateObj.toLocaleString("es", options);
     //const day = dateObj.getDate();
 
     return `${month}-${year}`;
@@ -479,6 +480,21 @@ const Report = () => {
       ? [formatMonthYear(startDate), formatMonthYear(endDate)]
       : [];
 
+  const costXfecha = filteredData?.map((info) => {
+    const dateObj = new Date(info.cost_date);
+    const year = dateObj.getFullYear();
+    const options = { month: "long" };
+    const month = dateObj.toLocaleString("es", options);
+    const mes = `${month} - ${year}`
+    const costos= info.cost_price
+    return { year, mes, costos, dateObj }
+  });
+  const sortedData = _.orderBy(costXfecha, (o) => o.dateObj, "asc")
+  const dataByYear = _.groupBy(sortedData, "year");
+
+  
+  const dataByMes = _.groupBy(sortedData, "mes");
+
   const dataByCrop = _.groupBy(filteredData, "crop_name");
 
   // Agrupa los datos por actividad
@@ -490,12 +506,30 @@ const Report = () => {
 
   const dataByPlant = _.groupBy(filteredData, "plant_name");
 
+  const dataYear = Object.keys(dataByYear).map((year) => {
+    const costs = _.reduce(
+      dataByYear[year],
+      (sum, item) => sum + parseFloat(item.costos),
+      0
+    );
+    return { year, costs };
+  });
+
+  const dataMes = Object.keys(dataByMes).map((mes) => {
+    const costs = _.reduce(
+      dataByMes[mes],
+      (sum, item) => sum + parseFloat(item.costos),
+      0
+    );
+    return { mes, costs };
+  });
+
   const dataAct = Object.keys(dataByActivity).map((activity) => {
     const costs = _.reduce(
       dataByActivity[activity],
       (sum, item) => sum + parseFloat(item.cost_price),
       0
-    );    
+    );
     return { activity, costs };
   });
 
@@ -504,7 +538,7 @@ const Report = () => {
       dataByPlant[name],
       (sum, item) => sum + parseFloat(item.cost_price),
       0
-    );    
+    );
     return { name, costs };
   });
 
@@ -513,7 +547,7 @@ const Report = () => {
       dataByCrop[name],
       (sum, item) => sum + parseFloat(item.cost_price),
       0
-    );    
+    );
     return { name, costs };
   });
 
@@ -522,7 +556,7 @@ const Report = () => {
       dataByCamp[name],
       (sum, item) => sum + parseFloat(item.cost_price),
       0
-    );    
+    );
     return { name, costs };
   });
 
@@ -531,26 +565,97 @@ const Report = () => {
       dataByItem[name],
       (sum, item) => sum + parseFloat(item.cost_price),
       0
-    );    
+    );
     return { name, costs };
   });
 
+  const YearCostChart = ({ data }) => {
+    const datas = {
+      labels: data.map((row) => row.year),
+      datasets: [
+        {
+          label: "Costos por Año",
+          data: data.map((row) => row.costs),
+          backgroundColor: ["rgba(10, 10, 155, 0.2)"],
+          borderColor: ["rgba(10, 10, 155, 1)"],
+
+          borderWidth: 2,
+        },
+      ],
+    };
+
+    const options = {
+      scales: {
+        y: {
+          beginAtZero: false,
+        },
+      },
+    };
+    return (
+      <>
+        <div className="header">
+          <h1 className="font-weight-bold titulo_campos">
+            Costos por Año
+          </h1>
+          <h3 className="font-weight-bold titulo_campos">
+            {dateFitered[0]} {dateFitered[1]}
+          </h3>
+        </div>
+        <Bar data={datas} options={options} />
+      </>
+    );
+  };
+
+  const MonthCostChart = ({ data }) => {
+    const datas = {
+      labels: data.map((row) => row.mes),
+      datasets: [
+        {
+          label: "Costos por Mes",
+          data: data.map((row) => row.costs),
+          backgroundColor: ["rgba(153, 10, 155, 0.2)"],
+          borderColor: ["rgba(153, 10, 155, 1)"],
+          borderWidth: 2,
+        },
+      ],
+    };
+
+    const options = {
+      scales: {
+        y: {
+          beginAtZero: false,
+        },
+      },
+    };
+    return (
+      <>
+        <div className="header">
+          <h1 className="font-weight-bold titulo_campos">
+            Costos Por Mes
+          </h1>
+          <h3 className="font-weight-bold titulo_campos">
+            {dateFitered[0]} {dateFitered[1]}
+          </h3>
+        </div>
+        <Bar data={datas} options={options} />
+      </>
+    );
+  };
 
 
-
-  const ActividadCostChart = ({data}) => {
+  const ActividadCostChart = ({ data }) => {
     const datas = {
       labels: data.map((row) => row.activity),
       datasets: [
         {
           label: "Costo por Actividad",
           data: data.map((row) => row.costs),
-  
+
           borderWidth: 2,
         },
       ],
     };
-  
+
     const options = {
       scales: {
         y: {
@@ -573,25 +678,21 @@ const Report = () => {
     );
   };
 
-  const PlantaCostChart = ({data}) => {
+  const PlantaCostChart = ({ data }) => {
     const datas = {
       labels: data.map((row) => row.name),
       datasets: [
         {
           label: "Costo por Actividad",
           data: data.map((row) => row.costs),
-          backgroundColor: [
-            'rgba(255, 99, 132, 0.2)'
-          ],
-          borderColor: [
-            'rgba(255, 99, 132, 1)'
-          ],
-  
+          backgroundColor: ["rgba(255, 99, 132, 0.2)"],
+          borderColor: ["rgba(255, 99, 132, 1)"],
+
           borderWidth: 2,
         },
       ],
     };
-  
+
     const options = {
       scales: {
         y: {
@@ -602,9 +703,7 @@ const Report = () => {
     return (
       <>
         <div className="header">
-          <h1 className="font-weight-bold titulo_campos">
-            Costo por Planta
-          </h1>
+          <h1 className="font-weight-bold titulo_campos">Costo por Planta</h1>
           <h3 className="font-weight-bold titulo_campos">
             {dateFitered[0]} {dateFitered[1]}
           </h3>
@@ -614,25 +713,21 @@ const Report = () => {
     );
   };
 
-  const CultivoCostChart = ({data}) => {
+  const CultivoCostChart = ({ data }) => {
     const datas = {
       labels: data.map((row) => row.name),
       datasets: [
         {
           label: "Costo por Cultivo",
           data: data.map((row) => row.costs),
-          backgroundColor: [
-            'rgba(54, 162, 235, 0.2)'
-          ],
-          borderColor: [
-            'rgba(54, 162, 235, 1)'
-          ],
-  
+          backgroundColor: ["rgba(54, 162, 235, 0.2)"],
+          borderColor: ["rgba(54, 162, 235, 1)"],
+
           borderWidth: 2,
         },
       ],
     };
-  
+
     const options = {
       scales: {
         y: {
@@ -643,9 +738,7 @@ const Report = () => {
     return (
       <>
         <div className="header">
-          <h1 className="font-weight-bold titulo_campos">
-            Costo por Cultivo
-          </h1>
+          <h1 className="font-weight-bold titulo_campos">Costo por Cultivo</h1>
           <h3 className="font-weight-bold titulo_campos">
             {dateFitered[0]} {dateFitered[1]}
           </h3>
@@ -655,25 +748,21 @@ const Report = () => {
     );
   };
 
-  const CampoCostChart = ({data}) => {
+  const CampoCostChart = ({ data }) => {
     const datas = {
       labels: data.map((row) => row.name),
       datasets: [
         {
           label: "Costo por Campo",
           data: data.map((row) => row.costs),
-          backgroundColor: [
-            'rgba(153, 102, 255, 0.2)'
-          ],
-          borderColor: [
-            'rgba(153, 102, 255, 1)'
-          ],
-  
+          backgroundColor: ["rgba(153, 102, 255, 0.2)"],
+          borderColor: ["rgba(153, 102, 255, 1)"],
+
           borderWidth: 2,
         },
       ],
     };
-  
+
     const options = {
       scales: {
         y: {
@@ -684,9 +773,7 @@ const Report = () => {
     return (
       <>
         <div className="header">
-          <h1 className="font-weight-bold titulo_campos">
-            Costo por Campo
-          </h1>
+          <h1 className="font-weight-bold titulo_campos">Costo por Campo</h1>
           <h3 className="font-weight-bold titulo_campos">
             {dateFitered[0]} {dateFitered[1]}
           </h3>
@@ -696,25 +783,21 @@ const Report = () => {
     );
   };
 
-  const ItemCostChart = ({data}) => {
+  const ItemCostChart = ({ data }) => {
     const datas = {
       labels: data.map((row) => row.name),
       datasets: [
         {
           label: "Costo por Artículo",
           data: data.map((row) => row.costs),
-          backgroundColor: [
-            'rgba(75, 192, 192, 0.2)'
-          ],
-          borderColor: [
-            'rgba(75, 192, 192, 1)'
-          ],
-  
+          backgroundColor: ["rgba(75, 192, 192, 0.2)"],
+          borderColor: ["rgba(75, 192, 192, 1)"],
+
           borderWidth: 2,
         },
       ],
     };
-  
+
     const options = {
       scales: {
         y: {
@@ -725,9 +808,7 @@ const Report = () => {
     return (
       <>
         <div className="header">
-          <h1 className="font-weight-bold titulo_campos">
-            Costo por Artículo
-          </h1>
+          <h1 className="font-weight-bold titulo_campos">Costo por Artículo</h1>
           <h3 className="font-weight-bold titulo_campos">
             {dateFitered[0]} {dateFitered[1]}
           </h3>
@@ -736,10 +817,6 @@ const Report = () => {
       </>
     );
   };
-
-  
-  
-
 
   return (
     <>
@@ -779,51 +856,114 @@ const Report = () => {
           />
         </div>
         <div className="row">
-          <h3 className="col-2">
-          <label htmlFor="actividad">Actidades</label>
-          {' '}
-          <input type="checkbox" name="actividad" checked={uno} onChange={(e)=>setUno(e.target.checked)} />
+        <h3 className="col-2">
+            <label htmlFor="year">Mensual</label>{" "}
+            <input
+              type="checkbox"
+              name="year"
+              checked={seis}
+              onChange={(e) => setSeis(e.target.checked)}
+            />
           </h3>
           <h3 className="col-2">
-
-          <label htmlFor="planta">Plantas{' '}</label>
-          {' '}
-          <input type="checkbox" name="planta" checked={dos} onChange={(e)=>setDos(e.target.checked)} />
+            <label htmlFor="mensual">Anual</label>{" "}
+            <input
+              type="checkbox"
+              name="mensual"
+              checked={siete}
+              onChange={(e) => setSiete(e.target.checked)}
+            />
           </h3>
           <h3 className="col-2">
-          <label htmlFor="cultivo">Cultivos{' '}</label>
-          {' '}
-          <input type="checkbox" name="cultivo" checked={tres} onChange={(e)=>setTres(e.target.checked)} />
+            <label htmlFor="actividad">Actidades</label>{" "}
+            <input
+              type="checkbox"
+              name="actividad"
+              checked={uno}
+              onChange={(e) => setUno(e.target.checked)}
+            />
           </h3>
           <h3 className="col-2">
-          <label htmlFor="Campos">Campos{' '}</label>
-          {' '}
-          <input type="checkbox" name="Campos" checked={cuatro} onChange={(e)=>setCuatro(e.target.checked)} />
+            <label htmlFor="planta">Plantas </label>{" "}
+            <input
+              type="checkbox"
+              name="planta"
+              checked={dos}
+              onChange={(e) => setDos(e.target.checked)}
+            />
           </h3>
           <h3 className="col-2">
-          <label htmlFor="articulos">Artículos{' '}</label>
-          {' '}
-          <input type="checkbox" name="articulos" checked={cinco} onChange={(e)=>setCinco(e.target.checked)} />
+            <label htmlFor="cultivo">Cultivos </label>{" "}
+            <input
+              type="checkbox"
+              name="cultivo"
+              checked={tres}
+              onChange={(e) => setTres(e.target.checked)}
+            />
           </h3>
-          
+          <h3 className="col-2">
+            <label htmlFor="Campos">Campos </label>{" "}
+            <input
+              type="checkbox"
+              name="Campos"
+              checked={cuatro}
+              onChange={(e) => setCuatro(e.target.checked)}
+            />
+          </h3>
+          <h3 className="col-2">
+            <label htmlFor="articulos">Artículos </label>{" "}
+            <input
+              type="checkbox"
+              name="articulos"
+              checked={cinco}
+              onChange={(e) => setCinco(e.target.checked)}
+            />
+          </h3>
         </div>
       </div>
-      <div id={`${uno?'miDivB':'miDivN'}`} className="container needs-validation nuevo-cultivo-form">
+      <div
+        id={`${seis ? "miDivB" : "miDivN"}`}
+        className="container needs-validation nuevo-cultivo-form"
+      >
+        <MonthCostChart data={dataMes} />
+      </div>
+      <div
+        id={`${siete ? "miDivB" : "miDivN"}`}
+        className="container needs-validation nuevo-cultivo-form"
+      >
+        <YearCostChart data={dataYear} />
+      </div>
+      <div
+        id={`${uno ? "miDivB" : "miDivN"}`}
+        className="container needs-validation nuevo-cultivo-form"
+      >
         <ActividadCostChart data={dataAct} />
       </div>
-      <div id={`${dos?'miDivB':'miDivN'}`} className="container needs-validation nuevo-cultivo-form">
+      <div
+        id={`${dos ? "miDivB" : "miDivN"}`}
+        className="container needs-validation nuevo-cultivo-form"
+      >
         <PlantaCostChart data={dataPlant} />
       </div>
 
-      <div id={`${tres?'miDivB':'miDivN'}`} className="container needs-validation nuevo-cultivo-form">
+      <div
+        id={`${tres ? "miDivB" : "miDivN"}`}
+        className="container needs-validation nuevo-cultivo-form"
+      >
         <CultivoCostChart data={dataCrop} />
       </div>
 
-      <div id={`${cuatro?'miDivB':'miDivN'}`} className="container needs-validation nuevo-cultivo-form">
+      <div
+        id={`${cuatro ? "miDivB" : "miDivN"}`}
+        className="container needs-validation nuevo-cultivo-form"
+      >
         <CampoCostChart data={dataCamp} />
       </div>
 
-      <div id={`${cinco?'miDivB':'miDivN'}`} className="container needs-validation nuevo-cultivo-form">
+      <div
+        id={`${cinco ? "miDivB" : "miDivN"}`}
+        className="container needs-validation nuevo-cultivo-form"
+      >
         <ItemCostChart data={dataItem} />
       </div>
     </>
