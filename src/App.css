@@ -99,3 +99,10 @@ input:not(:placeholder-shown):invalid ~ .error-message {
 input:not(:placeholder-shown):invalid {
   border-color: #cb648c;
 }
+
+#miDivB {
+  display: block;
+}
+#miDivN {
+  display: none;
+}
