@@ -4,7 +4,7 @@ import { useParams } from "react-router-dom";
 import { format } from "date-fns";
 //import { filterBetween } from 'date-fns/fp';
 import { isWithinInterval, parseISO } from "date-fns";
-
+import Chart from 'chart.js/auto'
 import { Bar } from "react-chartjs-2";
 
 import PropTypes from "prop-types";
