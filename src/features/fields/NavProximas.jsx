@@ -2,15 +2,79 @@ import React, { useState, useEffect, useRef } from "react";
 import "../../styles/proximas.css";
 import ReImage from "../../images/return.svg";
 import { Link } from "react-router-dom";
-import { useTable, useSortBy, usePagination } from "react-table";
+import { useTable, useSortBy, usePagination, useFilters } from "react-table";
 import { useGetDatesQuery } from "./redux/appApiSlice";
 import useAuth from "../../hooks/useAuth";
 import AppDate from "../../components/AppDate";
 import { useNavigate } from "react-router-dom";
 
+function DefaultColumnFilter({
+  column: { filterValue, preFilteredRows, setFilter, id },
+}) {
+  // Obtener una lista de opciones únicas a partir de los valores en la columna
+  const options = React.useMemo(() => {
+    const uniqueOptions = new Set();
+    preFilteredRows.forEach((row) => {
+      uniqueOptions.add(row.values[id]);
+    });
+    return Array.from(uniqueOptions);
+  }, [id, preFilteredRows]);
+
+  // Renderizar una lista de opciones para el filtro
+  return (
+    <select
+      value={filterValue}
+      onChange={(e) => {
+        setFilter(e.target.value || undefined);
+      }}
+    >
+      <option value="">Todos</option>
+      {options.map((option, i) => (
+        <option key={i} value={option}>
+          {option}
+        </option>
+      ))}
+    </select>
+  );
+}
+
 const TablePr = ({ columns, data }) => {
-  const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
-    useTable({ columns, data }, useSortBy);
+  const defaultColumn = React.useMemo(
+    () => ({
+      // Let's set up our default Filter UI
+      Filter: DefaultColumnFilter,
+    }),
+    []
+  );
+
+  const {
+    getTableProps,
+    getTableBodyProps,
+    headerGroups,
+    prepareRow,
+    page,
+    canPreviousPage,
+    canNextPage,
+    pageOptions,
+    pageCount,
+    gotoPage,
+    nextPage,
+    previousPage,
+    setPageSize,
+    state: { pageIndex, pageSize },
+    setFilter,
+  } = useTable(
+    {
+      columns,
+      data,
+      defaultColumn,
+      initialState: { pageIndex: 0 },
+      // Be sure to pass the defaultColumn option
+    },
+    useFilters,
+    useSortBy,
+    usePagination
+  );
 
   return (
     <>
@@ -27,7 +91,6 @@ const TablePr = ({ columns, data }) => {
                     <th
                       {...column.getHeaderProps(column.getSortByToggleProps())}
                     >
-                      {column.render("Header")}
                       <span>
                         {column.isSorted
                           ? column.isSortedDesc
@@ -35,13 +98,18 @@ const TablePr = ({ columns, data }) => {
                             : " 🔼"
                           : ""}
                       </span>
+                      {column.render("Header")}
+
+                      <div>
+                        {column.canFilter ? column.render("Filter") : null}
+                      </div>
                     </th>
                   ))}
                 </tr>
               ))}
             </thead>
             <tbody {...getTableBodyProps()}>
-              {rows.map((row) => {
+              {page.map((row) => {
                 prepareRow(row);
                 return (
                   <tr {...row.getRowProps()}>
@@ -55,6 +123,53 @@ const TablePr = ({ columns, data }) => {
               })}
             </tbody>
           </table>
+          <div className="pagination">
+            <button onClick={() => gotoPage(0)} disabled={!canPreviousPage}>
+              {"<<"}
+            </button>{" "}
+            <button onClick={() => previousPage()} disabled={!canPreviousPage}>
+              {"<"}
+            </button>{" "}
+            <button onClick={() => nextPage()} disabled={!canNextPage}>
+              {">"}
+            </button>{" "}
+            <button
+              onClick={() => gotoPage(pageCount - 1)}
+              disabled={!canNextPage}
+            >
+              {">>"}
+            </button>{" "}
+            <span>
+              Page{" "}
+              <strong>
+                {pageIndex + 1} of {pageOptions.length}
+              </strong>{" "}
+            </span>
+            <span>
+              | Go to page:{" "}
+              <input
+                type="number"
+                defaultValue={pageIndex + 1}
+                onChange={(e) => {
+                  const page = e.target.value ? Number(e.target.value) - 1 : 0;
+                  gotoPage(page);
+                }}
+                style={{ width: "100px" }}
+              />
+            </span>{" "}
+            <select
+              value={pageSize}
+              onChange={(e) => {
+                setPageSize(Number(e.target.value));
+              }}
+            >
+              {[10, 20, 30, 40, 50].map((pageSize) => (
+                <option key={pageSize} value={pageSize}>
+                  Show {pageSize}
+                </option>
+              ))}
+            </select>
+          </div>
         </div>
       </div>
     </>
@@ -64,100 +179,110 @@ const TablePr = ({ columns, data }) => {
 const navProximas = () => {
   const { username, isManager, isAdmin, userId } = useAuth();
   const navigate = useNavigate();
+  const [prodArray, setProdArr] = useState([]);
 
-  const { data: datess } = useGetDatesQuery("datesList");
-  const { dates } = useGetDatesQuery("datesList", {
-    selectFromResult: ({ data }) => ({
-      dates: data?.ids?.map((Id) => {
-        let plnt = `${data?.entities[Id].crop_name}`.split("-")[0];
-        if (plnt !== "Plantilla") {
-          if (isAdmin) {
-            return data?.entities[Id];
-          } else if (isManager) {
-            if (
-              data?.entities[Id].crop_user_key == userId ||
-              data?.entities[Id].date_user_key == userId
-            ) {
-              return data?.entities[Id];
-            }
-          } else {
-            if (data?.entities[Id].date_user_key == userId) {
-              return data?.entities[Id];
-            }
+  const { isSuccess } = useGetDatesQuery("datesList");
+
+  const filterDates = (data, isAdmin, isManager, userId) => {
+    const filteredDates = data?.ids?.reduce((filtered, Id) => {
+      let plnt = `${data?.entities[Id].crop_name}`.split("-")[0];
+      if (plnt !== "Plantilla") {
+        if (isAdmin) {
+          filtered.push(data?.entities[Id]);
+        } else if (isManager) {
+          if (
+            data?.entities[Id].crop_user_key == userId ||
+            data?.entities[Id].date_user_key == userId
+          ) {
+            filtered.push(data?.entities[Id]);
+          }
+        } else {
+          if (data?.entities[Id].date_user_key == userId) {
+            filtered.push(data?.entities[Id]);
           }
         }
-      }),
+      }
+      return filtered;
+    }, []);
+    return filteredDates;
+  };
+
+  const { dates } = useGetDatesQuery("datesList", {
+    selectFromResult: ({ data }) => ({
+      dates: filterDates(data, isAdmin, isManager, userId),
     }),
   });
 
   let num = 0;
 
-  let prodArr =
-    dates?.length &&
-    dates
-      ?.filter((data) => data !== undefined)
-      .map((date) => {
-        if (date) {
-          num = num + 1;
-          let nomnb =
-            `${date?.date_user_key}` == "null"
-              ? "no"
-              : date?.user_nombre
-              ? date?.user_nombre
-              : date?.user_name;
-          let actNma =
-            date?.act_name == 0 || date?.act_name == undefined
-              ? "no"
-              : date?.act_name;
-          let cropNma =
-            date?.crop_name == 0 || date?.crop_name == undefined
-              ? "no"
-              : date?.crop_name;
-          let campNma =
-            date?.camp_name == 0 || date?.camp_name == undefined
-              ? "no"
-              : date?.camp_name;
-          let fecha =
-            `${date?.date_init}` == "null"
-              ? "no asignada"
-              : `${date?.date_init}`.split("T")[0];
+  useEffect(() => {
+    const prodArr =
+      dates?.length &&
+      dates
+        ?.filter((data) => data !== undefined)
+        .map((date) => {
+          if (date) {
+            num = num + 1;
+            let nomnb =
+              `${date?.date_user_key}` == "null"
+                ? "no"
+                : date?.user_nombre
+                ? date?.user_nombre
+                : date?.user_name;
+            let actNma =
+              date?.act_name == 0 || date?.act_name == undefined
+                ? "no"
+                : date?.act_name;
+            let cropNma =
+              date?.crop_name == 0 || date?.crop_name == undefined
+                ? "no"
+                : date?.crop_name;
+            let campNma =
+              date?.camp_name == 0 || date?.camp_name == undefined
+                ? "no"
+                : date?.camp_name;
+            let fecha =
+              `${date?.date_init}` == "null"
+                ? "no asignada"
+                : `${date?.date_init}`.split("T")[0];
 
-          return {
-            id: num,
-            act: actNma,
-            cult: cropNma,
-            camp: campNma,
-            fech: fecha,
-            resp: nomnb,
-          };
-        }
-      });
+            return {
+              id: num,
+              act: actNma,
+              cult: cropNma,
+              camp: campNma,
+              fech: fecha,
+              resp: nomnb,
+            };
+          }
+        });
 
- 
+    setProdArr(prodArr);
+  }, [isSuccess]);
 
   const data = React.useMemo(
     () =>
-      prodArr?.length &&
-      Object.keys(prodArr).map((info) => {
-        const col1 = prodArr[info].id;
-        const col2 = prodArr[info].act;
-        const col3 = prodArr[info].cult;
-        const col4 = prodArr[info].camp;
-        const col5 = prodArr[info].fech;
-        const col6 = prodArr[info].resp;
+      prodArray?.length &&
+      Object.keys(prodArray).map((info) => {
+        const col1 = prodArray[info].id;
+        const col2 = prodArray[info].act;
+        const col3 = prodArray[info].cult;
+        const col4 = prodArray[info].camp;
+        const col5 = prodArray[info].fech;
+        const col6 = prodArray[info].resp;
 
         return { col1, col2, col3, col4, col5, col6 };
       }),
-    [prodArr]
+    [prodArray]
   );
 
-  
   const columns = React.useMemo(
     () => [
       {
         Header: "#",
         accessor: "col1", // accessor is the "key" in the data
         sortType: "basic",
+        Filter: "",
       },
       {
         Header: "Actividad",
@@ -178,6 +303,7 @@ const navProximas = () => {
         Header: "Fecha Programada",
         accessor: "col5",
         sortType: "basic",
+        Filter: "",
       },
       {
         Header: "Responsable",
@@ -185,11 +311,11 @@ const navProximas = () => {
         sortType: "basic",
       },
     ],
-    [prodArr]
+    []
   );
 
   let content =
-    prodArr?.length > 0 ? (
+    data?.length > 0 ? (
       <TablePr columns={columns} data={data} />
     ) : (
       <>Loading...</>
