@@ -28,6 +28,7 @@ import RegistrarPlanta from "./features/fields/RegistrarPlanta";
 import InfoCultivo from "./features/fields/InfoCultivo";
 import InfoCultivoPdf from "./features/fields/InfoCultivoPdf";
 import Report from "./features/fields/Report";
+import DateReport from "./features/fields/DateReport";
 import ItemReport from "./features/fields/ItemReport";
 import InfoAppCult from "./features/fields/InfoAppCult";
 
@@ -111,6 +112,7 @@ function App() {
                   <Route path="reporteria">
                     <Route index element={<Report />} />
                     <Route path="items" element={<ItemReport />} />
+                    <Route path="cultivos" element={<DateReport />} />
                   </Route>
                 </Route>
                 {/*lo agregado aqui en adelante es de fran*/}

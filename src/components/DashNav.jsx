@@ -111,7 +111,7 @@ const DashHeader = () => {
             {isAdmin && (
               <Link className="nav-item" to={"/dash/reporteria"}>
                 <li className={`menu-inicio`} id="d">
-                  Informe
+                  Reportes
                 </li>
               </Link>
             )}

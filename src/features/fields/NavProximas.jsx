@@ -140,13 +140,13 @@ const TablePr = ({ columns, data }) => {
               {">>"}
             </button>{" "}
             <span>
-              Page{" "}
+              Página{" "}
               <strong>
                 {pageIndex + 1} of {pageOptions.length}
               </strong>{" "}
             </span>
             <span>
-              | Go to page:{" "}
+              | Ir a la página:{" "}
               <input
                 type="number"
                 defaultValue={pageIndex + 1}
@@ -165,7 +165,7 @@ const TablePr = ({ columns, data }) => {
             >
               {[10, 20, 30, 40, 50].map((pageSize) => (
                 <option key={pageSize} value={pageSize}>
-                  Show {pageSize}
+                  Mostrar {pageSize}
                 </option>
               ))}
             </select>
@@ -186,7 +186,10 @@ const navProximas = () => {
   const filterDates = (data, isAdmin, isManager, userId) => {
     const filteredDates = data?.ids?.reduce((filtered, Id) => {
       let plnt = `${data?.entities[Id].crop_name}`.split("-")[0];
-      if (plnt !== "Plantilla") {
+      let statusCrop = data?.entities[Id].crop_status
+      let dateH = `${data?.entities[Id].crop_harvest}` == "null"?true:false
+      let appActDate = `${data?.entities[Id].date_end}` == "null"?true:false
+      if (plnt !== "Plantilla" && (statusCrop && dateH && appActDate)) {
         if (isAdmin) {
           filtered.push(data?.entities[Id]);
         } else if (isManager) {
@@ -243,7 +246,7 @@ const navProximas = () => {
                 : date?.camp_name;
             let fecha =
               `${date?.date_init}` == "null"
-                ? "no asignada"
+                ? "-"
                 : `${date?.date_init}`.split("T")[0];
 
             return {
@@ -256,6 +259,9 @@ const navProximas = () => {
             };
           }
         });
+
+
+        console.log(dates);
 
     setProdArr(prodArr);
   }, [isSuccess]);
