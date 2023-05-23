@@ -18,7 +18,7 @@ import useAuth from "../hooks/useAuth";
 
 Modal.setAppElement("#root");
 
-const USER_REGEX = /^[A-z]{3,20}$/;
+const USER_REGEX = /^[A-zñ]{3,20}$/;
 const PWD_REGEX = /^(?=\w*\d)(?=\w*[A-Z])(?=\w*[a-z])\S{8,16}$/;
 const EMAIL_REGEX =
   /^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/;
@@ -244,7 +244,19 @@ const User = ({ userId, Lista }) => {
     });
 
     const actuUser = (
-      <Modal isOpen={isOpen} onRequestClose={() => setIsOpen(false)}>
+      <Modal
+        isOpen={isOpen}
+        onRequestClose={() => {
+          setIsOpen(false);
+          setUsername(user.user_name);
+          setNames(user.user_nombre);
+          setSurname(user.user_apellido);
+          setRoles(user.user_rol);
+          setEmail(user.email);
+          setPhone(user.user_phone);
+          setStatus(user.user_status);
+        }}
+      >
         <button
           className="btn btn-danger"
           onClick={() => {
@@ -299,7 +311,7 @@ const User = ({ userId, Lista }) => {
                   name="names"
                   type="text"
                   autoComplete="off"
-                  pattern="^[a-zA-Z ]*$"
+                  pattern="^[a-zA-ZñÑ ]*$"
                   placeholder="Ej: Juan Andres"
                   value={names ? names : ""}
                   onChange={onNamesChanged}
@@ -317,7 +329,7 @@ const User = ({ userId, Lista }) => {
                   name="surname"
                   type="text"
                   autoComplete="off"
-                  pattern="^[a-zA-Z ]*$"
+                  pattern="^[a-zA-ZñÑ ]*$"
                   placeholder="Ej: Gómez Almanzar"
                   value={surname ? surname : ""}
                   onChange={onSurnameChanged}

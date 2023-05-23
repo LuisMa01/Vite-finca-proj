@@ -14,6 +14,11 @@ import { ROLES } from "../config/roles";
 import useAuth from "../hooks/useAuth";
 
 //en progreso aun falta configurar dosis y luego de este
+const DOSE_REGEX =
+  /^([A-Z]{1})([a-z0-9]{0,20})(([/-]{1}?)([a-zA-Z0-9]{1,20}?)){0,4}$/;
+const UNIT_REGEX =
+  /^([a-zA-Z0-9]{0,20})(([/ -]{1}?)([a-zA-Z0-9]{1,20}?)){0,4}$/;
+
 const Dose = ({ doseId }) => {
   const { username, isManager, isAdmin } = useAuth();
 
@@ -28,6 +33,17 @@ const Dose = ({ doseId }) => {
   const [desc, setDesc] = useState(dose.dose_desc);
   const [active, setActive] = useState(dose.dose_status);
   const [isOpen, setIsOpen] = useState(false);
+  const [validDose, setValidDose] = useState(false);
+  const [validUnit, setValidUnit] = useState(false);
+
+  useEffect(() => {
+    setValidUnit(UNIT_REGEX.test(doseUnit));
+  }, [doseUnit]);
+  useEffect(() => {
+    setValidDose(DOSE_REGEX.test(doseName));
+  }, [doseName]);
+
+  
 
   const [updateDose, { isLoading, isSuccess: doseUpSuc, isError, error }] =
     useUpdateDoseMutation();
@@ -37,6 +53,8 @@ const Dose = ({ doseId }) => {
     { isSuccess: isDelSuccess, isError: isDelError, error: delerror },
   ] = useDeleteDoseMutation();
 
+
+  const canSave = [validDose, validUnit].every(Boolean) && !isLoading;
   const onDoseNameChanged = (e) => setDoseName(e.target.value);
   const onItemDescChanged = (e) => setDesc(e.target.value);
   const onDoseUnitChanged = (e) => setDoseUnit(e.target.value);
@@ -57,13 +75,16 @@ const Dose = ({ doseId }) => {
     });
   };
   const onDoseChanged = async (e) => {
-    await updateDose({
-      id: dose.dose_id,
-      doseName,
-      doseUnit,
-      desc,
-      active,
-    });
+    if (canSave) {
+      await updateDose({
+        id: dose.dose_id,
+        doseName,
+        doseUnit,
+        desc,
+        active,
+      });
+    }
+    
   };
   //id, itemName, desc, itemPrice, active, itemDose
 
@@ -106,12 +127,14 @@ const Dose = ({ doseId }) => {
       <>
         <tr key={doseId}>
           <td>
-            <div type="button">{dosename}</div>
+            <div type="button">
+              {dose.dose_name ? dose.dose_name : "no tiene"}
+            </div>
           </td>
           <td>
-            <div>{doseUnit}</div>
+            <div>{dose.dose_unit}</div>
           </td>
-          <td>{desc}</td>
+          <td>{dose.dose_desc}</td>
           {(isManager || isAdmin) && (
             <td>
               <input
@@ -131,71 +154,92 @@ const Dose = ({ doseId }) => {
               />
             </td>
           )}
-          {isAdmin &&<td>
-            <div type="button" onClick={() => setIsOpen(!isOpen)}>
-              {isOpen ? "Cerrar" : "Editar"}
-            </div>
-          </td>}
+          {isAdmin && (
+            <td>
+              <div
+                type="button"
+                onClick={() => {
+                  setIsOpen(!isOpen);
+                  setDoseName(dose.dose_name);
+                  setDesc(dose.dose_desc);
+                  setDoseUnit(dose.dose_unit);
+                  setActive(dose.dose_status);
+                }}
+              >
+                {isOpen ? "Cerrar" : "Editar"}
+              </div>
+            </td>
+          )}
         </tr>
 
-        {(isAdmin) && <tr>
-          <td>
-            <Collapse isOpened={isOpen}>
-              <input
-                type="text"
-                maxLength={30}
-                className="form-control"
-                placeholder="Ej: hora/hombre"
-                value={doseName}
-                onChange={onDoseNameChanged}
-                required
-              />
-            </Collapse>
-          </td>
-          <td>
-            <Collapse isOpened={isOpen}>
-              <input
-                type="text"
-                maxLength={20}
-                className="form-control"
-                placeholder="Unidad"
-                value={doseUnit}
-                onChange={onDoseUnitChanged}
-              />
-            </Collapse>
-          </td>
-          <td>
-            <Collapse isOpened={isOpen}>
-              <input
-                type="text"
-                maxLength={200}
-                className="form-control"
-                placeholder="Descripción"
-                value={desc}
-                onChange={onItemDescChanged}
-              />
-            </Collapse>
-          </td>
-          <td>
-            <Collapse isOpened={isOpen}></Collapse>
-          </td>
+        {isAdmin && (
+          <tr>
+            <td>
+              <Collapse isOpened={isOpen}>
+                <input
+                  type="text"
+                  maxLength={30}
+                  className="form-control"
+                  placeholder="Ej: hora/hombre"
+                  pattern="^([A-ZÑ]{1})([a-zñ0-9]{0,20})(([/-]{1}?)([a-zñA-ZÑ0-9]{1,20}?)){0,4}$"
+                  value={doseName}
+                  onChange={onDoseNameChanged}
+                  required
+                />
+                <div className="error-message">
+                  <p>Formato incorrecto. Ej: [hora/hombre]</p>
+                </div>
+              </Collapse>
+            </td>
+            <td>
+              <Collapse isOpened={isOpen}>
+                <input
+                  type="text"
+                  maxLength={20}
+                  className="form-control"
+                  placeholder="Unidad"
+                  pattern="^([a-zñA-ZÑ0-9]{0,20})(([/-]{1}?)([a-zñA-ZÑ0-9]{1,20}?)){0,4}$"
+                  value={doseUnit}
+                  onChange={onDoseUnitChanged}
+                />
+                <div className="error-message">
+                  <p>Formato incorrecto. Ej: [hora]</p>
+                </div>
+              </Collapse>
+            </td>
+            <td>
+              <Collapse isOpened={isOpen}>
+                <input
+                  type="text"
+                  maxLength={200}
+                  className="form-control"
+                  placeholder="Descripción"
+                  value={desc}
+                  onChange={onItemDescChanged}
+                />
+              </Collapse>
+            </td>
+            <td>
+              <Collapse isOpened={isOpen}></Collapse>
+            </td>
 
-          <td>
-            <Collapse isOpened={isOpen}>
-              <div type="button" onClick={onDoseChanged}>
-                Guardar
-              </div>
-            </Collapse>
-          </td>
+            <td>
+              <Collapse isOpened={isOpen}>
+                <div className="btn btn-sm btn-success" type="button" onClick={onDoseChanged} disabled={!canSave}>
+                  Guardar
+                </div>
+              </Collapse>
+            </td>
 
-          <td>
-            <Collapse isOpened={isOpen}>
-              <button className="btn btn-danger" onClick={handleClearClick}>
-                Limpiar
-              </button>
-            </Collapse>
-          </td>
-        </tr>}
+            <td>
+              <Collapse isOpened={isOpen}>
+                <button className="btn btn-danger" onClick={handleClearClick}>
+                  Retornar Valor
+                </button>
+              </Collapse>
+            </td>
+          </tr>
+        )}
       </>
     );
 

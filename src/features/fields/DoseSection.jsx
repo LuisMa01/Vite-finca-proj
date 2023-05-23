@@ -9,6 +9,10 @@ import { useState, useEffect } from "react";
 import Dose from "../../components/Dose";
 import useAuth from "../../hooks/useAuth";
 
+const DOSE_REGEX =
+  /^([A-Z]{1})([a-z0-9]{0,20})(([/-]{1}?)([a-zA-Z0-9]{1,20}?)){0,4}$/;
+const UNIT_REGEX =
+  /^([a-zA-Z0-9]{0,20})(([/ -]{1}?)([a-zA-Z0-9]{1,20}?)){0,4}$/;
 const DoseSection = () => {
   const { username, isManager, isAdmin } = useAuth();
   const {
@@ -25,19 +29,36 @@ const DoseSection = () => {
 
   const [
     addNewDose,
-    { isSuccess: addissuccess, isError: addiserror, error: adderror },
+    {
+      isSuccess: addissuccess,
+      isLoading: isLoad,
+      isError: addiserror,
+      error: adderror,
+    },
   ] = useAddNewDoseMutation();
 
   const [doseName, setDoseName] = useState("");
   const [desc, setDesc] = useState("");
   const [doseUnit, setDoseUnit] = useState("");
+  const [validDose, setValidDose] = useState(false);
+  const [validUnit, setValidUnit] = useState(false);
+
+  useEffect(() => {
+    setValidUnit(UNIT_REGEX.test(doseUnit));
+  }, [doseUnit]);
+  useEffect(() => {
+    setValidDose(DOSE_REGEX.test(doseName));
+  }, [doseName]);
+
+  const canSave = [validDose, validUnit].every(Boolean) && !isLoad;
 
   //doseName, desc, doseUnit
 
   const onSaveDoseClicked = async (e) => {
     e.preventDefault();
-
-    await addNewDose({ doseName, desc, doseUnit });
+    if (canSave) {
+      await addNewDose({ doseName, desc, doseUnit });
+    }
   };
 
   const onDoseNameChanged = (e) => setDoseName(e.target.value);
@@ -117,7 +138,7 @@ const DoseSection = () => {
       <h1 className="item-section_titulo">Dosis y Unidad</h1>
       <div className="container centered-form">
         {isAdmin && (
-          <form className="col-12 col-lg-9  justify-content-center needs-validation">
+          <form className="col-12 col-lg-9  justify-content-center needs-validation" onSubmit={onSaveDoseClicked}>
             <p className="font-weight-bold subheader">Agregar dosis</p>
             <div className="form-row bg-light">
               <div className="col-md-3 mb-3">
@@ -126,10 +147,14 @@ const DoseSection = () => {
                   maxLength={20}
                   className="form-control"
                   placeholder="Ej: hora/hombre"
+                  pattern="^([A-Z]{1})([a-z0-9]{0,20})(([/-]{1}?)([a-zA-Z0-9]{1,20}?)){0,4}$"
                   value={doseName}
                   onChange={onDoseNameChanged}
                   required
                 />
+                <div className="error-message">
+                  <p>Formato incorrecto. Ej: [hora/hombre]</p>
+                </div>
               </div>
               <div className="col-12 col-md-3 mb-2">
                 <input
@@ -137,9 +162,13 @@ const DoseSection = () => {
                   maxLength={20}
                   className="form-control"
                   placeholder="Unidad"
+                  pattern="^([a-zñA-ZÑ0-9]{0,20})(([/-]{1}?)([a-zñA-ZÑ0-9]{1,20}?)){0,4}$"
                   value={doseUnit}
                   onChange={onDoseUnitChanged}
                 />
+                <div className="error-message">
+                  <p>Formato incorrecto. Ej: [hora]</p>
+                </div>
               </div>
               <div className="col-12 col-md-6 mb-3">
                 <input
@@ -156,8 +185,8 @@ const DoseSection = () => {
             <div className="form-row cultivos_button-section">
               <button
                 className="btn btn-success"
-                onClick={onSaveDoseClicked}
                 type="submit"
+                disabled={!canSave}
               >
                 Guardar
               </button>

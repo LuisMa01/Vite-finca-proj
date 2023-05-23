@@ -12,7 +12,7 @@ import Plant from "../../components/Plant";
 import useAuth from "../../hooks/useAuth";
 
 const PLANT_REGEX =
-  /^([A-Z]{1})([a-z0-9]{0,20})(([- ]{1}?)([a-zA-Z0-9]{1,20}?)){0,3}$/;
+  /^([A-ZÑ]{1})([a-zñ0-9]{0,20})(([- ]{1}?)([a-zñA-ZÑ0-9]{1,20}?)){0,3}$/;
 const VARY_REGEX = /^([A-Z]{1})([a-z-0-9]{2,20})$/;
 const FRAME_REGEX = /^((\d{1,3})(\.?)(\d{0,2}))[X-x]((\d{1,3})(\.?)(\d{0,2}))/;
 
@@ -124,7 +124,7 @@ const RegistrarPlanta = () => {
                   className="form-control"
                   id="nombre_cultivo"
                   placeholder="Ej: Fruta X o Fruta-X"
-                  pattern="^([A-Z]{1})([a-z0-9]{0,20})(([- ]{1}?)([a-zA-Z0-9]{1,20}?)){0,3}$"
+                  pattern="^([A-ZÑ]{1})([a-zñ0-9]{0,20})(([- ]{1}?)([a-zñA-ZÑ0-9]{1,20}?)){0,3}$"
                   value={plantName}
                   onChange={onPlantNameChanged}
                   required="campo requerido"
@@ -141,7 +141,7 @@ const RegistrarPlanta = () => {
                   type="text"
                   maxLength={20}
                   className="form-control"
-                  pattern="^([A-Z]{1})([a-z-0-9]{2,20})$"
+                  pattern="^([A-ZÑ]{1})([a-zñ-0-9]{2,20})$"
                   id="nombre_cultivo"
                   placeholder="Herbáceas"
                   value={variety}

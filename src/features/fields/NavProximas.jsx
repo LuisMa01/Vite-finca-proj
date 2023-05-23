@@ -186,10 +186,11 @@ const navProximas = () => {
   const filterDates = (data, isAdmin, isManager, userId) => {
     const filteredDates = data?.ids?.reduce((filtered, Id) => {
       let plnt = `${data?.entities[Id].crop_name}`.split("-")[0];
-      let statusCrop = data?.entities[Id].crop_status
-      let dateH = `${data?.entities[Id].crop_harvest}` == "null"?true:false
-      let appActDate = `${data?.entities[Id].date_end}` == "null"?true:false
-      if (plnt !== "Plantilla" && (statusCrop && dateH && appActDate)) {
+      let statusCrop = data?.entities[Id].crop_status;
+      let dateH = `${data?.entities[Id].crop_harvest}` == "null" ? true : false;
+      let appActDate =
+        `${data?.entities[Id].date_end}` == "null" ? true : false;
+      if (plnt !== "Plantilla" && statusCrop && dateH && appActDate) {
         if (isAdmin) {
           filtered.push(data?.entities[Id]);
         } else if (isManager) {
@@ -216,7 +217,7 @@ const navProximas = () => {
     }),
   });
 
-  let num = 0;
+  let num = 1;
 
   useEffect(() => {
     const prodArr =
@@ -225,43 +226,42 @@ const navProximas = () => {
         ?.filter((data) => data !== undefined)
         .map((date) => {
           if (date) {
-            num = num + 1;
-            let nomnb =
+            const nomnb =
               `${date?.date_user_key}` == "null"
-                ? "no"
+                ? "-"
                 : date?.user_nombre
                 ? date?.user_nombre
                 : date?.user_name;
-            let actNma =
+            const actNma =
               date?.act_name == 0 || date?.act_name == undefined
-                ? "no"
+                ? "-"
                 : date?.act_name;
-            let cropNma =
+            const cropNma =
               date?.crop_name == 0 || date?.crop_name == undefined
-                ? "no"
+                ? "-"
                 : date?.crop_name;
-            let campNma =
+
+            const campNma =
               date?.camp_name == 0 || date?.camp_name == undefined
-                ? "no"
+                ? "-"
                 : date?.camp_name;
-            let fecha =
+            const fecha =
               `${date?.date_init}` == "null"
                 ? "-"
                 : `${date?.date_init}`.split("T")[0];
-
+            const cropKey = date?.date_crop_key;
+            const actDateId = date?.date_id;
             return {
-              id: num,
               act: actNma,
               cult: cropNma,
               camp: campNma,
               fech: fecha,
               resp: nomnb,
+              cropKey,
+              actDateId,
             };
           }
         });
-
-
-        console.log(dates);
 
     setProdArr(prodArr);
   }, [isSuccess]);
@@ -270,14 +270,25 @@ const navProximas = () => {
     () =>
       prodArray?.length &&
       Object.keys(prodArray).map((info) => {
-        const col1 = prodArray[info].id;
+        const col1 = num;
         const col2 = prodArray[info].act;
         const col3 = prodArray[info].cult;
         const col4 = prodArray[info].camp;
         const col5 = prodArray[info].fech;
         const col6 = prodArray[info].resp;
-
-        return { col1, col2, col3, col4, col5, col6 };
+        const actDateId = prodArray[info].actDateId;
+        const cropKey = prodArray[info].cropKey;
+        num = num + 1;
+        return {
+          col1,
+          col2,
+          col3,
+          col4,
+          col5,
+          col6,
+          cropKey,
+          actDateId,
+        };
       }),
     [prodArray]
   );
@@ -294,11 +305,17 @@ const navProximas = () => {
         Header: "Actividad",
         accessor: "col2",
         sortType: "basic",
+        Cell: ({ value, row }) => {
+          return <span onClick={()=>navigate(`/dash/cultivos/info-app/${row.original.actDateId}`)}>{value}</span>;
+        },
       },
       {
         Header: "Cultivo",
         accessor: "col3",
         sortType: "basic",
+        Cell: ({ value, row }) => {
+          return <span onClick={()=>navigate(`/dash/cultivos/info-cultivo/${row.original.cropKey}`)}>{value}</span>;
+        },
       },
       {
         Header: "Campo",
