@@ -17,8 +17,8 @@ import useAuth from "../hooks/useAuth";
 Modal.setAppElement("#root");
 
 const PLANT_REGEX =
-  /^([A-Z]{1})([a-z0-9]{4,20})(([- ]{1}?)([a-zA-Z0-9]{1,20}?)){0,3}$/;
-const VARY_REGEX = /^([A-Z]{1})([a-z-0-9]{2,20})$/;
+  /^([A-ZÑ]{1})([a-zñ0-9]{4,20})(([- ]{1}?)([a-zñA-ZÑ0-9]{1,20}?)){0,3}$/;
+const VARY_REGEX = /^([A-ZÑ]{1})([a-zñ0-9]{2,20})$/;
 const FRAME_REGEX = /^((\d{1,3})(\.?)(\d{0,2}))[X-x]((\d{1,3})(\.?)(\d{0,2}))/;
 
 const Plant = ({ plantId }) => {
@@ -134,7 +134,17 @@ const Plant = ({ plantId }) => {
       }
     }, [plant]);
     const updPlant = (
-      <Modal isOpen={isOpen} onRequestClose={() => setIsOpen(false)}>
+      <Modal
+        isOpen={isOpen}
+        onRequestClose={() => {
+          setIsOpen(false);
+          setPlantName(plant.plant_name);
+          setDesc(plant.plant_desc);
+          setVariety(plant.plant_variety);
+          setPlantFrame(plant.plant_frame);
+          setActive(plant.plant_status);
+        }}
+      >
         <button
           className="btn btn-danger"
           onClick={() => {
@@ -161,7 +171,7 @@ const Plant = ({ plantId }) => {
                   className="form-control"
                   id="nombre_cultivo"
                   placeholder="Fruta X o Fruta-x"
-                  pattern="^([A-Z]{1})([a-z0-9]{4,20})(([- ]{1}?)([a-zA-Z0-9]{1,20}?)){0,3}$"
+                  pattern="^([A-ZÑ]{1})([a-zñ0-9]{4,20})(([- ]{1}?)([a-zñA-ZÑ0-9]{1,20}?)){0,3}$"
                   value={plantName}
                   onChange={onPlantNameChanged}
                   required
@@ -180,7 +190,7 @@ const Plant = ({ plantId }) => {
                   className="form-control"
                   id="nombre_cultivo"
                   placeholder="Herbáceas"
-                  pattern="^([A-Z]{1})([a-z-0-9]{2,20})$"
+                  pattern="^([A-ZÑ]{1})([a-zñ0-9]{2,20})$"
                   value={variety}
                   onChange={onPlantVaryChanged}
                 />
@@ -203,8 +213,8 @@ const Plant = ({ plantId }) => {
                   onChange={onPlantFrameChanged}
                 />
                 <div className="error-message">
-                <p>Formato incorrecto</p>
-              </div>
+                  <p>Formato incorrecto</p>
+                </div>
               </div>
             </div>
 
@@ -216,7 +226,7 @@ const Plant = ({ plantId }) => {
                   maxLength={100}
                   className="form-control"
                   id="responsable"
-                  pattern="^[a-zA-Z-0-9-., ]*$"
+                  pattern="^[a-zñA-ZÑ0-9-., ]*$"
                   value={desc}
                   onChange={onPlantDescChanged}
                 />

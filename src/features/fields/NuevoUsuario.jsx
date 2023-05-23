@@ -7,7 +7,7 @@ import { useState, useEffect } from "react";
 import { ROLES } from "../../config/roles";
 import { useNavigate } from "react-router-dom";
 
-const USER_REGEX = /^[A-z]{3,20}$/;
+const USER_REGEX = /^[A-zñÑ]{3,20}$/;
 const PWD_REGEX = /^(?=\w*\d)(?=\w*[A-Z])(?=\w*[a-z])\S{8,16}$/;
 const EMAIL_REGEX =
   /^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/;
@@ -139,7 +139,7 @@ const NuevoUsuario = () => {
               name="names"
               type="text"
               autoComplete="off"
-              pattern="^[a-zA-Z ]*$"
+              pattern="^[a-zA-ZñÑ ]*$"
               placeholder="Ej: Juan Andres"
               value={names}
               onChange={onNamesChanged}
@@ -156,7 +156,7 @@ const NuevoUsuario = () => {
               maxLength={20}
               name="surname"
               type="text"
-              pattern="^[a-zA-Z ]*$"
+              pattern="^[a-zA-ZñÑ ]*$"
               autoComplete="off"
               autoFocus
               placeholder="Ej: Gómez Almanzar"
