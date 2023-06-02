@@ -1,4 +1,5 @@
 import "./App.css";
+import 'sweetalert2/src/sweetalert2.scss'
 
 import { Routes, Route } from "react-router-dom";
 

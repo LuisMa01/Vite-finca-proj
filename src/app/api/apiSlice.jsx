@@ -3,7 +3,7 @@ import { setCredentials } from "../../features/auth/authSlice";
 import { REHYDRATE } from "redux-persist";
 
 const baseQuery = fetchBaseQuery({
-  baseUrl: "https://andre-vloebergh-api.onrender.com", // http://localhost:5000 https://andre-vloebergh-api.onrender.com
+  baseUrl: "http://localhost:5000 https://andre-vloebergh-api.onrender.com", // http://localhost:5000 https://andre-vloebergh-api.onrender.com
   credentials: "include",
   prepareHeaders: (headers, { getState }) => {
     const token = getState().auth.token;
