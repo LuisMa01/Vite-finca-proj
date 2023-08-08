@@ -207,11 +207,9 @@ const User = ({ userId, Lista }) => {
       ].every(Boolean) && !isLoading;
 
     const canSavePs =
-      [
-        validPassword,
-        passwordDu == password,
-        password != passwordAnt,
-      ].every(Boolean) && !isLoading;
+      [validPassword, passwordDu == password, password != passwordAnt].every(
+        Boolean
+      ) && !isLoading;
 
     const onSaveUserClicked = async (e) => {
       e.preventDefault();
@@ -226,6 +224,9 @@ const User = ({ userId, Lista }) => {
           email,
           phone,
         });
+        setPassword("");
+        setPasswordDu("");
+        setPasswordAnt("");
       }
     };
     const onChangePsClicked = async (e) => {
@@ -239,6 +240,9 @@ const User = ({ userId, Lista }) => {
           password,
           passwordAnt,
         });
+        setPassword("");
+        setPasswordDu("");
+        setPasswordAnt("");
       }
     };
     const options = Object.keys(ROLES).map((role) => {
@@ -410,80 +414,82 @@ const User = ({ userId, Lista }) => {
           </form>
         </div>
 
-        {(isAdmin && adminID) && <div className="cultivos_button-section">
-          <div className="my-card card-outline-secondary col-12 col-sm-10 col-md-8 col-lg-6">
-            <form
-              className="container col-12 col-sm-11 col-lg-9 bg-light"
-              onSubmit={onChangePsClicked}
-            >
-              <p className="titulo_cambiar font-weight-bold">
-                Cambiar contraseña
-              </p>
-              <div className="form-group">
-                <input
-                  type="password"
-                  maxLength={17}
-                  className="form-control mb-3"
-                  placeholder="Contraseña actual"
-                  value={passwordAnt}
-                  onChange={onPasswordAntChanged}
-                  autoFocus
-                />
-              </div>
-              <div className="form-group">
-                <input
-                  type="password"
-                  maxLength={17}
-                  className="form-control mb-3"
-                  placeholder="Nueva contraseña"
-                  value={password}
-                  pattern="^(?=\w*\d)(?=\w*[A-Z])(?=\w*[a-z])\S{8,16}$"
-                  onChange={onPasswordChanged}
-                />
-                <div className="error-message">
-                  <p>Incorrecto</p>
+        {isAdmin && adminID && (
+          <div className="cultivos_button-section">
+            <div className="my-card card-outline-secondary col-12 col-sm-10 col-md-8 col-lg-6">
+              <form
+                className="container col-12 col-sm-11 col-lg-9 bg-light"
+                onSubmit={onChangePsClicked}
+              >
+                <p className="titulo_cambiar font-weight-bold">
+                  Cambiar contraseña
+                </p>
+                <div className="form-group">
+                  <input
+                    type="password"
+                    maxLength={17}
+                    className="form-control mb-3"
+                    placeholder="Contraseña actual"
+                    value={passwordAnt}
+                    onChange={onPasswordAntChanged}
+                    autoFocus
+                  />
                 </div>
-                <span className="form-text small text-muted">
-                  <p>La contraseña debe tener: </p>
-                  <p>- Entre 8 y 16 caracteres</p>
-                  <p>- Al menos un dígito</p>
-                  <p>- Al menos una minúscula</p>
-                  <p>- Al menos una mayúscula</p>
-                  <p>- No contener espacio</p>
-                </span>
-              </div>
-              <div className="form-group">
-                <input
-                  type="password"
-                  maxLength={17}
-                  className="form-control mb-3"
-                  placeholder="Verificar contraseña"
-                  pattern="^(?=\w*\d)(?=\w*[A-Z])(?=\w*[a-z])\S{8,16}$"
-                  value={passwordDu}
-                  onChange={onPasswordDuChanged}
-                />
-                <div className="error-message">
-                  <p>Incorrecto</p>
+                <div className="form-group">
+                  <input
+                    type="password"
+                    maxLength={17}
+                    className="form-control mb-3"
+                    placeholder="Nueva contraseña"
+                    value={password}
+                    pattern="^(?=\w*\d)(?=\w*[A-Z])(?=\w*[a-z])\S{8,16}$"
+                    onChange={onPasswordChanged}
+                  />
+                  <div className="error-message">
+                    <p>Incorrecto</p>
+                  </div>
+                  <span className="form-text small text-muted">
+                    <p>La contraseña debe tener: </p>
+                    <p>- Entre 8 y 16 caracteres</p>
+                    <p>- Al menos un dígito</p>
+                    <p>- Al menos una minúscula</p>
+                    <p>- Al menos una mayúscula</p>
+                    <p>- No contener espacio</p>
+                  </span>
                 </div>
-                <span className="form-text small text-muted">
-                  Para confirmar, Repita la nueva contraseña.
-                </span>
-              </div>
-              <div className="button-section">
-                <button
-                  type="submit"
-                  className="btn btn-success btn-lg"
-                  disabled={!canSavePs}
-                >
-                  Guardar
-                </button>
-                <button className="btn btn-danger" onClick={handleClearClick}>
-                  Limpiar
-                </button>
-              </div>
-            </form>
+                <div className="form-group">
+                  <input
+                    type="password"
+                    maxLength={17}
+                    className="form-control mb-3"
+                    placeholder="Verificar contraseña"
+                    pattern="^(?=\w*\d)(?=\w*[A-Z])(?=\w*[a-z])\S{8,16}$"
+                    value={passwordDu}
+                    onChange={onPasswordDuChanged}
+                  />
+                  <div className="error-message">
+                    <p>Incorrecto</p>
+                  </div>
+                  <span className="form-text small text-muted">
+                    Para confirmar, Repita la nueva contraseña.
+                  </span>
+                </div>
+                <div className="button-section">
+                  <button
+                    type="submit"
+                    className="btn btn-success btn-lg"
+                    disabled={!canSavePs}
+                  >
+                    Guardar
+                  </button>
+                  <button className="btn btn-danger" onClick={handleClearClick}>
+                    Limpiar
+                  </button>
+                </div>
+              </form>
+            </div>
           </div>
-        </div>}
+        )}
       </Modal>
     );
     const actuPass = (
