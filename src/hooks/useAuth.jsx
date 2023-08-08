@@ -7,6 +7,7 @@ const useAuth = () => {
   let isManager = false;
   let isAdmin = false;
   let status = 3;
+  let adminID = false
 
   if (token) {
     const decoded = jwtDecode(token);
@@ -18,6 +19,7 @@ const useAuth = () => {
 
     if (isManager) status = 2;
     if (isAdmin) status = 1;
+    if (userId == 1) adminID = true
 
     return {
       userId,
@@ -30,6 +32,7 @@ const useAuth = () => {
       apellidos,
       email,
       phone,
+      adminID
     };
   }
 

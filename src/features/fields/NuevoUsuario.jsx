@@ -7,7 +7,7 @@ import { useState, useEffect } from "react";
 import { ROLES } from "../../config/roles";
 import { useNavigate } from "react-router-dom";
 
-const USER_REGEX = /^[A-zñÑ]{3,20}$/;
+const USER_REGEX = /^[A-z0-9]{3,20}$/;
 const PWD_REGEX = /^(?=\w*\d)(?=\w*[A-Z])(?=\w*[a-z])\S{8,16}$/;
 const EMAIL_REGEX =
   /^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/;
@@ -117,7 +117,7 @@ const NuevoUsuario = () => {
               id="new-user-username"
               className="form-control"
               maxLength={30}
-              pattern="^[A-z]{3,20}$"
+              pattern="^[A-z0-9]{3,20}$"
               name="username"
               type="text"
               autoComplete="off"
@@ -139,7 +139,7 @@ const NuevoUsuario = () => {
               name="names"
               type="text"
               autoComplete="off"
-              pattern="^[a-zA-ZñÑ ]*$"
+              pattern="([\wáéíóúÁÉÍÓÚüÜñÑ]{2,}\s?([\wáéíóúÁÉÍÓÚüÜñÑ]{1,})?'?-?([\wáéíóúÁÉÍÓÚüÜñÑ]{2,})?\s?([\wáéíóúÁÉÍÓÚüÜñÑ]{1,})?)"
               placeholder="Ej: Juan Andres"
               value={names}
               onChange={onNamesChanged}
@@ -156,7 +156,7 @@ const NuevoUsuario = () => {
               maxLength={20}
               name="surname"
               type="text"
-              pattern="^[a-zA-ZñÑ ]*$"
+              pattern="([\wáéíóúÁÉÍÓÚüÜñÑ]{2,}\s?([\wáéíóúÁÉÍÓÚüÜñÑ]{1,})?'?-?([\wáéíóúÁÉÍÓÚüÜñÑ]{2,})?\s?([\wáéíóúÁÉÍÓÚüÜñÑ]{1,})?)"
               autoComplete="off"
               autoFocus
               placeholder="Ej: Gómez Almanzar"
@@ -192,9 +192,9 @@ const NuevoUsuario = () => {
               className="form-control"
               maxLength={30}
               name="email"
-              type="text"
+              type="email"
               autoComplete="off"
-              pattern="^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$"
+              
               placeholder="Ej: nombre@ejemplo.com"
               value={email}
               onChange={onEmailChanged}

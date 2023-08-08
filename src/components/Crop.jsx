@@ -21,9 +21,9 @@ import useAuth from "../hooks/useAuth";
 
 Modal.setAppElement("#root");
 const CULT_REGEX =
-  /^([A-Z]{1})([a-z0-9]{4,20})(([-]{1}?)([a-zA-Z0-9]{1,20}?)){0,3}$/;
+  /^([A-ZÑ]{1})([a-zñ\d]{0,20})(-?([\wñ\d]{0,20})?){0,4}/;
 const FINAL_PRO_REGEX =
-  /^([A-Z]{1})([a-z0-9]{4,20})(([-., ]{1}?)([a-zA-Z0-9]{1,20}?)){0,10}$/;
+  /^([A-ZÑ]{1})([a-zñ\d]{0,20})(-?\s?\.?,?([\wñ\d]{0,20})?){0,20}/;
 
 const Cost = ({ cropId }) => {
   const { data: cost } = useGetCostsQuery("costsList", {
@@ -279,7 +279,7 @@ const Crop = ({ cropId, Lista }) => {
                   maxLength={20}
                   className="form-control"
                   placeholder="Cultivo-##"
-                  pattern="^([A-Z]{1})([a-z0-9]{4,20})(([-]{1}?)([a-zA-Z0-9]{1,20}?)){0,3}$"
+                  pattern="^([A-ZÑ]{1})([a-zñ\d]{0,20})(-?([\wñ\d]{0,20})?){0,4}"
                   value={cropName}
                   onChange={onCropNameChanged}
                   required
@@ -371,7 +371,7 @@ const Crop = ({ cropId, Lista }) => {
                   type="text"
                   maxLength={100}
                   className="form-control"
-                  pattern="^([A-Z]{1})([a-z0-9ñ]{0,20})(([-., ]{1}?)([a-zA-Z0-9ñ]{1,20}?)){0,10}$"
+                  pattern="^([A-ZÑ]{1})([a-zñ\d]{0,20})(-?\s?\.?,?([\wñ\d]{0,20})?){0,20}"
                   value={finalProd}
                   onChange={onCropFinalProdChanged}
                 />

@@ -18,7 +18,7 @@ import useAuth from "../hooks/useAuth";
 
 Modal.setAppElement("#root");
 
-const USER_REGEX = /^[A-zñ]{3,20}$/;
+const USER_REGEX = /^[A-z0-9]{3,20}$/;
 const PWD_REGEX = /^(?=\w*\d)(?=\w*[A-Z])(?=\w*[a-z])\S{8,16}$/;
 const EMAIL_REGEX =
   /^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/;
@@ -63,7 +63,7 @@ const User = ({ userId, Lista }) => {
     validPass: false,
     validDupPass: false,
   });
-  const { username, isManager, isAdmin } = useAuth();
+  const { username, isManager, isAdmin, adminID } = useAuth();
   const {
     user,
     isLoading: userIsLoading,
@@ -126,6 +126,9 @@ const User = ({ userId, Lista }) => {
       setEmail(user.email);
       setPhone(user.user_phone);
       setStatus(user.user_status);
+      setPassword("");
+      setPasswordDu("");
+      setPasswordAnt("");
     };
 
     const onActiveChanged = async (e) => {
@@ -206,7 +209,6 @@ const User = ({ userId, Lista }) => {
     const canSavePs =
       [
         validPassword,
-        validPasswordAnt,
         passwordDu == password,
         password != passwordAnt,
       ].every(Boolean) && !isLoading;
@@ -255,6 +257,9 @@ const User = ({ userId, Lista }) => {
           setEmail(user.email);
           setPhone(user.user_phone);
           setStatus(user.user_status);
+          setPassword("");
+          setPasswordDu("");
+          setPasswordAnt("");
         }}
       >
         <button
@@ -268,6 +273,9 @@ const User = ({ userId, Lista }) => {
             setEmail(user.email);
             setPhone(user.user_phone);
             setStatus(user.user_status);
+            setPassword("");
+            setPasswordDu("");
+            setPasswordAnt("");
           }}
         >
           Cerrar
@@ -290,7 +298,7 @@ const User = ({ userId, Lista }) => {
                   name="username"
                   type="text"
                   autoComplete="off"
-                  pattern="^[A-z]{3,20}$"
+                  pattern="^[A-z0-9]{3,20}$"
                   placeholder="Ej: minombre"
                   required=""
                   value={username}
@@ -311,7 +319,7 @@ const User = ({ userId, Lista }) => {
                   name="names"
                   type="text"
                   autoComplete="off"
-                  pattern="^[a-zA-ZñÑ ]*$"
+                  pattern="([\wáéíóúÁÉÍÓÚüÜñÑ]{2,}\s?([\wáéíóúÁÉÍÓÚüÜñÑ]{1,})?'?-?([\wáéíóúÁÉÍÓÚüÜñÑ]{2,})?\s?([\wáéíóúÁÉÍÓÚüÜñÑ]{1,})?)"
                   placeholder="Ej: Juan Andres"
                   value={names ? names : ""}
                   onChange={onNamesChanged}
@@ -329,7 +337,7 @@ const User = ({ userId, Lista }) => {
                   name="surname"
                   type="text"
                   autoComplete="off"
-                  pattern="^[a-zA-ZñÑ ]*$"
+                  pattern="([\wáéíóúÁÉÍÓÚüÜñÑ]{2,}\s?([\wáéíóúÁÉÍÓÚüÜñÑ]{1,})?'?-?([\wáéíóúÁÉÍÓÚüÜñÑ]{2,})?\s?([\wáéíóúÁÉÍÓÚüÜñÑ]{1,})?)"
                   placeholder="Ej: Gómez Almanzar"
                   value={surname ? surname : ""}
                   onChange={onSurnameChanged}
@@ -364,9 +372,8 @@ const User = ({ userId, Lista }) => {
                   className="form-control"
                   maxLength={30}
                   name="email"
-                  type="text"
+                  type="email"
                   autoComplete="off"
-                  pattern="^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$"
                   placeholder="Ej: nombre@ejemplo.com"
                   value={email ? email : ""}
                   onChange={onEmailChanged}
@@ -402,13 +409,101 @@ const User = ({ userId, Lista }) => {
             </div>
           </form>
         </div>
+
+        {(isAdmin && adminID) && <div className="cultivos_button-section">
+          <div className="my-card card-outline-secondary col-12 col-sm-10 col-md-8 col-lg-6">
+            <form
+              className="container col-12 col-sm-11 col-lg-9 bg-light"
+              onSubmit={onChangePsClicked}
+            >
+              <p className="titulo_cambiar font-weight-bold">
+                Cambiar contraseña
+              </p>
+              <div className="form-group">
+                <input
+                  type="password"
+                  maxLength={17}
+                  className="form-control mb-3"
+                  placeholder="Contraseña actual"
+                  value={passwordAnt}
+                  onChange={onPasswordAntChanged}
+                  autoFocus
+                />
+              </div>
+              <div className="form-group">
+                <input
+                  type="password"
+                  maxLength={17}
+                  className="form-control mb-3"
+                  placeholder="Nueva contraseña"
+                  value={password}
+                  pattern="^(?=\w*\d)(?=\w*[A-Z])(?=\w*[a-z])\S{8,16}$"
+                  onChange={onPasswordChanged}
+                />
+                <div className="error-message">
+                  <p>Incorrecto</p>
+                </div>
+                <span className="form-text small text-muted">
+                  <p>La contraseña debe tener: </p>
+                  <p>- Entre 8 y 16 caracteres</p>
+                  <p>- Al menos un dígito</p>
+                  <p>- Al menos una minúscula</p>
+                  <p>- Al menos una mayúscula</p>
+                  <p>- No contener espacio</p>
+                </span>
+              </div>
+              <div className="form-group">
+                <input
+                  type="password"
+                  maxLength={17}
+                  className="form-control mb-3"
+                  placeholder="Verificar contraseña"
+                  pattern="^(?=\w*\d)(?=\w*[A-Z])(?=\w*[a-z])\S{8,16}$"
+                  value={passwordDu}
+                  onChange={onPasswordDuChanged}
+                />
+                <div className="error-message">
+                  <p>Incorrecto</p>
+                </div>
+                <span className="form-text small text-muted">
+                  Para confirmar, Repita la nueva contraseña.
+                </span>
+              </div>
+              <div className="button-section">
+                <button
+                  type="submit"
+                  className="btn btn-success btn-lg"
+                  disabled={!canSavePs}
+                >
+                  Guardar
+                </button>
+                <button className="btn btn-danger" onClick={handleClearClick}>
+                  Limpiar
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>}
       </Modal>
     );
     const actuPass = (
-      <Modal isOpen={isAbierto} onRequestClose={() => setIsisAbierto(false)}>
+      <Modal
+        isOpen={isAbierto}
+        onRequestClose={() => {
+          setPassword("");
+          setPasswordDu("");
+          setPasswordAnt("");
+          setIsisAbierto(false);
+        }}
+      >
         <button
           className="btn btn-danger"
-          onClick={() => setIsisAbierto(false)}
+          onClick={() => {
+            setPassword("");
+            setPasswordDu("");
+            setPasswordAnt("");
+            setIsisAbierto(false);
+          }}
         >
           Cerrar
         </button>

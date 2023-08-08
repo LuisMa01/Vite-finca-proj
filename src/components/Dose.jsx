@@ -15,9 +15,9 @@ import useAuth from "../hooks/useAuth";
 
 //en progreso aun falta configurar dosis y luego de este
 const DOSE_REGEX =
-  /^([A-Z]{1})([a-z0-9]{0,20})(([/-]{1}?)([a-zA-Z0-9]{1,20}?)){0,4}$/;
+  /^([A-ZÑ]{1})([\wñÑ\d]{0,20})(\/?-?([\wñÑ\d]{1,20}?)){0,4}/;
 const UNIT_REGEX =
-  /^([a-zA-Z0-9]{0,20})(([/ -]{1}?)([a-zA-Z0-9]{1,20}?)){0,4}$/;
+  /^([\wñÑ\d]{0,20})((\/?\s?-?)([\wñÑ\d]{1,20}?)){0,4}$/;
 
 const Dose = ({ doseId }) => {
   const { username, isManager, isAdmin } = useAuth();
@@ -181,7 +181,7 @@ const Dose = ({ doseId }) => {
                   maxLength={30}
                   className="form-control"
                   placeholder="Ej: hora/hombre"
-                  pattern="^([A-ZÑ]{1})([a-zñ0-9]{0,20})(([/-]{1}?)([a-zñA-ZÑ0-9]{1,20}?)){0,4}$"
+                  pattern="^([A-ZÑ]{1})([\wñÑ\d]{0,20})(\/?-?([\wñÑ\d]{1,20}?)){0,4}"
                   value={doseName}
                   onChange={onDoseNameChanged}
                   required
@@ -198,7 +198,7 @@ const Dose = ({ doseId }) => {
                   maxLength={20}
                   className="form-control"
                   placeholder="Unidad"
-                  pattern="^([a-zñA-ZÑ0-9]{0,20})(([/-]{1}?)([a-zñA-ZÑ0-9]{1,20}?)){0,4}$"
+                  pattern="^([\wñÑ\d]{0,20})((\/?\s?-?)([\wñÑ\d]{1,20}?)){0,4}$"
                   value={doseUnit}
                   onChange={onDoseUnitChanged}
                 />

@@ -14,9 +14,11 @@ import useAuth from "../../hooks/useAuth";
 import { ROLES } from "../../config/roles";
 
 const CULT_REGEX =
-  /^([A-Z]{1})([a-z0-9]{0,20})(([-]{1}?)([a-zA-Z0-9]{1,20}?)){0,3}$/;
+  /^([A-ZÑ]{1})([a-zñ\d]{0,20})(-?([\wñ\d]{0,20})?){0,4}/;
 const FINAL_PRO_REGEX =
-  /^([A-Z]{1})([a-z0-9]{0,20})(([-., ]{1}?)([a-zA-Z0-9]{1,20}?)){0,10}$/;
+  /^([A-ZÑ]{1})([a-zñ\d]{0,20})(-?\s?\.?,?([\wñ\d]{0,20})?){0,20}/;
+
+  /*([\wáéíóúÁÉÍÓÚüÜñÑ]{2,}\s?([\wáéíóúÁÉÍÓÚüÜñÑ]{1,})?'?-?([\wáéíóúÁÉÍÓÚüÜñÑ]{2,})?\s?([\wáéíóúÁÉÍÓÚüÜñÑ]{1,})?)*/
 
 const nuevoCultivo = () => {
   const { username, isManager, isAdmin, userId } = useAuth();
@@ -276,7 +278,7 @@ const nuevoCultivo = () => {
                     maxLength={30}
                     className="form-control"
                     placeholder="Cultivo-##"
-                    pattern="^([A-Z]{1})([a-z0-9]{0,20})(([-]{1}?)([a-zA-Z0-9]{1,20}?)){0,3}$"
+                    pattern="^([A-ZÑ]{1})([a-zñ\d]{0,20})(-?([\wñ\d]{0,20})?){0,4}"
                     value={cropNames}
                     onChange={onCropNamesChanged}
                     required=""
@@ -381,7 +383,7 @@ const nuevoCultivo = () => {
                 type="text"
                 maxLength={100}
                 className="form-control"
-                pattern="^([A-Z]{1})([a-z0-9ñ]{0,20})(([-., ]{1}?)([a-zA-Z0-9ñ]{1,20}?)){0,10}$"
+                pattern="^([A-ZÑ]{1})([a-zñ\d]{0,20})(-?\s?\.?,?([\wñ\d]{0,20})?){0,20}"
                 value={finalProd}
                 onChange={onCropFinalProdChanged}
               />

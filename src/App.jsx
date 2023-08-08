@@ -1,6 +1,6 @@
-import "./App.css";
-import 'sweetalert2/src/sweetalert2.scss'
 
+import 'sweetalert2/src/sweetalert2.scss'
+import "./App.css";
 import { Routes, Route } from "react-router-dom";
 
 import Layouts from "./components/Layouts";
