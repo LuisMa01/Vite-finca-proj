@@ -151,7 +151,7 @@ const Camp = ({ campId, Lista }) => {
                 className="form-control"
                 id="nombre_cultivo"
                 placeholder="Campo X"
-                pattern="^([A-Z]{1})([a-z0-9]{0,20})(([- ]{1}?)([a-zA-Z0-9]{1,20}?)){0,4}$"
+                pattern="^([A-ZÑ]{1})([a-zñ\d]{0,20})(-?\s?([\wñ\d]{0,20})?){0,5}"
                 value={campName}
                 onChange={onCampNameChanged}
                 required
@@ -182,7 +182,7 @@ const Camp = ({ campId, Lista }) => {
               Guardar Cambios
             </button>
             <button className="btn btn-danger" onClick={handleClearClick}>
-              Limpiar
+              Retornar valor
             </button>
           </div>
         </form>

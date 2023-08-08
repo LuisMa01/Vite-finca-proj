@@ -17,7 +17,7 @@ import useAuth from "../hooks/useAuth";
 Modal.setAppElement("#root");
 
 const ACT_REGEX =
-  /^([A-Z]{1})([a-z0-9]{4,20})(([- ]{1}?)([a-zA-Z0-9]{1,20}?)){0,3}$/;
+  /^([A-ZÑ]{1})([a-zñ\d]{0,20})(-?\s?([\wñÑ\d]{0,20})?){0,5}/;
 
 const Act = ({ actId }) => {
   const { username, isManager, isAdmin } = useAuth();
@@ -134,7 +134,7 @@ const Act = ({ actId }) => {
                   maxLength={20}
                   className="form-control"
                   placeholder="Actividad X o Actividad-x"
-                  pattern="^([A-Z]{1})([a-z0-9]{4,20})(([- ]{1}?)([a-zA-Z0-9]{1,20}?)){0,3}$"
+                  pattern="^([A-ZÑ]{1})([a-zñ\d]{0,20})(-?\s?([\wñÑ\d]{0,20})?){0,5}"
                   value={actName}
                   onChange={onActNameChanged}
                   required=""
@@ -153,7 +153,7 @@ const Act = ({ actId }) => {
                   type="text"
                   className="form-control rounded-1"
                   placeholder="Ingresar descripción"
-                  pattern="^[a-zA-Z-0-9-., ]*$"
+                  pattern="^([A-ZÑ]{1})([a-zñ\d]{0,20})(-?\s?\.?,?([\wñ\d]{0,20})?){0,30}"
                   value={desc}
                   onChange={onActDescChanged}
                   

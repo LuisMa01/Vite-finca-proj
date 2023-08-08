@@ -17,10 +17,10 @@ import useAuth from "../hooks/useAuth";
 Modal.setAppElement("#root");
 
 const ITEM_REGEX =
-  /^([A-Z]{1})([a-z0-9]{0,20})(([- ]{1}?)([a-zA-Z0-9]{1,20}?)){0,3}$/;
+  /^([A-ZÑ]{1})([a-zñ\d]{0,20})(-?\s?([\wñ\d]{0,20})?){0,5}/;
 
 const DESC_REGEX =
-  /^([A-Z]{1})([a-z0-9]{0,20})(([-., ]{1}?)([a-zA-Z0-9]{1,20}?)){0,50}$/;
+  /^([A-ZÑ]{1})([a-zñ\d]{0,20})(-?\s?\.?,?([\wñ\d]{0,20})?){0,50}/;
 const Dose = ({ doseId }) => {
   const { dose } = useGetDosesQuery("dosesList", {
     selectFromResult: ({ data }) => ({
@@ -204,7 +204,7 @@ const Item = ({ itemId }) => {
                   maxLength={30}
                   className="form-control"
                   placeholder="Articulo X o Articulo-X"
-                  pattern="^([A-Z]{1})([a-z0-9]{0,20})(([- ]{1}?)([a-zA-Z0-9]{1,20}?)){0,3}$"
+                  pattern="^([A-ZÑ]{1})([a-zñ\d]{0,20})(-?\s?([\wñ\d]{0,20})?){0,5}"
                   value={itemName}
                   onChange={onItemNameChanged}
                   required
@@ -249,7 +249,7 @@ const Item = ({ itemId }) => {
                   type="text"
                   maxLength={200}
                   className="form-control"
-                  pattern="^([A-Z]{1})([a-z0-9]{0,20})(([-., ]{1}?)([a-zA-Z0-9]{1,20}?)){0,50}$"
+                  pattern="^([A-ZÑ]{1})([a-zñ\d]{0,20})(-?\s?\.?,?([\wñ\d]{0,20})?){0,50}"
                   value={desc}
                   onChange={onItemDescChanged}
                 />

@@ -89,20 +89,22 @@ a:hover{
   background-color: #116EA2;
   color: white
 }
-.error-message{
-  display: none;
-}
-input:not(:placeholder-shown):invalid ~ .error-message {
-  display: block;
-  color: red;
-}
-input:not(:placeholder-shown):invalid {
-  border-color: #cb648c;
-}
+
 
 #miDivB {
   display: block;
 }
 #miDivN {
   display: none;
+}
+.error-message{
+  display: none;
+}
+
+input:not(:placeholder-shown):invalid ~ .error-message {
+  display: block;
+  color: red;
+}
+input:not(:placeholder-shown):invalid {
+  border-color: #cb648c;
 }
