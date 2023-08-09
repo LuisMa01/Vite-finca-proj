@@ -185,9 +185,9 @@ const navProximas = () => {
       let appActDate =
         `${data?.entities[Id].date_end}` == "null" ? true : false;
       if (plnt !== "Plantilla" && statusCrop && dateH && appActDate) {
-        if (isAdmin) {
+       /* if (isAdmin) {*/
           filtered.push(data?.entities[Id]);
-        } else if (isManager) {
+        /*} else if (isManager) {
           if (
             data?.entities[Id].crop_user_key == userId ||
             data?.entities[Id].date_user_key == userId
@@ -198,7 +198,7 @@ const navProximas = () => {
           if (data?.entities[Id].date_user_key == userId) {
             filtered.push(data?.entities[Id]);
           }
-        }
+        }*/
       }
       return filtered;
     }, []);

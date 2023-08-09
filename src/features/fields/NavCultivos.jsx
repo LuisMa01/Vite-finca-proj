@@ -40,9 +40,9 @@ const NavCultivos = () => {
       results.map((Id) => {
         let plnt = `${entities[Id].crop_name}`.split("-")[0];
         if (plnt !== "Plantilla") {
-          if (isAdmin) {
+          //if (isAdmin) {
             return <Crop key={Id} cropId={Id} Lista={"Lista2"} />;
-          } else if (isManager) {
+          /*} else if (isManager) {
             if (
               entities[Id].crop_user_key == userId ||
               entities[Id].date_user_key == userId
@@ -53,7 +53,7 @@ const NavCultivos = () => {
             if (entities[Id].date_user_key == userId) {
               return <Crop key={Id} cropId={Id} Lista={"Lista2"} />;
             }
-          }
+          }*/
         }
       });
   }
