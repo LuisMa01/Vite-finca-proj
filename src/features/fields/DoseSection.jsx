@@ -1,7 +1,6 @@
 import React from "react";
 import "../../styles/nav_cultivos.css";
 import ReImage from "../../images/return.svg";
-import { Link } from "react-router-dom";
 import "../../styles/item-section.css";
 import { useGetDosesQuery, useAddNewDoseMutation } from "./redux/doseApiSlice";
 
@@ -11,8 +10,7 @@ import useAuth from "../../hooks/useAuth";
 
 const DOSE_REGEX =
   /^([A-ZÑ]{1})([\wñÑ\d]{0,20})(\/?\s?-?([\wñÑ\d]{1,20}?)){0,4}/;
-const UNIT_REGEX =
-  /^([\wñÑ\d]{0,20})((\/?\s?-?)([\wñÑ\d]{1,20}?)){0,4}$/;
+const UNIT_REGEX = /^([\wñÑ\d]{0,20})((\/?\s?-?)([\wñÑ\d]{1,20}?)){0,4}$/;
 const DoseSection = () => {
   const { username, isManager, isAdmin } = useAuth();
   const {
@@ -51,8 +49,6 @@ const DoseSection = () => {
   }, [doseName]);
 
   const canSave = [validDose, validUnit].every(Boolean) && !isLoad;
-
-  //doseName, desc, doseUnit
 
   const onSaveDoseClicked = async (e) => {
     e.preventDefault();
@@ -138,7 +134,10 @@ const DoseSection = () => {
       <h1 className="item-section_titulo">Dosis y Unidad</h1>
       <div className="container centered-form">
         {isAdmin && (
-          <form className="col-12 col-lg-9  justify-content-center needs-validation" onSubmit={onSaveDoseClicked}>
+          <form
+            className="col-12 col-lg-9  justify-content-center needs-validation"
+            onSubmit={onSaveDoseClicked}
+          >
             <p className="font-weight-bold subheader">Agregar dosis</p>
             <div className="form-row bg-light">
               <div className="col-md-3 mb-3">

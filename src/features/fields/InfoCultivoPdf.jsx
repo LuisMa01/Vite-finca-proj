@@ -47,7 +47,7 @@ const styles = StyleSheet.create({
     alignItems: "stretch",
     justifyContent: "center",
     textAlign: "center",
-    
+
     borderWidth: 0.5,
     borderColor: "#000000",
   },
@@ -57,7 +57,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "stretch",
     textAlign: "center",
-    
+
     borderWidth: 0.5,
     borderColor: "#000000",
   },
@@ -67,7 +67,7 @@ const styles = StyleSheet.create({
     justifyContent: "flex-end",
     alignItems: "stretch",
     textAlign: "center",
-    
+
     borderWidth: 0.5,
     borderColor: "#000000",
   },
@@ -103,7 +103,6 @@ const styles = StyleSheet.create({
     alignItems: "stretch",
     justifyContent: "space-between",
     marginBottom: 5,
-    
   },
   secInfoCol: {
     display: "flex",
@@ -218,8 +217,6 @@ const infoCultivoPdf = () => {
     }),
   });
 
-  //userRep, dateInit, dateEnd, actKey, cropKey, plantId , userRep, dateInit, dateEnd, actKey, cropKey, plantId
-
   let contenido;
 
   let dateList;
@@ -234,7 +231,6 @@ const infoCultivoPdf = () => {
   let numAct = 0;
   let generalInfo;
   if (crop) {
-    //para asegurar que obtenga los datos del cultivo
     const fechaPlant =
       crop?.crop_plant == null
         ? "no asignado"

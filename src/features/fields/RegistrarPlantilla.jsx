@@ -18,7 +18,7 @@ const RegistrarPlantilla = () => {
   } = useGetCropsQuery("cropsList", {
     selectFromResult: ({ data }) => ({
       crops: data?.ids.map((Id) => {
-        let plnt = `${data?.entities[Id].crop_name}`.split("-")[0];        
+        let plnt = `${data?.entities[Id].crop_name}`.split("-")[0];
         if (plnt == "Plantilla") {
           return data?.entities[Id].crop_id;
         }
@@ -29,17 +29,13 @@ const RegistrarPlantilla = () => {
   let tableContent;
   if (isError) {
     tableContent = <p className="errmsg">{error?.data?.message}</p>;
-    
   }
-  
-  if (crops) {
-   
-    tableContent =
-    crops?.length &&
-    crops?.map((info) => {        
-        if (info) {
-          
 
+  if (crops) {
+    tableContent =
+      crops?.length &&
+      crops?.map((info) => {
+        if (info) {
           return <Crop key={info} cropId={info} Lista={"Lista1"} />;
         }
       });
@@ -48,8 +44,6 @@ const RegistrarPlantilla = () => {
     <>
       <h1 className="titulo_nueva-plantilla font-weight-bold">Plantillas</h1>
       <div className="ventana_plantillas">
-        {/* <form className="container col-12 col-md-10 col-lg-8 col-xl-6 col col needs-validation" novalidate>   */}
-
         <div className="table-container-1">
           <table className="table table-hover table-sm table-striped table-responsive-sm table-bordered">
             <thead className="thead-loyola">
@@ -60,7 +54,7 @@ const RegistrarPlantilla = () => {
                 <th className="align-middle" scope="col">
                   Planta
                 </th>
-                
+
                 {(isManager || isAdmin) && (
                   <th className="align-middle" scope="col">
                     Estatus

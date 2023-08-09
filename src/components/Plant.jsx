@@ -1,4 +1,3 @@
-//import { useNavigate } from 'react-router-dom'
 import "../../src/styles/registrar-actividad.css";
 import { useState, useEffect } from "react";
 import {
@@ -7,17 +6,14 @@ import {
   useDeletePlantMutation,
 } from "../features/fields/redux/plantApiSlice";
 import { memo } from "react";
-import { Link } from "react-router-dom";
 import RemoveImg from "../images/remove.svg";
 import Swal from "sweetalert2";
-import { ROLES } from "../config/roles";
 import Modal from "react-modal";
 import useAuth from "../hooks/useAuth";
 
 Modal.setAppElement("#root");
 
-const PLANT_REGEX =
-  /^([A-ZÑ]{1})([a-zñ\d]{0,20})(-?\s?([\wñ\d]{0,20})?){0,5}/;
+const PLANT_REGEX = /^([A-ZÑ]{1})([a-zñ\d]{0,20})(-?\s?([\wñ\d]{0,20})?){0,5}/;
 const VARY_REGEX = /^([A-ZÑ]{1})([a-zñ\d]{0,20})(-?\s?([\wñ\d]{0,20})?){0,5}/;
 const FRAME_REGEX = /^((\d{1,3})(\.?)(\d{0,2}))[X-x]((\d{1,3})(\.?)(\d{0,2}))/;
 
@@ -48,8 +44,6 @@ const Plant = ({ plantId }) => {
     useEffect(() => {
       setValidFrame(FRAME_REGEX.test(plantFrame));
     }, [plantFrame]);
-
-    //id, plantName, desc, variety, active, plantFrame
 
     const [updatePlant, { isLoading, isSuccess, isError, error }] =
       useUpdatePlantMutation();
@@ -96,7 +90,7 @@ const Plant = ({ plantId }) => {
 
       setIsOpen(false);
     };
-    // id, plantName, desc, variety, active
+
     const onDeletePlantClicked = async () => {
       Swal.fire({
         title: "¿Seguro de eliminar?",
@@ -255,13 +249,10 @@ const Plant = ({ plantId }) => {
       </Modal>
     );
 
-    //const handleEdit = () => navigate(`/dash/users/${plantId}`)
-
     const plantname = plant.plant_name ? plant.plant_name : "no tiene";
 
     const errContent = (error?.data?.message || delerror?.data?.message) ?? "";
 
-    //console.log(`${user.user_id} ${userName} ${userRolesString} ${active} ${errContent}`);
     if (isSuccess) {
       console.log(`no hay error ${errContent}`);
     }

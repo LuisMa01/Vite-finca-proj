@@ -75,21 +75,17 @@ export const {
   useDeletePlantMutation,
 } = plantApiSlice;
 
-// returns the query result object
 export const selectPlantsResult = plantApiSlice.endpoints.getPlants.select();
 
-// creates memoized selector
 const selectPlantsData = createSelector(
   selectPlantsResult,
-  (plantResult) => plantResult.data // normalized state object with ids & entities
+  (plantResult) => plantResult.data
 );
 
-//getSelectors creates these selectors and we rename them with aliases using destructuring
 export const {
   selectAll: selectAllplants,
   selectById: selectplantById,
   selectIds: selectplantIds,
-  // Pass in a selector that returns the plant slice of state
 } = plantsAdapter.getSelectors(
   (state) => selectPlantsData(state) ?? initialState
 );

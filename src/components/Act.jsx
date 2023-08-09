@@ -1,4 +1,3 @@
-//import { useNavigate } from 'react-router-dom'
 import "../../src/styles/registrar-actividad.css";
 import { useState, useEffect } from "react";
 import {
@@ -7,17 +6,14 @@ import {
   useDeleteActMutation,
 } from "../features/fields/redux/actApiSlice";
 import { memo } from "react";
-import { Link } from "react-router-dom";
 import RemoveImg from "../images/remove.svg";
 import Swal from "sweetalert2";
-import { ROLES } from "../config/roles";
 import Modal from "react-modal";
 import useAuth from "../hooks/useAuth";
 
 Modal.setAppElement("#root");
 
-const ACT_REGEX =
-  /^([A-ZÑ]{1})([a-zñ\d]{0,20})(-?\s?([\wñÑ\d]{0,20})?){0,5}/;
+const ACT_REGEX = /^([A-ZÑ]{1})([a-zñ\d]{0,20})(-?\s?([\wñÑ\d]{0,20})?){0,5}/;
 
 const Act = ({ actId }) => {
   const { username, isManager, isAdmin } = useAuth();
@@ -36,7 +32,6 @@ const Act = ({ actId }) => {
       setValidActName(ACT_REGEX.test(actName));
     }, [actName]);
 
-    //id, actName, desc, active
     const [updateAct, { isLoading, isSuccess, isError, error }] =
       useUpdateActMutation();
 
@@ -76,7 +71,7 @@ const Act = ({ actId }) => {
         setIsOpen(false);
       }
     };
-    // id, actName, desc, active
+
     const onDeleteActClicked = async () => {
       Swal.fire({
         title: "¿Seguro de eliminar?",
@@ -156,10 +151,10 @@ const Act = ({ actId }) => {
                   pattern="^([A-ZÑ]{1})([a-zñ\d]{0,20})(-?\s?\.?,?([\wñ\d]{0,20})?){0,30}"
                   value={desc}
                   onChange={onActDescChanged}
-                  
-                /><div className="error-message">
-                <p>No se admiten caracteres especiales, solo [.] [-] [,]</p>
-              </div>
+                />
+                <div className="error-message">
+                  <p>No se admiten caracteres especiales, solo [.] [-] [,]</p>
+                </div>
               </div>
             </div>
             <div className="edit-campo-button-section_parent">
@@ -182,13 +177,10 @@ const Act = ({ actId }) => {
       </Modal>
     );
 
-    //const handleEdit = () => navigate(`/dash/users/${actId}`)
-
     const actname = actName ? actName : "no tiene";
 
     const errContent = (error?.data?.message || delerror?.data?.message) ?? "";
 
-    //console.log(`${user.user_id} ${userName} ${userRolesString} ${active} ${errContent}`);
     if (isSuccess) {
       console.log(`no hay error ${errContent}`);
     }

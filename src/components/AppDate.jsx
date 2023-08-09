@@ -1,4 +1,3 @@
-//import { useNavigate } from 'react-router-dom'
 import "../../src/styles/registrar-actividad.css";
 import {
   useGetDatesQuery,
@@ -15,7 +14,6 @@ import { memo } from "react";
 import { Link } from "react-router-dom";
 import RemoveImg from "../images/remove.svg";
 import Swal from "sweetalert2";
-import { ROLES } from "../config/roles";
 import Modal from "react-modal";
 import useAuth from "../hooks/useAuth";
 
@@ -78,7 +76,7 @@ const AppDate = ({ dateId, Lista }) => {
       crop: data?.entities[date?.date_crop_key],
     }),
   });
-  //console.log(dateId);
+
   const { data: rpuser } = useGetUsersQuery("usersList", {
     pollingInterval: 60000,
     refetchOnFocus: true,
@@ -104,7 +102,6 @@ const AppDate = ({ dateId, Lista }) => {
       { isSuccess: isDelSuccess, isError: isDelError, error: delerror },
     ] = useDeleteDateMutation();
 
-    // id, dateInit, dateEnd, actKey, cropKey, plantId, userRep
     const onDeleteDateClicked = async () => {
       Swal.fire({
         title: "¿Seguro de eliminar?",
@@ -161,7 +158,7 @@ const AppDate = ({ dateId, Lista }) => {
         userRep,
       });
     };
-    //id, dateInit, dateEnd, actKey, plantId, userRep
+
     const handleClearClick = (e) => {
       e.preventDefault();
       setActKey(date.date_act_key);
@@ -241,7 +238,7 @@ const AppDate = ({ dateId, Lista }) => {
                 <label htmlFor="campo_cultivo">Responsable</label>
                 <select
                   className="form-control"
-                  value={userRep?userRep:""}
+                  value={userRep ? userRep : ""}
                   onChange={onUserRepChanged}
                 >
                   <option disabled value={""}>
@@ -287,11 +284,8 @@ const AppDate = ({ dateId, Lista }) => {
       </Modal>
     );
 
-    //const handleEdit = () => navigate(`/dash/users/${actId}`)
-
     const errContent = (error?.data?.message || delerror?.data?.message) ?? "";
 
-    //console.log(`${user.user_id} ${userName} ${userRolesString} ${active} ${errContent}`);
     if (isSuccess) {
     }
     let contenido;

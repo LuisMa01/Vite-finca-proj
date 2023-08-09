@@ -75,21 +75,17 @@ export const {
   useDeleteDoseMutation,
 } = doseApiSlice;
 
-// returns the query result object
 export const selectDosesResult = doseApiSlice.endpoints.getDoses.select();
 
-// creates memoized selector
 const selectDosesData = createSelector(
   selectDosesResult,
-  (doseResult) => doseResult.data // normalized state object with ids & entities
+  (doseResult) => doseResult.data
 );
 
-//getSelectors creates these selectors and we rename them with aliases using destructuring
 export const {
   selectAll: selectAllDoses,
   selectById: selectDoseById,
   selectIds: selectDoseIds,
-  // Pass in a selector that returns the users slice of state
 } = dosesAdapter.getSelectors(
   (state) => selectDosesData(state) ?? initialState
 );

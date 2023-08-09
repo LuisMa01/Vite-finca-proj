@@ -1,4 +1,3 @@
-//import { useNavigate } from 'react-router-dom'
 import "../../src/styles/registrar-actividad.css";
 import {
   useGetCampsQuery,
@@ -7,10 +6,10 @@ import {
 } from "../features/fields/redux/campApiSlice";
 import { useGetCropsQuery } from "../features/fields/redux/cropApiSlice";
 import { memo } from "react";
-import { Link } from "react-router-dom";
+
 import RemoveImg from "../images/remove.svg";
 import Swal from "sweetalert2";
-import { ROLES } from "../config/roles";
+
 import { useEffect, useState } from "react";
 import Modal from "react-modal";
 import useAuth from "../hooks/useAuth";
@@ -40,7 +39,6 @@ const Crop = ({ campId }) => {
               </>
             );
           }
-          
         }
       });
     cont = (
@@ -64,8 +62,6 @@ const Camp = ({ campId, Lista }) => {
   const [area, setArea] = useState(camp.camp_area);
   const [active, setActive] = useState(camp.camp_status);
   const [isOpen, setIsOpen] = useState(false);
-
-  //id, campName, area, active
 
   const [updateCamp, { isLoading, isSuccess, isError, error }] =
     useUpdateCampMutation();
@@ -102,7 +98,7 @@ const Camp = ({ campId, Lista }) => {
       active: e.target.checked,
     });
   };
-  // id, campName, area, active
+
   const onDeleteCampClicked = async () => {
     Swal.fire({
       title: "¿Seguro de eliminar?",
@@ -157,8 +153,8 @@ const Camp = ({ campId, Lista }) => {
                 required
               />
               <div className="error-message">
-                  <p>Formato incorrecto. ej: Campo X</p>
-                </div>
+                <p>Formato incorrecto. ej: Campo X</p>
+              </div>
             </div>
             <div className="col-12 col-md-6 mb-2">
               <label for="variedad_cultivo">Área (tareas)</label>
@@ -193,7 +189,6 @@ const Camp = ({ campId, Lista }) => {
   if (camp) {
     const errContent = (error?.data?.message || delerror?.data?.message) ?? "";
 
-    //console.log(`${user.user_id} ${userName} ${userRolesString} ${active} ${errContent}`);
     if (isSuccess) {
       console.log(`no hay error ${errContent}`);
     }
@@ -211,16 +206,18 @@ const Camp = ({ campId, Lista }) => {
               onChange={onActiveChanged}
             />
           </td>
-          {(isAdmin) && <td>
-            <img
-              onClick={onDeleteCampClicked}
-              className="remove-img"
-              src={RemoveImg}
-              alt="Remove"
-            />
-          </td>}
-          {(isAdmin) &&  <td onClick={() => setIsOpen(true)}>Editar</td>}
-          {(isAdmin) && <>{actuCamp}</>}
+          {isAdmin && (
+            <td>
+              <img
+                onClick={onDeleteCampClicked}
+                className="remove-img"
+                src={RemoveImg}
+                alt="Remove"
+              />
+            </td>
+          )}
+          {isAdmin && <td onClick={() => setIsOpen(true)}>Editar</td>}
+          {isAdmin && <>{actuCamp}</>}
         </tr>
       );
     }
@@ -229,7 +226,6 @@ const Camp = ({ campId, Lista }) => {
       contenido = (
         <div key={camp.camp_id} className="col-12 col-sm-6 col-md-4 col-xl-3">
           <div className="card">
-            {/* <img className="card-img-top" src={MaizImag} alt="dec-img" /> */}
             <div className="card-body">
               <h5 className="card-title">{camp.camp_name}</h5>
               <p className="card-text">

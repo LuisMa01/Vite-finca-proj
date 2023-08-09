@@ -56,11 +56,10 @@ const DashHeader = () => {
     buttonContent = <>{logoutButton}</>;
   }
 
-  // useEffect(() => {
   if (isSuccess) {
     navigate("/");
   }
-  // }, [isSuccess, navigate]);
+
   const content = (
     <>
       <p className={errClass}>{error?.data?.message}</p>
@@ -137,14 +136,6 @@ const DashHeader = () => {
           </ul>
         </div>
       </nav>
-
-      {/*<nav>
-        <div className="return-div">
-          <div onClick={goBack} className="return-button">
-            <img className="return-button-img" src={ReImage} alt="Atrás" />
-          </div>
-        </div>
-                </nav>*/}
     </>
   );
 

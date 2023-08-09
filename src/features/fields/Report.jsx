@@ -2,7 +2,7 @@ import React from "react";
 import { useEffect, useState, useMemo, useRef } from "react";
 import { useParams } from "react-router-dom";
 import { format } from "date-fns";
-//import { filterBetween } from 'date-fns/fp';
+
 import { isWithinInterval, parseISO } from "date-fns";
 import Chart from "chart.js/auto";
 import { Bar, Pie } from "react-chartjs-2";
@@ -306,10 +306,8 @@ const Report = () => {
   const [seis, setSeis] = useState(true);
   const [siete, setSiete] = useState(true);
   const [ocho, setOcho] = useState(true);
-  //const [chartData, setChartData] = React.useState(data);
 
   const { username, isManager, isAdmin, userId } = useAuth();
-  //const [focusedInput, setFocusedInput]=useState()
 
   const {
     data: costs,
@@ -980,8 +978,8 @@ const Report = () => {
               <button
                 className="btn btn-outline-primary seccion_cultivos_btn-agr"
                 onClick={() => {
-                  navigate("/dash/reporteria")
-                  setOcho(true)
+                  navigate("/dash/reporteria");
+                  setOcho(true);
                 }}
               >
                 Reporte de Costos

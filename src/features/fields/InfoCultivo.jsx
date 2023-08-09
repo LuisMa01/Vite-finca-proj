@@ -203,7 +203,6 @@ const infoCultivo = () => {
   const [userRep, setUserRep] = useState("");
   const [plantillaKey, setPlantillaKey] = useState("");
 
-  //const [isPlantilla, setIsPlantilla] = useState(false);
   let actArr = [];
   let plntCrop;
   const { crop } = useGetCropsQuery(
@@ -303,8 +302,6 @@ const infoCultivo = () => {
     });
   };
 
-  //userRep, dateInit, dateEnd, actKey, cropKey, plantId , userRep, dateInit, dateEnd, actKey, cropKey, plantId
-
   const onActKeyChanged = (e) => {
     e.preventDefault();
     setActKey(e.target.value);
@@ -357,7 +354,6 @@ const infoCultivo = () => {
   let plnt = <></>;
   let cropUsado = 0;
   if (crop) {
-    //para asegurar que obtenga los datos del cultivo
     const finalDate =
       crop?.crop_harvest !== null || !crop.crop_status ? true : false;
     cropDato = (

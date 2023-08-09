@@ -1,4 +1,3 @@
-//import { useNavigate } from 'react-router-dom'
 import "../styles/user-list.css";
 import {
   useGetUsersQuery,
@@ -6,12 +5,10 @@ import {
   useDeleteUserMutation,
 } from "../features/fields/redux/usersApiSlice";
 import { memo, useEffect, useState, useReducer } from "react";
-import { Link } from "react-router-dom";
 import RemoveImg from "../images/remove.svg";
 import Swal from "sweetalert2";
 import { ROLES } from "../config/roles";
 import Modal from "react-modal";
-
 import ReImage from "../images/return.svg";
 import PeopleImg from "../images/users.svg";
 import useAuth from "../hooks/useAuth";
@@ -593,8 +590,6 @@ const User = ({ userId, Lista }) => {
       contenido(<>Error...</>);
     }
 
-    // if (user) {
-    //const handleEdit = () => navigate(`/dash/users/${userId}`)
     const nombre = names ? names : "Sin nombre";
     const apellido = surname ? surname : "";
     const correo = email ? email : "No tiene correo";
@@ -614,8 +609,6 @@ const User = ({ userId, Lista }) => {
     if (roles == Object.values(ROLES)[2]) {
       llave = Object.keys(ROLES)[2];
     }
-
-    //console.log(`${user.user_id} ${userName} ${userRolesString} ${active} ${errContent}`);
 
     if (Lista == "Lista1") {
       contenido = (
@@ -696,7 +689,6 @@ const User = ({ userId, Lista }) => {
         </>
       );
     }
-    //}
 
     return contenido;
   } else {

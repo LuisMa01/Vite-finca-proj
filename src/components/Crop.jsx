@@ -1,4 +1,3 @@
-//import { useNavigate } from 'react-router-dom'
 import "../../src/styles/registrar-actividad.css";
 import {
   useGetCropsQuery,
@@ -8,7 +7,6 @@ import {
 import { useGetPlantsQuery } from "../features/fields/redux/plantApiSlice";
 import { useGetCampsQuery } from "../features/fields/redux/campApiSlice";
 import { useGetUsersQuery } from "../features/fields/redux/usersApiSlice";
-
 import { useGetCostsQuery } from "../features/fields/redux/costApiSlice";
 import { memo } from "react";
 import { Link, useNavigate } from "react-router-dom";
@@ -20,8 +18,7 @@ import Modal from "react-modal";
 import useAuth from "../hooks/useAuth";
 
 Modal.setAppElement("#root");
-const CULT_REGEX =
-  /^([A-ZÑ]{1})([a-zñ\d]{0,20})(-?([\wñ\d]{0,20})?){0,4}/;
+const CULT_REGEX = /^([A-ZÑ]{1})([a-zñ\d]{0,20})(-?([\wñ\d]{0,20})?){0,4}/;
 const FINAL_PRO_REGEX =
   /^([A-ZÑ]{1})([a-zñ\d]{0,20})(-?\s?\.?,?([\wñ\d]{0,20})?){0,20}/;
 
@@ -114,7 +111,7 @@ const Crop = ({ cropId, Lista }) => {
   const onCropCampChanged = (e) => setCropCampKey(e.target.value);
   const onCropPlantKeyChanged = (e) => setCropPlantKey(e.target.value);
   const onCropAreaChanged = (e) => setCropArea(e.target.value);
-  //id, repUser, cropName, datePlant, dateHarvest, finalProd, cropCampKey, cropPlantKey, active, cropArea
+
   const onActiveChanged = async (e) => {
     e.preventDefault();
     if (canSave) {
@@ -146,7 +143,7 @@ const Crop = ({ cropId, Lista }) => {
       cropArea,
     });
   };
-  //id, cropName, datePlant, dateHarvest, finalProd, cropCampKey, cropPlantKey, active
+
   const onDeleteCropClicked = async () => {
     Swal.fire({
       title: "¿Seguro de eliminar?",
@@ -199,10 +196,10 @@ const Crop = ({ cropId, Lista }) => {
       const { ids, entities } = rpuser;
       if (repUser) {
         user = entities[repUser].user_nombre
-        ? entities[repUser].user_nombre
-        : entities[repUser].user_name;
+          ? entities[repUser].user_nombre
+          : entities[repUser].user_name;
       }
-      
+
       userOption = ids.map((Id) => {
         if (entities[Id].user_status) {
           if (
@@ -398,13 +395,10 @@ const Crop = ({ cropId, Lista }) => {
       </Modal>
     );
 
-    //const handleEdit = () => navigate(`/dash/users/${cropId}`)
-
     const cropname = crop.crop_name ? crop.crop_name : "no tiene";
 
     const errContent = (error?.data?.message || delerror?.data?.message) ?? "";
 
-    //console.log(`${user.user_id} ${userName} ${userRolesString} ${active} ${errContent}`);
     if (isSuccess) {
       console.log(`no hay error ${errContent}`);
     }
@@ -420,8 +414,8 @@ const Crop = ({ cropId, Lista }) => {
           </td>
 
           <td>{crop?.plant_name}</td>
-          {(plnt !== "Plantilla") && ( <td>{crop?.camp_name}</td>)}
-          {(plnt !== "Plantilla") && (<td>{user}</td>)}
+          {plnt !== "Plantilla" && <td>{crop?.camp_name}</td>}
+          {plnt !== "Plantilla" && <td>{user}</td>}
           {(isManager || isAdmin) && (
             <td>
               <input
@@ -449,55 +443,56 @@ const Crop = ({ cropId, Lista }) => {
     if (Lista == "Lista2") {
       contenido = (
         <div className="big-cont col-12 col-sm-6 col-md-4 col-xl-3">
-          <div className="card" onClick={()=>navigate(`/dash/cultivos/info-cultivo/${cropId}`)}>
-            
-              <div className="card-header rounded">
-                <h5>{crop?.plant_name}</h5>
-              </div>
+          <div
+            className="card"
+            onClick={() => navigate(`/dash/cultivos/info-cultivo/${cropId}`)}
+          >
+            <div className="card-header rounded">
+              <h5>{crop?.plant_name}</h5>
+            </div>
 
-              <ul className="cultivos_general">
-                <li className="col-12">
-                  <b>Cultivo: </b>
-                  {cropName}
-                </li>
-                <li className="col-12">
-                  <b>Variedad: </b>
-                  {crop?.plant_variety}
-                </li>
-                <li className="col-12">
-                  <b>Área: </b>
-                  {cropArea ? cropArea : 0} tareas
-                </li>
-                <li className="col-12">
-                  <b>Marco de plantacion: </b>
-                  {crop?.plant_frame}
-                </li>
-                <li className="col-12">
-                  <b>Campo#: </b>
-                  {crop?.camp_name}
-                </li>
-                <li className="col-12">
-                  <b>Fecha de siembra: </b>
-                  {fechaIni}
-                </li>
-                <li className="col-12">
-                  <b>Fecha de cosecha: </b>
-                  {fechaFin}
-                </li>
-                <li className="col-12">
-                  <b>Producto final: </b>
-                  {finalProd}
-                </li>
-                <li className="col-12">
+            <ul className="cultivos_general">
+              <li className="col-12">
+                <b>Cultivo: </b>
+                {cropName}
+              </li>
+              <li className="col-12">
+                <b>Variedad: </b>
+                {crop?.plant_variety}
+              </li>
+              <li className="col-12">
+                <b>Área: </b>
+                {cropArea ? cropArea : 0} tareas
+              </li>
+              <li className="col-12">
+                <b>Marco de plantacion: </b>
+                {crop?.plant_frame}
+              </li>
+              <li className="col-12">
+                <b>Campo#: </b>
+                {crop?.camp_name}
+              </li>
+              <li className="col-12">
+                <b>Fecha de siembra: </b>
+                {fechaIni}
+              </li>
+              <li className="col-12">
+                <b>Fecha de cosecha: </b>
+                {fechaFin}
+              </li>
+              <li className="col-12">
+                <b>Producto final: </b>
+                {finalProd}
+              </li>
+              <li className="col-12">
                 <b>Responsable: </b>
                 {user ? user : "no asignado"}
-                </li>
-                <li className="col-12">
-                  <b>Costo acumulado: </b>
-                  <Cost key={cropId} cropId={cropId} />
-                </li>
-              </ul>
-            
+              </li>
+              <li className="col-12">
+                <b>Costo acumulado: </b>
+                <Cost key={cropId} cropId={cropId} />
+              </li>
+            </ul>
           </div>
         </div>
       );

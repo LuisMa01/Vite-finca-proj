@@ -13,12 +13,9 @@ import Crop from "../../components/Crop";
 import useAuth from "../../hooks/useAuth";
 import { ROLES } from "../../config/roles";
 
-const CULT_REGEX =
-  /^([A-ZÑ]{1})([a-zñ\d]{0,20})(-?([\wñ\d]{0,20})?){0,4}/;
+const CULT_REGEX = /^([A-ZÑ]{1})([a-zñ\d]{0,20})(-?([\wñ\d]{0,20})?){0,4}/;
 const FINAL_PRO_REGEX =
   /^([A-ZÑ]{1})([a-zñ\d]{0,20})(-?\s?\.?,?([\wñ\d]{0,20})?){0,20}/;
-
-  /*([\wáéíóúÁÉÍÓÚüÜñÑ]{2,}\s?([\wáéíóúÁÉÍÓÚüÜñÑ]{1,})?'?-?([\wáéíóúÁÉÍÓÚüÜñÑ]{2,})?\s?([\wáéíóúÁÉÍÓÚüÜñÑ]{1,})?)*/
 
 const nuevoCultivo = () => {
   const { username, isManager, isAdmin, userId } = useAuth();
@@ -106,7 +103,6 @@ const nuevoCultivo = () => {
     },
   ] = useAddNewCropMutation();
 
-  //username, cropNames, datePlant, dateHarvest, finalProd, cropCampKey, cropPlantKey
   const [cropNames, setCropNames] = useState("");
   const [repUser, setRepUser] = useState("");
   const [datePlant, setCropPlant] = useState();
@@ -226,7 +222,6 @@ const nuevoCultivo = () => {
   let tableContent;
   if (isError) {
     tableContent = <p className="errmsg">{error?.data?.message}</p>;
-    
   }
   if (cropSuc) {
     const { ids, entities } = crops;
@@ -239,7 +234,10 @@ const nuevoCultivo = () => {
           if (isAdmin) {
             return <Crop key={Id} cropId={Id} Lista={"Lista1"} />;
           } else if (isManager) {
-            if (entities[Id].crop_user_key == userId || entities[Id].date_user_key == userId) {
+            if (
+              entities[Id].crop_user_key == userId ||
+              entities[Id].date_user_key == userId
+            ) {
               return <Crop key={Id} cropId={Id} Lista={"Lista1"} />;
             }
           } else {

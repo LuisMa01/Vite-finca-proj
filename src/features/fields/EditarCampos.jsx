@@ -96,8 +96,8 @@ const EditarCampos = () => {
                 required
               />
               <div className="error-message">
-                  <p>Formato incorrecto. ej: Campo X</p>
-                </div>
+                <p>Formato incorrecto. ej: Campo X</p>
+              </div>
             </div>
             <div className="col-12 col-md-6 mb-2">
               <label htmlFor="variedad_cultivo">Área (tareas)</label>

@@ -2,7 +2,7 @@ import React from "react";
 import { useEffect, useState, useMemo, useRef } from "react";
 import { useParams } from "react-router-dom";
 import { format } from "date-fns";
-//import { filterBetween } from 'date-fns/fp';
+
 import { isWithinInterval, parseISO } from "date-fns";
 import Chart from "chart.js/auto";
 import { Bar, Pie } from "react-chartjs-2";
@@ -354,7 +354,7 @@ const DateReport = () => {
             `${date?.crop_plant}` == "null" ? "-" : date?.crop_plant;
           let fechaHarvest =
             `${date?.crop_harvest}` == "null" ? "-" : date?.crop_harvest;
-          let cropStatus = date?.crop_status?'Activo':'Inactivo';
+          let cropStatus = date?.crop_status ? "Activo" : "Inactivo";
 
           const date1 = new Date(fechaPlant);
           const date2 = new Date(fechaHarvest);
@@ -369,25 +369,25 @@ const DateReport = () => {
 
           const date3 = new Date(fechaPro);
           const date4 = new Date(fechaEjc);
-          const dateHoy = new Date()
-           let estadoAct = "-"
+          const dateHoy = new Date();
+          let estadoAct = "-";
           if (
             `${date?.date_end}` !== "null" &&
             `${date?.date_init}` !== "null"
           ) {
             // Comparar si date3 es igual a date4
             if (date3.getTime() === date4.getTime()) {
-              estadoAct = "Completado a tiempo"
+              estadoAct = "Completado a tiempo";
             }
 
             // Comparar si date3 es mayor que date4
             if (date3.getTime() > date4.getTime()) {
-              estadoAct = "Completado anticipadamente"
+              estadoAct = "Completado anticipadamente";
             }
 
             // Comparar si date3 es menor que date4
             if (date3.getTime() < date4.getTime()) {
-              estadoAct = "Completado con retraso"
+              estadoAct = "Completado con retraso";
             }
           }
           if (
@@ -396,17 +396,17 @@ const DateReport = () => {
           ) {
             // Comparar si date3 es igual a date4
             if (date3.getTime() === dateHoy.getTime()) {
-              estadoAct = "Urgente"
+              estadoAct = "Urgente";
             }
 
             // Comparar si date3 es mayor que date4
             if (date3.getTime() > dateHoy.getTime()) {
-              estadoAct = "Retrasado"
+              estadoAct = "Retrasado";
             }
 
             // Comparar si date3 es menor que date4
             if (date3.getTime() < dateHoy.getTime()) {
-              estadoAct = "En progreso"
+              estadoAct = "En progreso";
             }
           }
 
@@ -423,12 +423,10 @@ const DateReport = () => {
             fechaHarvest,
             cropStatus,
             diffDay,
-            estadoAct
+            estadoAct,
           };
         }
       });
-
-  // setProdArr(prodArr);
 
   const data = React.useMemo(
     () =>
@@ -445,7 +443,6 @@ const DateReport = () => {
         const cropStatus = prodArr[info].cropStatus;
         const diffDay = prodArr[info].diffDay;
         const estadoAct = prodArr[info].estadoAct;
-        
 
         return {
           actNma,
@@ -573,7 +570,7 @@ const DateReport = () => {
     <>
       <div>
         <div className="button-section_parent ">
-        <div>
+          <div>
             <div className="button-section_parent ">
               <button
                 className="btn btn-outline-primary seccion_cultivos_btn-agr"
@@ -582,7 +579,6 @@ const DateReport = () => {
                 Reporte de Costos
               </button>
 
-
               <button
                 type="button"
                 className="btn btn-outline-primary seccion_cultivos_btn-agr"
@@ -590,8 +586,6 @@ const DateReport = () => {
               >
                 Reporte de Duración
               </button>
-
-              
             </div>
           </div>
         </div>

@@ -75,21 +75,17 @@ export const {
   useDeleteDateMutation,
 } = dateApiSlice;
 
-// returns the query result object
 export const selectDatesResult = dateApiSlice.endpoints.getDates.select();
 
-// creates memoized selector
 const selectDatesData = createSelector(
   selectDatesResult,
-  (dateResult) => dateResult.data // normalized state object with ids & entities
+  (dateResult) => dateResult.data
 );
 
-//getSelectors creates these selectors and we rename them with aliases using destructuring
 export const {
   selectAll: selectAllDates,
   selectById: selectDateById,
   selectIds: selectDateIds,
-  // Pass in a selector that returns the users slice of state
 } = datesAdapter.getSelectors(
   (state) => selectDatesData(state) ?? initialState
 );

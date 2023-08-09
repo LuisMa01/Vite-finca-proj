@@ -26,8 +26,7 @@ const reducer = (state, action) => {
       throw new Error();
   }
 };
-const ACT_REGEX =
-  /^([A-ZÑ]{1})([a-zñ\d]{0,20})(-?\s?([\wñÑ\d]{0,20})?){0,5}/;
+const ACT_REGEX = /^([A-ZÑ]{1})([a-zñ\d]{0,20})(-?\s?([\wñÑ\d]{0,20})?){0,5}/;
 
 const registrarActividad = () => {
   const { username, isManager, isAdmin } = useAuth();

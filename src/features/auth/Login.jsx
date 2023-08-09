@@ -12,9 +12,7 @@ import "../../styles/login.css";
 import EyeImg from "../../images/eye.svg";
 import LeafImg from "../../images/leaf.svg";
 
-
-
-const seePassword=()=> {
+const seePassword = () => {
   let myPassword = document.getElementById("password");
 
   if (myPassword.type === "password") {
@@ -22,9 +20,8 @@ const seePassword=()=> {
   } else {
     myPassword.type = "password";
   }
-}
+};
 const Login = () => {
-  
   const userRef = useRef();
   const errRef = useRef();
   const [username, setUsername] = useState("");
@@ -40,8 +37,6 @@ const Login = () => {
   useEffect(() => {
     userRef.current.focus();
   }, []);
-  
-  
 
   useEffect(() => {
     setErrMsg("");
@@ -73,65 +68,14 @@ const Login = () => {
   const handlePwdInput = (e) => setPassword(e.target.value);
   const handleToggle = () => setPersist((prev) => !prev);
 
-  const errClass = errMsg ? "errmsg" : "offscreen"
+  const errClass = errMsg ? "errmsg" : "offscreen";
 
-  if (isLoading) return <p>Cargando...</p>
+  if (isLoading) return <p>Cargando...</p>;
 
-/*
-  const content = (
-    <section >
-      <header>
-        <h1>Login</h1>
-      </header>
-      <main>
-        <p ref={errRef} className={errClass} aria-live="assertive">
-          {errMsg}
-        </p>
-
-        <form onSubmit={handleSubmit}>
-          <label htmlFor="username">Usuario:</label>
-          <input
-            type="text"
-            id="username"
-            ref={userRef}
-            value={username}
-            onChange={handleUserInput}
-            autoComplete="off"
-            required
-          />
-
-          <label htmlFor="password">Password:</label>
-          <input
-            type="password"
-            id="password"
-            onChange={handlePwdInput}
-            value={password}
-            required
-          />
-          <button>Sign In</button>
-
-          <label htmlFor="persist">
-            <input
-              type="checkbox"
-              id="persist"
-              onChange={handleToggle}
-              checked={persist}
-            />
-            Trust This Device
-          </label>
-        </form>
-      </main>
-      
-    </section>
-  );
-  */
   const content = (
     <>
-    <DashHeader /> 
+      <DashHeader />
       <main className="login-screen">
-        {/* <p ref={errRef} className={errClass} aria-live="assertive">
-          {errMsg}
-        </p> */}
         <form onSubmit={handleSubmit} className="login">
           <h1>Inicie sesión en Finca Experimental AV</h1>
           <img className="bottom-image" src={LeafImg} alt="" />
@@ -193,7 +137,5 @@ const Login = () => {
 
   return content;
 };
-
-
 
 export default Login;

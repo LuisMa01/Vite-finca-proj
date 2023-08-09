@@ -75,21 +75,17 @@ export const {
   useDeleteItemMutation,
 } = itemApiSlice;
 
-// returns the query result object
 export const selectItemsResult = itemApiSlice.endpoints.getItems.select();
 
-// creates memoized selector
 const selectItemsData = createSelector(
   selectItemsResult,
-  (itemResult) => itemResult.data // normalized state object with ids & entities
+  (itemResult) => itemResult.data
 );
 
-//getSelectors creates these selectors and we rename them with aliases using destructuring
 export const {
   selectAll: selectAllItems,
   selectById: selectItemById,
   selectIds: selectItemIds,
-  // Pass in a selector that returns the users slice of state
 } = itemsAdapter.getSelectors(
   (state) => selectItemsData(state) ?? initialState
 );

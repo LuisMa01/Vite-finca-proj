@@ -75,21 +75,17 @@ export const {
   useDeleteComtMutation,
 } = comtApiSlice;
 
-// returns the query result object
 export const selectComtsResult = comtApiSlice.endpoints.getComts.select();
 
-// creates memoized selector
 const selectComtsData = createSelector(
   selectComtsResult,
-  (comtResult) => comtResult.data // normalized state object with ids & entities
+  (comtResult) => comtResult.data
 );
 
-//getSelectors creates these selectors and we rename them with aliases using destructuring
 export const {
   selectAll: selectAllComts,
   selectById: selectComtById,
   selectIds: selectComtIds,
-  // Pass in a selector that returns the users slice of state
 } = comtsAdapter.getSelectors(
   (state) => selectComtsData(state) ?? initialState
 );

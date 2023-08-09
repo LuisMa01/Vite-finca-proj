@@ -1,4 +1,3 @@
-//import { useNavigate } from 'react-router-dom'
 import "../../src/styles/registrar-actividad.css";
 import {
   useGetItemsQuery,
@@ -7,17 +6,14 @@ import {
 } from "../features/fields/redux/itemApiSlice";
 import { useGetDosesQuery } from "../features/fields/redux/doseApiSlice";
 import { memo, useState, useEffect } from "react";
-import { Link } from "react-router-dom";
 import RemoveImg from "../images/remove.svg";
 import Swal from "sweetalert2";
-import { ROLES } from "../config/roles";
 import Modal from "react-modal";
 import useAuth from "../hooks/useAuth";
 
 Modal.setAppElement("#root");
 
-const ITEM_REGEX =
-  /^([A-ZÑ]{1})([a-zñ\d]{0,20})(-?\s?([\wñ\d]{0,20})?){0,5}/;
+const ITEM_REGEX = /^([A-ZÑ]{1})([a-zñ\d]{0,20})(-?\s?([\wñ\d]{0,20})?){0,5}/;
 
 const DESC_REGEX =
   /^([A-ZÑ]{1})([a-zñ\d]{0,20})(-?\s?\.?,?([\wñ\d]{0,20})?){0,50}/;
@@ -38,7 +34,6 @@ const Dose = ({ doseId }) => {
   }
 };
 
-//en progreso aun falta configurar dosis y luego de este
 const Item = ({ itemId }) => {
   const { username, isManager, isAdmin } = useAuth();
   const { item } = useGetItemsQuery("itemsList", {
@@ -107,7 +102,6 @@ const Item = ({ itemId }) => {
 
       setIsOpen(false);
     };
-    //id, itemName, desc, itemPrice, active, itemDose
 
     const onDeleteItemClicked = async () => {
       Swal.fire({
@@ -160,7 +154,6 @@ const Item = ({ itemId }) => {
       });
     }
 
-    //const handleEdit = () => navigate(`/dash/users/${cropId}`)
     let precio = new Intl.NumberFormat("es-do", {
       style: "currency",
       currency: "DOP",
@@ -281,8 +274,6 @@ const Item = ({ itemId }) => {
     const itemname = itemName ? itemName : "no tiene";
 
     const errContent = (error?.data?.message || delerror?.data?.message) ?? "";
-
-    //console.log(`${user.user_id} ${userName} ${userRolesString} ${active} ${errContent}`);
 
     const contenido = (
       <tr key={itemId}>
