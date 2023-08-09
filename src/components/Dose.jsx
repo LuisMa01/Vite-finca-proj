@@ -1,4 +1,3 @@
-//import { useNavigate } from 'react-router-dom'
 import "../../src/styles/registrar-actividad.css";
 import {
   useGetDosesQuery,
@@ -13,11 +12,8 @@ import Swal from "sweetalert2";
 import { ROLES } from "../config/roles";
 import useAuth from "../hooks/useAuth";
 
-//en progreso aun falta configurar dosis y luego de este
-const DOSE_REGEX =
-  /^([A-ZÑ]{1})([\wñÑ\d]{0,20})(\/?-?([\wñÑ\d]{1,20}?)){0,4}/;
-const UNIT_REGEX =
-  /^([\wñÑ\d]{0,20})((\/?\s?-?)([\wñÑ\d]{1,20}?)){0,4}$/;
+const DOSE_REGEX = /^([A-ZÑ]{1})([\wñÑ\d]{0,20})(\/?-?([\wñÑ\d]{1,20}?)){0,4}/;
+const UNIT_REGEX = /^([\wñÑ\d]{0,20})((\/?\s?-?)([\wñÑ\d]{1,20}?)){0,4}$/;
 
 const Dose = ({ doseId }) => {
   const { username, isManager, isAdmin } = useAuth();
@@ -43,8 +39,6 @@ const Dose = ({ doseId }) => {
     setValidDose(DOSE_REGEX.test(doseName));
   }, [doseName]);
 
-  
-
   const [updateDose, { isLoading, isSuccess: doseUpSuc, isError, error }] =
     useUpdateDoseMutation();
 
@@ -52,7 +46,6 @@ const Dose = ({ doseId }) => {
     deleteDose,
     { isSuccess: isDelSuccess, isError: isDelError, error: delerror },
   ] = useDeleteDoseMutation();
-
 
   const canSave = [validDose, validUnit].every(Boolean) && !isLoading;
   const onDoseNameChanged = (e) => setDoseName(e.target.value);
@@ -84,9 +77,7 @@ const Dose = ({ doseId }) => {
         active,
       });
     }
-    
   };
-  //id, itemName, desc, itemPrice, active, itemDose
 
   const onDeleteDoseClicked = async () => {
     Swal.fire({
@@ -115,13 +106,9 @@ const Dose = ({ doseId }) => {
   }, [doseUpSuc, dose]);
 
   if (dose) {
-    //const handleEdit = () => navigate(`/dash/users/${cropId}`)
-
     const dosename = doseName ? doseName : "no tiene";
 
     const errContent = (error?.data?.message || delerror?.data?.message) ?? "";
-
-    //console.log(`${user.user_id} ${userName} ${userRolesString} ${active} ${errContent}`);
 
     let contenido = (
       <>
@@ -225,7 +212,12 @@ const Dose = ({ doseId }) => {
 
             <td>
               <Collapse isOpened={isOpen}>
-                <div className="btn btn-sm btn-success" type="button" onClick={onDoseChanged} disabled={!canSave}>
+                <div
+                  className="btn btn-sm btn-success"
+                  type="button"
+                  onClick={onDoseChanged}
+                  disabled={!canSave}
+                >
                   Guardar
                 </div>
               </Collapse>

@@ -1,18 +1,13 @@
-
-import 'sweetalert2/src/sweetalert2.scss'
+import "sweetalert2/src/sweetalert2.scss";
 import "./App.css";
 import { Routes, Route } from "react-router-dom";
-
 import Layouts from "./components/Layouts";
-
 import Login from "./features/auth/Login";
 import DashLayout from "./components/DashLayout";
-
 import Prefetch from "./features/auth/Prefetch";
 import PersistLogin from "./features/auth/PersistLogin";
 import RequireAuth from "./features/auth/RequireAuth";
 import { ROLES } from "./config/roles";
-
 import NavInicio from "./features/fields/NavInicio";
 import NavProximas from "./features/fields/NavProximas";
 import MiPerfil from "./features/fields/MiPerfil";
@@ -45,7 +40,6 @@ function App() {
           >
             <Route element={<Prefetch />}>
               <Route path="dash" element={<DashLayout />}>
-                {/*lo agregado aqui en adelante es de fran*/}
                 <Route index element={<NavInicio />} />
                 <Route path="proximas" element={<NavProximas />} />
                 <Route path="cultivos">
@@ -116,7 +110,6 @@ function App() {
                     <Route path="cultivos" element={<DateReport />} />
                   </Route>
                 </Route>
-                {/*lo agregado aqui en adelante es de fran*/}
               </Route>
             </Route>
           </Route>

@@ -75,21 +75,17 @@ export const {
   useDeleteCampMutation,
 } = campApiSlice;
 
-// returns the query result object
 export const selectCampsResult = campApiSlice.endpoints.getCamps.select();
 
-// creates memoized selector
 const selectCampsData = createSelector(
   selectCampsResult,
-  (campResult) => campResult.data // normalized state object with ids & entities
+  (campResult) => campResult.data
 );
 
-//getSelectors creates these selectors and we rename them with aliases using destructuring
 export const {
   selectAll: selectAllCamps,
   selectById: selectCampById,
   selectIds: selectCampIds,
-  // Pass in a selector that returns the users slice of state
 } = campsAdapter.getSelectors(
   (state) => selectCampsData(state) ?? initialState
 );

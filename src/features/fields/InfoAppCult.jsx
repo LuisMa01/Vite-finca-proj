@@ -25,14 +25,13 @@ const Comentario = ({ dateId, info }) => {
     refetchOnFocus: true,
     refetchOnMountOrArgChange: true,
   });
-  
+
   const [
     addNewComt,
     { isSuccess: addComtSuc, isError: addComtIserror, error: addComterror },
   ] = useAddNewComtMutation();
   const [desc, setComtDesc] = useState("");
   const [comtDateKey, setComtDateKey] = useState(dateId);
-  //desc, comtDateKey
 
   const onAddComtClicked = async (e) => {
     e.preventDefault();
@@ -60,37 +59,39 @@ const Comentario = ({ dateId, info }) => {
     <>
       <p className="titulo_tipos-de-actividades col-12">Comentario</p>
 
-     {(!info && (isAdmin || isManager)) && ( <form className="container myform col-6 needs-validation">
-        <div className="form-row bg-light">
-          <div className="col-12 mb-2 form-group">
-            <textarea
-              type="text"
-                  className="form-control col-12"
-                  placeholder="Ingresar Comentario"
-                  value={desc}
-                  maxLength={300}
-                  onChange={onComtDescChange}
-                  rows={2}
-                  cols={25}
-            />
+      {!info && (isAdmin || isManager) && (
+        <form className="container myform col-6 needs-validation">
+          <div className="form-row bg-light">
+            <div className="col-12 mb-2 form-group">
+              <textarea
+                type="text"
+                className="form-control col-12"
+                placeholder="Ingresar Comentario"
+                value={desc}
+                maxLength={300}
+                onChange={onComtDescChange}
+                rows={2}
+                cols={25}
+              />
+            </div>
           </div>
-        </div>
-        <div className="edit-campo-button-section_parent col-12">
-          <button
-            type="submit"
-            onClick={onAddComtClicked}
-            className="btn btn-outline-primary limpiar"
-          >
-            Añadir comentario
-          </button>
-          <button
-            className="btn btn-outline-danger limpiar"
-            onClick={handleClearClick}
-          >
-            Limpiar
-          </button>
-        </div>
-      </form>)}
+          <div className="edit-campo-button-section_parent col-12">
+            <button
+              type="submit"
+              onClick={onAddComtClicked}
+              className="btn btn-outline-primary limpiar"
+            >
+              Añadir comentario
+            </button>
+            <button
+              className="btn btn-outline-danger limpiar"
+              onClick={handleClearClick}
+            >
+              Limpiar
+            </button>
+          </div>
+        </form>
+      )}
     </>
   );
   let contenido;
@@ -98,7 +99,6 @@ const Comentario = ({ dateId, info }) => {
     contenido = <>{error?.data?.message}</>;
   }
   if (comts) {
-    
     let comtList;
     if (comts) {
       const { ids, entities } = comts;
@@ -123,14 +123,16 @@ const Comentario = ({ dateId, info }) => {
                 <th className="align-middle" scope="col">
                   Comentario
                 </th>
-                {(!info && isAdmin)&& (
+                {!info && isAdmin && (
                   <th className="align-middle" scope="col">
                     Eliminar
                   </th>
                 )}
-                {(!info && (isAdmin || isManager))&& (<th className="align-middle" scope="col">
-                  Editar
-                </th>)}
+                {!info && (isAdmin || isManager) && (
+                  <th className="align-middle" scope="col">
+                    Editar
+                  </th>
+                )}
               </tr>
             </thead>
             <tbody>{comtList}</tbody>
@@ -208,14 +210,14 @@ const InfoAppCult = () => {
       costDateKey,
     });
   };
-  //  costItemKey, costQuantity, costDateKey
+
   const handleClearClick = (e) => {
     e.preventDefault();
     setItemCostKey("");
     setCostDateKey(id);
     setItemPrecioKey(0);
     setCostQuantityKey(1);
-    setItemDoseKey("")
+    setItemDoseKey("");
   };
   useEffect(() => {
     if (date || costs) {
@@ -223,12 +225,12 @@ const InfoAppCult = () => {
       setItemPrecioKey(0);
       setCostDateKey(id);
       setCostQuantityKey(1);
-      setItemDoseKey("")
+      setItemDoseKey("");
     }
   }, [date, costs]);
 
   let itemOption;
-  
+
   if (items) {
     const { ids, entities } = items;
 
@@ -245,7 +247,7 @@ const InfoAppCult = () => {
   let costTotal = [];
   if (costs) {
     const { ids, entities } = costs;
- 
+
     costList =
       ids?.length &&
       ids.map((Id) => {
@@ -270,7 +272,8 @@ const InfoAppCult = () => {
 
   if (date) {
     let contentApp;
-    const finalDate = (crop?.crop_harvest !== null || !crop.crop_status)? true:false
+    const finalDate =
+      crop?.crop_harvest !== null || !crop.crop_status ? true : false;
 
     if (date) {
       contentApp = date.date_id.length ?? (
@@ -289,65 +292,67 @@ const InfoAppCult = () => {
           Materiales, insumos y mano de obra
         </div>
         <div>{contentApp}</div>
-        {(!finalDate && (isAdmin || isManager)) && (<form>
-          <div className="new-activity-miniform d-flex justify-content-center col-12 col-md-10 col-xl-9 form-row bg-light">
-            <div className="col-md-6 col-lg-3 mb-3">
-              <label htmlFor="campo_cultivo">Articulos</label>
-              <select
-                className="form-control"
-                value={costItemKey}
-                onChange={onItemCostChanged}
-              >
-                <option disabled value={""}>
-                  Elegir Acticulo
-                </option>
-                {itemOption}
-              </select>
-            </div>
-            <div className="col-md-6 col-lg-3 mb-3">
-              <div>
-                {" "}
-                <label htmlFor="campo_cultivo">Precio</label>
-              </div>
-              <div>{precio ? precio : "precio del articulo elejido."}</div>
-            </div>
-            <div className="col-md-6 col-lg-3 mb-3">
-              <div>
-                {" "}
-                <label htmlFor="campo_cultivo">Dosis</label>
-              </div>
-              <div>{itemDose ? itemDose : "Dosis del articulo."}</div>
-            </div>
-            <div className="col-md-6 col-lg-3 mb-3">
-              <div>
-                {" "}
-                <label htmlFor="campo_cultivo">Cantidad</label>
-              </div>
-              <input
-                type="number"
-                maxLength={9}
-                value={costQuantity}
-                min="0"
-                onChange={onCostQuantityChanged}
-              />
-            </div>
-
-            <div className="col-12">
-              <div className="cultivos_button-section">
-                <button
-                  className="btn btn-success"
-                  onClick={onAddCostClicked}
-                  type="submit"
+        {!finalDate && (isAdmin || isManager) && (
+          <form>
+            <div className="new-activity-miniform d-flex justify-content-center col-12 col-md-10 col-xl-9 form-row bg-light">
+              <div className="col-md-6 col-lg-3 mb-3">
+                <label htmlFor="campo_cultivo">Articulos</label>
+                <select
+                  className="form-control"
+                  value={costItemKey}
+                  onChange={onItemCostChanged}
                 >
-                  Agregar Artículo
-                </button>
-                <button className="btn btn-danger" onClick={handleClearClick}>
-                  Limpiar
-                </button>
+                  <option disabled value={""}>
+                    Elegir Acticulo
+                  </option>
+                  {itemOption}
+                </select>
+              </div>
+              <div className="col-md-6 col-lg-3 mb-3">
+                <div>
+                  {" "}
+                  <label htmlFor="campo_cultivo">Precio</label>
+                </div>
+                <div>{precio ? precio : "precio del articulo elejido."}</div>
+              </div>
+              <div className="col-md-6 col-lg-3 mb-3">
+                <div>
+                  {" "}
+                  <label htmlFor="campo_cultivo">Dosis</label>
+                </div>
+                <div>{itemDose ? itemDose : "Dosis del articulo."}</div>
+              </div>
+              <div className="col-md-6 col-lg-3 mb-3">
+                <div>
+                  {" "}
+                  <label htmlFor="campo_cultivo">Cantidad</label>
+                </div>
+                <input
+                  type="number"
+                  maxLength={9}
+                  value={costQuantity}
+                  min="0"
+                  onChange={onCostQuantityChanged}
+                />
+              </div>
+
+              <div className="col-12">
+                <div className="cultivos_button-section">
+                  <button
+                    className="btn btn-success"
+                    onClick={onAddCostClicked}
+                    type="submit"
+                  >
+                    Agregar Artículo
+                  </button>
+                  <button className="btn btn-danger" onClick={handleClearClick}>
+                    Limpiar
+                  </button>
+                </div>
               </div>
             </div>
-          </div>
-        </form>)}
+          </form>
+        )}
 
         <div className="table-container col-12 col-md-9 col-xl-6">
           <table className="table table-hover table-sm table-striped table-responsive-sm table-bordered">
@@ -371,7 +376,7 @@ const InfoAppCult = () => {
                 <th className="align-middle" scope="col">
                   Costo Total
                 </th>
-                {(!finalDate && isAdmin) && (
+                {!finalDate && isAdmin && (
                   <th className="align-middle" scope="col">
                     Eliminar
                   </th>

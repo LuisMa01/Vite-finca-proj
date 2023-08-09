@@ -1,11 +1,8 @@
-//import { useNavigate } from 'react-router-dom'
 import "../../src/styles/registrar-actividad.css";
-import { useGetDatesQuery } from "../features/fields/redux/appApiSlice";
 import { useGetItemsQuery } from "../features/fields/redux/itemApiSlice";
 import { useGetDosesQuery } from "../features/fields/redux/doseApiSlice";
 import { useEffect, useState } from "react";
 import { useGetActsQuery } from "../features/fields/redux/actApiSlice";
-import { useGetUsersQuery } from "../features/fields/redux/usersApiSlice";
 import { useGetCropsQuery } from "../features/fields/redux/cropApiSlice";
 import {
   useGetCostsQuery,
@@ -16,11 +13,9 @@ import { memo } from "react";
 import { Link } from "react-router-dom";
 import RemoveImg from "../images/remove.svg";
 import Swal from "sweetalert2";
-import { ROLES } from "../config/roles";
 import useAuth from "../hooks/useAuth";
 
 const Act = ({ actId }) => {
-  
   const { act } = useGetActsQuery("actsList", {
     selectFromResult: ({ data }) => ({
       act: data?.entities[actId],
@@ -67,7 +62,7 @@ const Cost = ({ costId, Lista }) => {
       costDateKey,
     });
   };
-  // id, costItemKey, costQuantity, costDateKey, costItemPrice
+
   const onDeleteDateClicked = async () => {
     Swal.fire({
       title: "¿Seguro de eliminar?",
@@ -105,8 +100,8 @@ const Cost = ({ costId, Lista }) => {
   }, [cost]);
 
   if (cost) {
-    //const handleEdit = () => navigate(`/dash/users/${actId}`)
-    const finalDate = (crop?.crop_harvest !== null || !crop.crop_status)? true:false
+    const finalDate =
+      crop?.crop_harvest !== null || !crop.crop_status ? true : false;
     const { item } = useGetItemsQuery("itemsList", {
       selectFromResult: ({ data }) => ({
         item: data?.entities[costItemKey],
@@ -117,7 +112,7 @@ const Cost = ({ costId, Lista }) => {
         dose: data?.entities[cost.item_dose_key],
       }),
     });
-    
+
     let precioItem = new Intl.NumberFormat("es-do", {
       style: "currency",
       currency: "DOP",
@@ -134,12 +129,11 @@ const Cost = ({ costId, Lista }) => {
       const errContent =
         (error?.data?.message || delerror?.data?.message) ?? "";
 
-      //console.log(`${user.user_id} ${userName} ${userRolesString} ${active} ${errContent}`);
       if (isSuccess) {
         console.log(`no hay error ${errContent}`);
       }
 
-      let contenido 
+      let contenido;
       if (Lista == "Lista1") {
         contenido = (
           <tr key={costId}>
@@ -151,16 +145,18 @@ const Cost = ({ costId, Lista }) => {
             <td>{dose.dose_unit}</td>
             <td>{precioItem}</td>
             <td>{precio}</td>
-            {(!finalDate && isAdmin) && <td>
-              <img
-                onClick={onDeleteDateClicked}
-                className="remove-img"
-                src={RemoveImg}
-                alt="Remove"
-              />
-            </td>}
+            {!finalDate && isAdmin && (
+              <td>
+                <img
+                  onClick={onDeleteDateClicked}
+                  className="remove-img"
+                  src={RemoveImg}
+                  alt="Remove"
+                />
+              </td>
+            )}
           </tr>
-        );        
+        );
       }
       if (Lista == "Lista2") {
         contenido = (
@@ -168,24 +164,29 @@ const Cost = ({ costId, Lista }) => {
             <td>
               <div type="button">{itemname}</div>
             </td>
-            <td><Link to={`/dash/cultivos/info-app/${costDateKey}`}><Act key={cost.date_act_key} actId={cost.date_act_key} /></Link></td>
-            <td>{dose.dose_name}</td>            
+            <td>
+              <Link to={`/dash/cultivos/info-app/${costDateKey}`}>
+                <Act key={cost.date_act_key} actId={cost.date_act_key} />
+              </Link>
+            </td>
+            <td>{dose.dose_name}</td>
             <td>{costQuantity}</td>
             <td>{dose.dose_unit}</td>
             <td>{precioItem}</td>
             <td>{precio}</td>
-            {(!finalDate && isAdmin) && <td>
-              <img
-                onClick={onDeleteDateClicked}
-                className="remove-img"
-                src={RemoveImg}
-                alt="Remove"
-              />
-            </td>}
+            {!finalDate && isAdmin && (
+              <td>
+                <img
+                  onClick={onDeleteDateClicked}
+                  className="remove-img"
+                  src={RemoveImg}
+                  alt="Remove"
+                />
+              </td>
+            )}
           </tr>
-        ); 
+        );
       }
-      
 
       return contenido;
     }

@@ -1,17 +1,14 @@
 import React, { useState, useEffect, useRef } from "react";
 import "../../styles/proximas.css";
 import ReImage from "../../images/return.svg";
-import { Link } from "react-router-dom";
 import { useTable, useSortBy, usePagination, useFilters } from "react-table";
 import { useGetDatesQuery } from "./redux/appApiSlice";
 import useAuth from "../../hooks/useAuth";
-import AppDate from "../../components/AppDate";
 import { useNavigate } from "react-router-dom";
 
 function DefaultColumnFilter({
   column: { filterValue, preFilteredRows, setFilter, id },
 }) {
-  // Obtener una lista de opciones únicas a partir de los valores en la columna
   const options = React.useMemo(() => {
     const uniqueOptions = new Set();
     preFilteredRows.forEach((row) => {
@@ -20,7 +17,6 @@ function DefaultColumnFilter({
     return Array.from(uniqueOptions);
   }, [id, preFilteredRows]);
 
-  // Renderizar una lista de opciones para el filtro
   return (
     <select
       value={filterValue}
@@ -41,7 +37,6 @@ function DefaultColumnFilter({
 const TablePr = ({ columns, data }) => {
   const defaultColumn = React.useMemo(
     () => ({
-      // Let's set up our default Filter UI
       Filter: DefaultColumnFilter,
     }),
     []
@@ -69,7 +64,6 @@ const TablePr = ({ columns, data }) => {
       data,
       defaultColumn,
       initialState: { pageIndex: 0 },
-      // Be sure to pass the defaultColumn option
     },
     useFilters,
     useSortBy,
@@ -191,9 +185,9 @@ const navProximas = () => {
       let appActDate =
         `${data?.entities[Id].date_end}` == "null" ? true : false;
       if (plnt !== "Plantilla" && statusCrop && dateH && appActDate) {
-        if (isAdmin) {
+       /* if (isAdmin) {*/
           filtered.push(data?.entities[Id]);
-        } else if (isManager) {
+        /*} else if (isManager) {
           if (
             data?.entities[Id].crop_user_key == userId ||
             data?.entities[Id].date_user_key == userId
@@ -204,7 +198,7 @@ const navProximas = () => {
           if (data?.entities[Id].date_user_key == userId) {
             filtered.push(data?.entities[Id]);
           }
-        }
+        }*/
       }
       return filtered;
     }, []);
@@ -297,7 +291,7 @@ const navProximas = () => {
     () => [
       {
         Header: "#",
-        accessor: "col1", // accessor is the "key" in the data
+        accessor: "col1",
         sortType: "basic",
         Filter: "",
       },
@@ -306,7 +300,15 @@ const navProximas = () => {
         accessor: "col2",
         sortType: "basic",
         Cell: ({ value, row }) => {
-          return <span onClick={()=>navigate(`/dash/cultivos/info-app/${row.original.actDateId}`)}>{value}</span>;
+          return (
+            <span
+              onClick={() =>
+                navigate(`/dash/cultivos/info-app/${row.original.actDateId}`)
+              }
+            >
+              {value}
+            </span>
+          );
         },
       },
       {
@@ -314,12 +316,20 @@ const navProximas = () => {
         accessor: "col3",
         sortType: "basic",
         Cell: ({ value, row }) => {
-          return <span onClick={()=>navigate(`/dash/cultivos/info-cultivo/${row.original.cropKey}`)}>{value}</span>;
+          return (
+            <span
+              onClick={() =>
+                navigate(`/dash/cultivos/info-cultivo/${row.original.cropKey}`)
+              }
+            >
+              {value}
+            </span>
+          );
         },
       },
       {
         Header: "Campo",
-        accessor: "col4", // accessor is the "key" in the data
+        accessor: "col4",
         sortType: "basic",
       },
       {

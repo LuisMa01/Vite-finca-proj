@@ -75,21 +75,17 @@ export const {
   useDeleteCropMutation,
 } = cropApiSlice;
 
-// returns the query result object
 export const selectCropsResult = cropApiSlice.endpoints.getCrops.select();
 
-// creates memoized selector
 const selectCropsData = createSelector(
   selectCropsResult,
-  (cropResult) => cropResult.data // normalized state object with ids & entities
+  (cropResult) => cropResult.data
 );
 
-//getSelectors creates these selectors and we rename them with aliases using destructuring
 export const {
   selectAll: selectAllCrops,
   selectById: selectCropById,
   selectIds: selectCropIds,
-  // Pass in a selector that returns the users slice of state
 } = cropsAdapter.getSelectors(
   (state) => selectCropsData(state) ?? initialState
 );

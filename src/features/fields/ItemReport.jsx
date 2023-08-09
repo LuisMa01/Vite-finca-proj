@@ -123,12 +123,6 @@ const ItemReport = () => {
     setSelectedOption(event.target.value);
   };
 
-  // const { data: plants, isSuccess: plantSucc } = useGetPlantsQuery("plantsList");
-  // const { data: camps, isSuccess: campSucc } = useGetCampsQuery("campsList");
-  //const { data: crops, isSuccess: cropSucc } = useGetCropsQuery("cropsList");
-  //const { data: acts, isSuccess: actSucc } = useGetActsQuery("actsList");
-  // const { data: dates, isSuccess: dateSucc } = useGetDatesQuery("datesList");
-  //const { data: items, isSuccess: itemSucc } = useGetItemsQuery("itemsList");
   const { data: costs, isSuccess: costSucc } = useGetCostsQuery("costsList");
 
   const onItemSelect = (e) => {

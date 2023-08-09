@@ -101,8 +101,6 @@ const NuevoUsuario = () => {
     <>
       <h1 className="crear_titulo">Crear usuario</h1>
 
-      {/* A partir de aqui son las modificaciones, esperando no poner otro huevo] */}
-
       <form
         className="container col-12 col-sm-11 col-lg-9 bg-light"
         onSubmit={onSaveUserClicked}
@@ -194,7 +192,6 @@ const NuevoUsuario = () => {
               name="email"
               type="email"
               autoComplete="off"
-              
               placeholder="Ej: nombre@ejemplo.com"
               value={email}
               onChange={onEmailChanged}

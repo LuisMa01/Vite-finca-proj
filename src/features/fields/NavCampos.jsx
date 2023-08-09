@@ -9,12 +9,8 @@ import { useGetCampsQuery } from "../fields/redux/campApiSlice";
 import Camp from "../../components/Camp";
 import useAuth from "../../hooks/useAuth";
 
-
-
 const navCampos = () => {
-  
-
-  const [stado, setStado] = useState("")
+  const [stado, setStado] = useState("");
   const { username, isManager, isAdmin } = useAuth();
   const {
     data: camps,
@@ -40,12 +36,10 @@ const navCampos = () => {
   if (isSuccess) {
     const { ids, entities } = camps;
 
-    
-
     const results = !stado
       ? ids
       : ids.filter((dato) => `${entities[dato].camp_status}` == stado);
-        
+
     tableContent =
       results?.length &&
       results.map((Id) => <Camp key={Id} campId={Id} Lista={"Lista2"} />);
@@ -67,17 +61,16 @@ const navCampos = () => {
         )}
       </div>
       <div className="seccion_cultivos_checkbox-div">
-        
         <div>
-        <select
-              className="form-control"
-              value={stado}
-              onChange={searchEstado}
-            >
-              <option value={""}>Todos</option>
-              <option value={true}>Activos</option>
-              <option value={false}>Inactivos</option>
-            </select>
+          <select
+            className="form-control"
+            value={stado}
+            onChange={searchEstado}
+          >
+            <option value={""}>Todos</option>
+            <option value={true}>Activos</option>
+            <option value={false}>Inactivos</option>
+          </select>
         </div>
       </div>
       <div className="card-deck">{tableContent}</div>

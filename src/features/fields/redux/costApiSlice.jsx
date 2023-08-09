@@ -75,21 +75,17 @@ export const {
   useDeleteCostMutation,
 } = costApiSlice;
 
-// returns the query result object
 export const selectCostsResult = costApiSlice.endpoints.getCosts.select();
 
-// creates memoized selector
 const selectCostsData = createSelector(
   selectCostsResult,
-  (costResult) => costResult.data // normalized state object with ids & entities
+  (costResult) => costResult.data
 );
 
-//getSelectors creates these selectors and we rename them with aliases using destructuring
 export const {
   selectAll: selectAllCosts,
   selectById: selectCostById,
   selectIds: selectCostIds,
-  // Pass in a selector that returns the users slice of state
 } = costsAdapter.getSelectors(
   (state) => selectCostsData(state) ?? initialState
 );

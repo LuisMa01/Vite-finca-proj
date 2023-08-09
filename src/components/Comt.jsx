@@ -1,16 +1,6 @@
-//import { useNavigate } from 'react-router-dom'
 import "../../src/styles/registrar-actividad.css";
-import { useGetDatesQuery } from "../features/fields/redux/appApiSlice";
-import { useGetItemsQuery } from "../features/fields/redux/itemApiSlice";
-import { useGetDosesQuery } from "../features/fields/redux/doseApiSlice";
 import { useEffect, useState } from "react";
 import { useGetActsQuery } from "../features/fields/redux/actApiSlice";
-import { useGetUsersQuery } from "../features/fields/redux/usersApiSlice";
-import {
-  useGetCostsQuery,
-  useUpdateCostMutation,
-  useDeleteCostMutation,
-} from "../features/fields/redux/costApiSlice";
 import { useGetCropsQuery } from "../features/fields/redux/cropApiSlice";
 import {
   useGetComtsQuery,
@@ -21,7 +11,6 @@ import { memo } from "react";
 import { Link } from "react-router-dom";
 import RemoveImg from "../images/remove.svg";
 import Swal from "sweetalert2";
-import { ROLES } from "../config/roles";
 import Modal from "react-modal";
 import useAuth from "../hooks/useAuth";
 
@@ -84,7 +73,7 @@ const Comt = ({ comtId, Lista }) => {
     });
     setIsOpen(false);
   };
-  //
+
   const onDeleteComtClicked = async () => {
     Swal.fire({
       title: "¿Seguro de eliminar?",
@@ -149,18 +138,18 @@ const Comt = ({ comtId, Lista }) => {
         <p className="titulo_tipos-de-actividades col-12">Editar comentario</p>
         <form className="container myform col-6 needs-validation" novalidate>
           <div className="form-row bg-light">
-              <div className="form-group col-12 mb-2">
-                <textarea
-                  type="text"
-                  className="form-control col-12"
-                  placeholder="Ingresar Comentario"
-                  value={desc}
-                  maxLength={300}
-                  onChange={onComtDescChange}
-                  rows={2}
-                  cols={25}
-                />
-              </div>
+            <div className="form-group col-12 mb-2">
+              <textarea
+                type="text"
+                className="form-control col-12"
+                placeholder="Ingresar Comentario"
+                value={desc}
+                maxLength={300}
+                onChange={onComtDescChange}
+                rows={2}
+                cols={25}
+              />
+            </div>
           </div>
           <div className="edit-campo-button-section_parent col-12">
             <button
@@ -183,14 +172,12 @@ const Comt = ({ comtId, Lista }) => {
   );
 
   if (comt) {
-    let finalDate 
-
+    let finalDate;
 
     if (crop) {
-      finalDate = crop?.crop_harvest !== null || !crop?.crop_status ? true : false; 
-      
+      finalDate =
+        crop?.crop_harvest !== null || !crop?.crop_status ? true : false;
     }
-      
 
     if (comt) {
       const fecha = `${comtDate}`.split("T")[0];
@@ -198,7 +185,6 @@ const Comt = ({ comtId, Lista }) => {
       const errContent =
         (error?.data?.message || delerror?.data?.message) ?? "";
 
-      //console.log(`${user.user_id} ${userName} ${userRolesString} ${active} ${errContent}`);
       if (isSuccess) {
         console.log(`no hay error ${errContent}`);
       }

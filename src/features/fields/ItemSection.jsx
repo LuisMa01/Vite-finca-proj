@@ -12,8 +12,7 @@ import DoseSection from "./DoseSection";
 import useAuth from "../../hooks/useAuth";
 
 Modal.setAppElement("#root");
-const ITEM_REGEX =
-  /^([A-ZÑ]{1})([a-zñ\d]{0,20})(-?\s?([\wñ\d]{0,20})?){0,5}/;
+const ITEM_REGEX = /^([A-ZÑ]{1})([a-zñ\d]{0,20})(-?\s?([\wñ\d]{0,20})?){0,5}/;
 
 const DESC_REGEX =
   /^([A-ZÑ]{1})([a-zñ\d]{0,20})(-?\s?\.?,?([\wñ\d]{0,20})?){0,50}/;
@@ -61,7 +60,6 @@ const ItemSection = () => {
     setValidUnit(DESC_REGEX.test(desc));
   }, [desc]);
 
-  //itemName, desc, itemPrice, itemDose
   const canSave =
     [validItemName, desc ? validDesc : true].every(Boolean) && !isLoadingNew;
 
