@@ -1,9 +1,10 @@
+
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { setCredentials } from "../../features/auth/authSlice";
 import { REHYDRATE } from "redux-persist";
 
 const baseQuery = fetchBaseQuery({
-  baseUrl: "https://andre-vloebergh-api.onrender.com", // http://localhost:5000 https://andre-vloebergh-api.onrender.com
+  baseUrl: import.meta.env.VITE_BACKEND_URL, // 
   credentials: "include",
   prepareHeaders: (headers, { getState }) => {
     const token = getState().auth.token;
