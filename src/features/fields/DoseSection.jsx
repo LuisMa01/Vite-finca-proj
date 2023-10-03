@@ -9,7 +9,7 @@ import Dose from "../../components/Dose";
 import useAuth from "../../hooks/useAuth";
 
 const DOSE_REGEX =
-  /^([A-ZÑ\d]{1})([\wñÑ\d]{0,20})(\/?\s?-?([\wñÑ\d]{1,20}?)){0,4}/;
+  /^([A-ZÑ\d\.\,\(\)\*\-\+]{1})([\wñÑ\d\.\,\(\)\*\-\+]{0,20})(\/?-?([\wñÑ\d\.\,\(\)\*\-\+]{1,20}?)){0,4}/;
 const UNIT_REGEX = /^([\wñÑ\d]{0,20})((\/?\s?-?)([\wñÑ\d]{1,20}?)){0,4}$/;
 const DoseSection = () => {
   const { username, isManager, isAdmin } = useAuth();
@@ -146,7 +146,7 @@ const DoseSection = () => {
                   maxLength={20}
                   className="form-control"
                   placeholder="Ej: hora/hombre"
-                  pattern="^([A-ZÑ\d]{1})([\wñÑ\d]{0,20})(\/?-?([\wñÑ\d]{1,20}?)){0,4}"
+                  pattern="^([A-ZÑ\d\.\,\(\)\*\-\+]{1})([\wñÑ\d\.\,\(\)\*\-\+]{0,20})(\/?-?([\wñÑ\d\.\,\(\)\*\-\+]{1,20}?)){0,4}"
                   value={doseName}
                   onChange={onDoseNameChanged}
                   required
