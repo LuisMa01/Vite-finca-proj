@@ -12,7 +12,7 @@ import Swal from "sweetalert2";
 import { ROLES } from "../config/roles";
 import useAuth from "../hooks/useAuth";
 
-const DOSE_REGEX = /^([A-ZÑ\d]{1})([\wñÑ\d]{0,20})(\/?-?([\wñÑ\d]{1,20}?)){0,4}/;
+const DOSE_REGEX = /^([A-ZÑ\d\.\,\(\)\*\-\+]{1})([\wñÑ\d\.\,\(\)\*\-\+]{0,20})(\/?-?([\wñÑ\d\.\,\(\)\*\-\+]{1,20}?)){0,4}/;
 const UNIT_REGEX = /^([\wñÑ\d]{0,20})((\/?\s?-?)([\wñÑ\d]{1,20}?)){0,4}$/;
 
 const Dose = ({ doseId }) => {
@@ -169,7 +169,7 @@ const Dose = ({ doseId }) => {
                   className="form-control"
                   placeholder="Ej: hora/hombre"
                   value={doseName}
-                  pattern="^([A-ZÑ\d]{1})([\wñÑ\d]{0,20})(\/?-?([\wñÑ\d]{1,20}?)){0,4}"
+                  pattern="^([A-ZÑ\d\.\,\(\)\*\-\+]{1})([\wñÑ\d\.\,\(\)\*\-\+]{0,20})(\/?-?([\wñÑ\d\.\,\(\)\*\-\+]{1,20}?)){0,4}"
                   onChange={onDoseNameChanged}
                   required
                 />
